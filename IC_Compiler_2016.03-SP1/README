@@ -1,0 +1,145 @@
+Synopsys
+Customer Education Services
+======================================================================
+IC Compiler Block-level Implementation
+Lab Notes Rev 2016.03-SP1
+Last Update: 2016-09-08
+======================================================================
+
+
+These Instructions are intended to help you with the installation of 
+the tools needed to successfully run the labs, and with the installation 
+of the lab database itself.
+
+CONTENTS
+================================
+
+1. Software installation
+2. Lab database installation
+3. Lab database configuration and testing
+4. Lynx Installation Notes, ICV environment variable
+
+
+**********************************************************************
+1. Software installation
+======================================================================
+
+This workshop needs the following tool(s) to be installed:
+
+- IC Compiler 2016.03-SP1 
+- IC Validator 2015.12-SP2-2 
+- Lynx Design System 2016.03 
+
+
+To download the required software release, you have to access
+the Solvnet Release Library:
+
+1. Navigate your browser to http://solvnet.synopsys.com
+
+2. Log in using your solvnet id and password
+   If you are not registered, follow the instructions on this 
+   page to sign up for solvnet
+
+3. Select "Downloads" from the main navigation
+
+4. Select the correct tool(s) from the list of software, then the correct release
+
+5. Follow the instructions to download and install the software on 
+   your workstation
+
+
+
+**********************************************************************
+2. Lab database Installation
+======================================================================
+
+Execute the following command to unpack the archive:
+
+        unix$  gtar xzf ces_ic_compiler_2016.03-sp1.tar.gz
+
+Note:  Archives were created using GNU tar.
+
+
+Multiple account installation:
+Since the lab directory structure may contain symbolic links that 
+should be preserved instead of being expanded, it is strongly 
+recommended that you untar the file directly into each account.
+Repeat the following for every user account:
+
+unix$ cd /path/to/user/account1
+unix$ gtar xzf /path/to/ces_ic_compiler_2016.03-sp1.tar.gz
+
+
+**********************************************************************
+3. Lab database configuration and testing
+======================================================================
+
+
+Configuration
+==============================
+
+The "setup.csh" file is provided for your convenience.
+Please modify it appropriately to match your local environment. 
+source the modified setup.csh file prior to testing and 
+running the labs.
+
+
+Testing
+==============================
+
+To verify that the lab files are complete, and test for the correct
+versions of the software, it is recommended that you run the supplied
+test script (the current directory has to be the "IC_Compiler_2016.03-SP1" directory):
+
+
+        unix$  ./.testscript
+
+
+This will run a series of tests to verify that all files exist, and that
+the tools can be invoked.
+
+If everything is ok, you should see output similar to:
+
+
+------------------------------------------------------------
+
+ ******************************************************
+ Running the Synopsys Workshop Installation Test Script
+ 
+       Course Name:    IC Compiler Block-level Implementation
+       Course Version: 2016.03-SP1
+       Last Update:    2016-09-08
+ ******************************************************
+
+ Running  Test 1 - installation integrity check
+ Running  Test 2 - testing executables
+ Skipping Test 3 - GUI
+
+
+ Installation Test PASSED for IC Compiler Block-level Implementation Course
+
+------------------------------------------------------------
+
+Note:
+By default, the GUI test is skipped.
+If you want to test the GUI, add the "-gui" option:
+
+	unix$  ./.testscript -gui
+
+Make sure that you have the DISPLAY environment variable set
+correctly, otherwise the test will fail.
+
+
+
+**********************************************************************
+4. Lynx Installation Notes, ICV environment variable
+======================================================================
+
+
+During Lynx installation you might receive an error. This is due to the fact that a Lynx-DS license 
+is provided, which allows using the Lynx Runtime Manager but does not allow the installation of 
+certain other Lynx parts. 
+You can ignore this error, the relevant parts will still be installed.
+
+Make sure that you set the environment variable ICV_HOME_DIR. This needs to point
+to the location you have installed IC Validator.
