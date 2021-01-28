@@ -1,0 +1,1599 @@
+
+<!--
+## HEADER $Id: //sps/flow/scripts_dev/lcrm/rtm_auxx/scripts_global/TECH/variables.xml#21 $
+## HEADER_MSG    Lynx Design System: Production Flow
+## HEADER_MSG    Version 2013.12-SP1
+## HEADER_MSG    Copyright (c) 2013 Synopsys
+## HEADER_MSG    Perforce Label: lynx_flow_2013.12-SP1
+## HEADER_MSG
+-->
+<variables>
+  <master_lib_variable name="setup,lib_types_list">
+    <info><![CDATA[<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN" "http://www.w3.org/TR/REC-html40/strict.dtd">
+<html><head><meta name="qrichtext" content="1" /><style type="text/css">
+p, li { white-space: pre-wrap; }
+</style></head><body style=" font-family:'Bitstream Vera Sans'; font-size:10pt; font-weight:400; font-style:normal;">
+<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">NOTE: Not used in LCRM. Provided here to illustrate Lynx Design System capabilities.<br /><br />This variable defines the valid set of library names.<br />These names, which are arbitrary strings, provide<br />convenient handles for specifying libraries.<br />These variables must use characters that are alpha/numeric/underscore only.<br />Examples: stdcell_hvt, stdcell_lvt, ram, io, etc</p></body></html>]]></info>
+    <user_rule>isSimpleStringRequired</user_rule>
+    <meta_list>
+      <meta>Auto Variable Expansion</meta>
+    </meta_list>
+  </master_lib_variable>
+  <variable class="svar" name="setup,oc_types_list">
+    <info><![CDATA[<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN" "http://www.w3.org/TR/REC-html40/strict.dtd">
+<html><head><meta name="qrichtext" content="1" /><style type="text/css">
+p, li { white-space: pre-wrap; }
+</style></head><body style=" font-family:'Bitstream Vera Sans'; font-size:10pt; font-weight:400; font-style:normal;">
+<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">NOTE: Not used in LCRM. Provided here to illustrate Lynx Design System capabilities.<br /><br />This variable defines the valid set of operating condition names.<br />These names, which are arbitrary strings, provide<br />convenient handles for specifying operating conditions.<br />These variables must use characters that are alpha/numeric/underscore only.<br />Examples: OC_BC, OC_WC, OC_TYP, OC_LEAKAGE, etc.</p></body></html>]]></info>
+    <user_rule>isSimpleStringRequired</user_rule>
+    <meta_list>
+      <meta>Auto Variable Expansion</meta>
+    </meta_list>
+    <expansion_string>##OC_TYPE##</expansion_string>
+    <output_format>list</output_format>
+    <save_option>common_only</save_option>
+    <list_must_be_unique>1</list_must_be_unique>
+    <fields>
+      <field type="string" source="from_user"/>
+    </fields>
+  </variable>
+  <variable class="svar" name="setup,rc_types_list">
+    <info><![CDATA[<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN" "http://www.w3.org/TR/REC-html40/strict.dtd">
+<html><head><meta name="qrichtext" content="1" /><style type="text/css">
+p, li { white-space: pre-wrap; }
+</style></head><body style=" font-family:'Bitstream Vera Sans'; font-size:10pt; font-weight:400; font-style:normal;">
+<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">NOTE: Not used in LCRM. Provided here to illustrate Lynx Design System capabilities.<br /><br />This variable defines the valid set of parasitic condition names.<br />These names, which are arbitrary strings, provide<br />convenient handles for specifying parasitic conditions.<br />These variables must use characters that are alpha/numeric/underscore only.<br />Examples: RC_MIN_1, RC_MAX_1, RC_TYP, etc.</p></body></html>]]></info>
+    <user_rule>isSimpleStringRequired</user_rule>
+    <meta_list>
+      <meta>Auto Variable Expansion</meta>
+    </meta_list>
+    <expansion_string>##RC_TYPE##</expansion_string>
+    <output_format>list</output_format>
+    <save_option>common_only</save_option>
+    <list_must_be_unique>1</list_must_be_unique>
+    <fields>
+      <field type="string" source="from_user"/>
+    </fields>
+  </variable>
+  <variable class="sev" name="aro_enable">
+    <info><![CDATA[<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN" "http://www.w3.org/TR/REC-html40/strict.dtd">
+<html><head><meta name="qrichtext" content="1" /><style type="text/css">
+p, li { white-space: pre-wrap; }
+</style></head><body style=" font-family:'Bitstream Vera Sans'; font-size:10pt; font-weight:400; font-style:normal;">
+<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">This variable enables Advanced Resource Optimization. (ARO)</p></body></html>]]></info>
+    <user_rule>isBoolean</user_rule>
+    <meta_list>
+      <meta>Job Distribution</meta>
+      <meta>LCRM</meta>
+    </meta_list>
+    <output_format>string</output_format>
+    <fields>
+      <field type="boolean"/>
+    </fields>
+  </variable>
+  <variable class="sev" name="aro_port">
+    <info><![CDATA[<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN" "http://www.w3.org/TR/REC-html40/strict.dtd">
+<html><head><meta name="qrichtext" content="1" /><style type="text/css">
+p, li { white-space: pre-wrap; }
+</style></head><body style=" font-family:'Bitstream Vera Sans'; font-size:10pt; font-weight:400; font-style:normal;">
+<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">This variable defines the port on the ARO server.</p></body></html>]]></info>
+    <user_rule>isIntegerOptional</user_rule>
+    <meta_list>
+      <meta>Job Distribution</meta>
+      <meta>LCRM</meta>
+    </meta_list>
+    <output_format>string</output_format>
+    <fields>
+      <field type="integer"/>
+    </fields>
+  </variable>
+  <variable class="sev" name="aro_server">
+    <info><![CDATA[<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN" "http://www.w3.org/TR/REC-html40/strict.dtd">
+<html><head><meta name="qrichtext" content="1" /><style type="text/css">
+p, li { white-space: pre-wrap; }
+</style></head><body style=" font-family:'Bitstream Vera Sans'; font-size:10pt; font-weight:400; font-style:normal;">
+<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">This variable defines the name of the ARO server.</p>
+<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">This is a machine's host name.</p></body></html>]]></info>
+    <meta_list>
+      <meta>Job Distribution</meta>
+      <meta>LCRM</meta>
+    </meta_list>
+    <output_format>string</output_format>
+    <fields>
+      <field type="string"/>
+    </fields>
+  </variable>
+  <variable class="sev" name="job_app">
+    <info><![CDATA[<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN" "http://www.w3.org/TR/REC-html40/strict.dtd">
+<html><head><meta name="qrichtext" content="1" /><style type="text/css">
+p, li { white-space: pre-wrap; }
+</style></head><body style=" font-family:'Bitstream Vera Sans'; font-size:10pt; font-weight:400; font-style:normal;">
+<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">This variable defines the job distribution application that will be employed.</p></body></html>]]></info>
+    <meta_list>
+      <meta>Job Distribution</meta>
+      <meta>LCRM</meta>
+    </meta_list>
+    <output_format>string</output_format>
+    <restart>1</restart>
+    <fields>
+      <field type="string" source="from_proc">
+        <proc>var_get_job_app</proc>
+      </field>
+    </fields>
+  </variable>
+  <variable class="sev" name="job_enable">
+    <info><![CDATA[<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN" "http://www.w3.org/TR/REC-html40/strict.dtd">
+<html><head><meta name="qrichtext" content="1" /><style type="text/css">
+p, li { white-space: pre-wrap; }
+</style></head><body style=" font-family:'Bitstream Vera Sans'; font-size:10pt; font-weight:400; font-style:normal;">
+<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">This variable enables job distribution.</p></body></html>]]></info>
+    <user_rule>isBoolean</user_rule>
+    <meta_list>
+      <meta>Job Distribution</meta>
+      <meta>LCRM</meta>
+    </meta_list>
+    <output_format>string</output_format>
+    <fields>
+      <field type="boolean"/>
+    </fields>
+  </variable>
+  <variable class="sev" name="job_misc1">
+    <info><![CDATA[<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN" "http://www.w3.org/TR/REC-html40/strict.dtd">
+<html><head><meta name="qrichtext" content="1" /><style type="text/css">
+p, li { white-space: pre-wrap; }
+</style></head><body style=" font-family:'Bitstream Vera Sans'; font-size:10pt; font-weight:400; font-style:normal;">
+<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">This variable can be used to provide additional controls  for job distribution functions.</p>
+<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">It's function is TBD per end-user modifications.</p>
+<p style="-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;"><br /></p></body></html>]]></info>
+    <meta_list>
+      <meta>Job Distribution</meta>
+    </meta_list>
+    <output_format>string</output_format>
+    <fields>
+      <field type="string"/>
+    </fields>
+  </variable>
+  <variable class="sev" name="job_misc2">
+    <info><![CDATA[<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN" "http://www.w3.org/TR/REC-html40/strict.dtd">
+<html><head><meta name="qrichtext" content="1" /><style type="text/css">
+p, li { white-space: pre-wrap; }
+</style></head><body style=" font-family:'Bitstream Vera Sans'; font-size:10pt; font-weight:400; font-style:normal;">
+<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">This variable can be used to provide additional controls  for job distribution functions.</p>
+<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">It's function is TBD per end-user modifications.</p>
+<p style="-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;"><br /></p></body></html>]]></info>
+    <meta_list>
+      <meta>Job Distribution</meta>
+    </meta_list>
+    <output_format>string</output_format>
+    <fields>
+      <field type="string"/>
+    </fields>
+  </variable>
+  <variable class="sev" name="job_misc3">
+    <info><![CDATA[<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN" "http://www.w3.org/TR/REC-html40/strict.dtd">
+<html><head><meta name="qrichtext" content="1" /><style type="text/css">
+p, li { white-space: pre-wrap; }
+</style></head><body style=" font-family:'Bitstream Vera Sans'; font-size:10pt; font-weight:400; font-style:normal;">
+<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">This variable can be used to provide additional controls  for job distribution functions.</p>
+<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">It's function is TBD per end-user modifications.</p>
+<p style="-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;"><br /></p></body></html>]]></info>
+    <meta_list>
+      <meta>Job Distribution</meta>
+    </meta_list>
+    <output_format>string</output_format>
+    <fields>
+      <field type="string"/>
+    </fields>
+  </variable>
+  <variable class="sev" name="job_misc4">
+    <info><![CDATA[<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN" "http://www.w3.org/TR/REC-html40/strict.dtd">
+<html><head><meta name="qrichtext" content="1" /><style type="text/css">
+p, li { white-space: pre-wrap; }
+</style></head><body style=" font-family:'Bitstream Vera Sans'; font-size:10pt; font-weight:400; font-style:normal;">
+<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">For LSF:</p>
+<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">This variable can be used to provide additional controls  for job distribution functions.</p>
+<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">It's function is TBD per end-user modifications.</p>
+<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;"><br />For GRD:</p>
+<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">This variable specifies the <span style=" font-weight:600; font-style:italic;">name</span> of the resource<br />which is used to specify the &quot;number-of-cpus-per-slot&quot;.</p></body></html>]]></info>
+    <meta_list>
+      <meta>Job Distribution</meta>
+    </meta_list>
+    <output_format>string</output_format>
+    <fields>
+      <field type="string"/>
+    </fields>
+  </variable>
+  <variable class="sev" name="job_options">
+    <info><![CDATA[<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN" "http://www.w3.org/TR/REC-html40/strict.dtd">
+<html><head><meta name="qrichtext" content="1" /><style type="text/css">
+p, li { white-space: pre-wrap; }
+</style></head><body style=" font-family:'Bitstream Vera Sans'; font-size:10pt; font-weight:400; font-style:normal;">
+<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">This variable defines job distribution options.</p></body></html>]]></info>
+    <meta_list>
+      <meta>Job Distribution</meta>
+      <meta>LCRM</meta>
+    </meta_list>
+    <output_format>string</output_format>
+    <fields>
+      <field type="string"/>
+    </fields>
+  </variable>
+  <variable class="sev" name="job_queue_batch">
+    <info><![CDATA[<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN" "http://www.w3.org/TR/REC-html40/strict.dtd">
+<html><head><meta name="qrichtext" content="1" /><style type="text/css">
+p, li { white-space: pre-wrap; }
+</style></head><body style=" font-family:'Bitstream Vera Sans'; font-size:10pt; font-weight:400; font-style:normal;">
+<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">This variable defines the queue name that is used for batch execution of tasks.</p></body></html>]]></info>
+    <meta_list>
+      <meta>Job Distribution</meta>
+      <meta>LCRM</meta>
+    </meta_list>
+    <output_format>string</output_format>
+    <fields>
+      <field type="string"/>
+    </fields>
+  </variable>
+  <variable class="sev" name="job_queue_child">
+    <info><![CDATA[<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN" "http://www.w3.org/TR/REC-html40/strict.dtd">
+<html><head><meta name="qrichtext" content="1" /><style type="text/css">
+p, li { white-space: pre-wrap; }
+</style></head><body style=" font-family:'Bitstream Vera Sans'; font-size:10pt; font-weight:400; font-style:normal;">
+<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">This variable defines the queue name that is used for<br />execution of child jobs that are distributed by the primary task.<br />The child queue is expected to have a higher priority than the batch queue<br />for this job distribution feature to be effective.<br />If there is no provision for a child job queue, just leave this variable blank,<br />and the queue specified by SEV(job_queue_batch) will be used by default</p></body></html>]]></info>
+    <meta_list>
+      <meta>Job Distribution</meta>
+      <meta>LCRM</meta>
+    </meta_list>
+    <output_format>string</output_format>
+    <fields>
+      <field type="string"/>
+    </fields>
+  </variable>
+  <variable class="sev" name="job_queue_interactive">
+    <info><![CDATA[<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN" "http://www.w3.org/TR/REC-html40/strict.dtd">
+<html><head><meta name="qrichtext" content="1" /><style type="text/css">
+p, li { white-space: pre-wrap; }
+</style></head><body style=" font-family:'Bitstream Vera Sans'; font-size:10pt; font-weight:400; font-style:normal;">
+<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">This variable defines the queue name that is used for interactive execution of tasks.</p></body></html>]]></info>
+    <meta_list>
+      <meta>Job Distribution</meta>
+      <meta>LCRM</meta>
+    </meta_list>
+    <output_format>string</output_format>
+    <fields>
+      <field type="string"/>
+    </fields>
+  </variable>
+  <variable class="sev" name="job_queue_sync">
+    <info><![CDATA[<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN" "http://www.w3.org/TR/REC-html40/strict.dtd">
+<html><head><meta name="qrichtext" content="1" /><style type="text/css">
+p, li { white-space: pre-wrap; }
+</style></head><body style=" font-family:'Bitstream Vera Sans'; font-size:10pt; font-weight:400; font-style:normal;">
+<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">This variable defines the queue name that is used for execution of the<br />synchronization jobs that are associated with the primary job for a task.<br />Ideally this queue should be configured to service very short jobs.</p>
+<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">If one is not available, you can set to SEV(job_queue_batch).</p></body></html>]]></info>
+    <meta_list>
+      <meta>Job Distribution</meta>
+      <meta>LCRM</meta>
+    </meta_list>
+    <output_format>string</output_format>
+    <fields>
+      <field type="string"/>
+    </fields>
+  </variable>
+  <variable class="sev" name="job_resources">
+    <info><![CDATA[<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN" "http://www.w3.org/TR/REC-html40/strict.dtd">
+<html><head><meta name="qrichtext" content="1" /><style type="text/css">
+p, li { white-space: pre-wrap; }
+</style></head><body style=" font-family:'Bitstream Vera Sans'; font-size:10pt; font-weight:400; font-style:normal;">
+<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">This variable defines the job distribution resources.<br />Important Note:<br /><span style=" color:#ff0000;">Do not use square bracket characters when defining this variable!</span><br />If you need a &quot;[&quot; character, then use &quot;((&quot; instead.<br />If you need a &quot;]&quot; character, then use &quot;))&quot; instead.<br />LSF makes use of square bracket characters in resource specifications.<br />This causes problems in Tcl scripts, because Tcl treats square bracket<br />characters as command delimiters. Lynx makes the needed conversions.</p></body></html>]]></info>
+    <meta_list>
+      <meta>Job Distribution</meta>
+      <meta>LCRM</meta>
+    </meta_list>
+    <output_format>string</output_format>
+    <fields>
+      <field type="string"/>
+    </fields>
+  </variable>
+  <variable class="sev" name="log_level">
+    <info><![CDATA[<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN" "http://www.w3.org/TR/REC-html40/strict.dtd">
+<html><head><meta name="qrichtext" content="1" /><style type="text/css">
+p, li { white-space: pre-wrap; }
+</style></head><body style=" font-family:'Bitstream Vera Sans'; font-size:10pt; font-weight:400; font-style:normal;">
+<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">This variable is used by the sproc_source procedure and controls log file verbosity.<br />If set to &quot;0&quot;:</p>
+<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">When sourcing all files, quiet mode is controlled by the procedure call.<br />If set to &quot;1&quot;:</p>
+<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">When sourcing standard header files, quiet mode is selected.<br />When sourcing all other files, quiet mode is controlled by the procedure call.<br />If set to &quot;2&quot;:</p>
+<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">When sourcing all files, quiet mode is selected.</p></body></html>]]></info>
+    <user_rule>isIntegerRequired</user_rule>
+    <meta_list>
+      <meta>Misc</meta>
+    </meta_list>
+    <output_format>string</output_format>
+    <fields>
+      <field type="integer" source="from_user"/>
+    </fields>
+  </variable>
+  <variable class="sev" name="metrics_enable_forward">
+    <info><![CDATA[<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN" "http://www.w3.org/TR/REC-html40/strict.dtd">
+<html><head><meta name="qrichtext" content="1" /><style type="text/css">
+p, li { white-space: pre-wrap; }
+</style></head><body style=" font-family:'Bitstream Vera Sans'; font-size:10pt; font-weight:400; font-style:normal;">
+<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">This variable controls metric forwarding.<br />If set to &quot;0&quot;: Metrics are not forwarded.</p>
+<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">If set to &quot;1&quot;: Metrics are forwarded.</p>
+<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">Note that the MC project receving metrics must have forwarding enabled for this variable to have an effect.</p>
+<p style="-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;"><br /></p>
+<p style="-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;"><br /></p></body></html>]]></info>
+    <user_rule>isIntegerRequired</user_rule>
+    <meta_list>
+      <meta>Metrics</meta>
+      <meta>LCRM</meta>
+    </meta_list>
+    <output_format>string</output_format>
+    <fields>
+      <field type="string" source="from_values">
+        <values>
+          <value>0</value>
+          <value>1</value>
+        </values>
+      </field>
+    </fields>
+  </variable>
+  <variable class="sev" name="metrics_enable_generation">
+    <info><![CDATA[<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN" "http://www.w3.org/TR/REC-html40/strict.dtd">
+<html><head><meta name="qrichtext" content="1" /><style type="text/css">
+p, li { white-space: pre-wrap; }
+</style></head><body style=" font-family:'Bitstream Vera Sans'; font-size:10pt; font-weight:400; font-style:normal;">
+<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">This variable controls what metrics are present in a log file.<br />If set to &quot;0&quot;: Only SYS metrics</p>
+<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">If set to &quot;1&quot;: All metrics</p>
+<p style="-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;"><br /></p></body></html>]]></info>
+    <user_rule>isIntegerRequired</user_rule>
+    <meta_list>
+      <meta>Metrics</meta>
+      <meta>LCRM</meta>
+    </meta_list>
+    <output_format>string</output_format>
+    <fields>
+      <field type="string" source="from_values">
+        <values>
+          <value>0</value>
+          <value>1</value>
+        </values>
+      </field>
+    </fields>
+  </variable>
+  <variable class="sev" name="metrics_enable_transfer">
+    <info><![CDATA[<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN" "http://www.w3.org/TR/REC-html40/strict.dtd">
+<html><head><meta name="qrichtext" content="1" /><style type="text/css">
+p, li { white-space: pre-wrap; }
+</style></head><body style=" font-family:'Bitstream Vera Sans'; font-size:10pt; font-weight:400; font-style:normal;">
+<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">This variable controls what metrics are sent from the RTM to the MC.<br />If set to &quot;0&quot;: No metrics sent</p>
+<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">If set to &quot;1&quot;: Only SYS metrics sent</p>
+<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">If set to &quot;2&quot;: All metrics sent</p>
+<p style="-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;"><br /></p></body></html>]]></info>
+    <user_rule>isIntegerRequired</user_rule>
+    <meta_list>
+      <meta>Metrics</meta>
+      <meta>LCRM</meta>
+    </meta_list>
+    <output_format>string</output_format>
+    <fields>
+      <field type="string" source="from_values">
+        <values>
+          <value>0</value>
+          <value>1</value>
+          <value>2</value>
+        </values>
+      </field>
+    </fields>
+  </variable>
+  <variable class="sev" name="metrics_flag_errors">
+    <info><![CDATA[<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN" "http://www.w3.org/TR/REC-html40/strict.dtd">
+<html><head><meta name="qrichtext" content="1" /><style type="text/css">
+p, li { white-space: pre-wrap; }
+</style></head><body style=" font-family:'Bitstream Vera Sans'; font-size:10pt; font-weight:400; font-style:normal;">
+<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">When this variable is set to &quot;1&quot;, a task will fail if</p>
+<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">there are any Metrics or Metrics Server errors.</p></body></html>]]></info>
+    <user_rule>isBoolean</user_rule>
+    <meta_list>
+      <meta>Metrics</meta>
+      <meta>LCRM</meta>
+    </meta_list>
+    <output_format>string</output_format>
+    <fields>
+      <field type="boolean"/>
+    </fields>
+  </variable>
+  <variable class="sev" name="metrics_port">
+    <info><![CDATA[<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN" "http://www.w3.org/TR/REC-html40/strict.dtd">
+<html><head><meta name="qrichtext" content="1" /><style type="text/css">
+p, li { white-space: pre-wrap; }
+</style></head><body style=" font-family:'Bitstream Vera Sans'; font-size:10pt; font-weight:400; font-style:normal;">
+<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">This variable defines the port on the metrics database server.</p></body></html>]]></info>
+    <user_rule>isIntegerOptional</user_rule>
+    <meta_list>
+      <meta>Metrics</meta>
+      <meta>LCRM</meta>
+    </meta_list>
+    <output_format>string</output_format>
+    <fields>
+      <field type="integer"/>
+    </fields>
+  </variable>
+  <variable class="sev" name="metrics_server">
+    <info><![CDATA[<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN" "http://www.w3.org/TR/REC-html40/strict.dtd">
+<html><head><meta name="qrichtext" content="1" /><style type="text/css">
+p, li { white-space: pre-wrap; }
+</style></head><body style=" font-family:'Bitstream Vera Sans'; font-size:10pt; font-weight:400; font-style:normal;">
+<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">This variable defines the name of the metrics database server.</p>
+<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">This is a machine's host name.</p></body></html>]]></info>
+    <meta_list>
+      <meta>Metrics</meta>
+      <meta>LCRM</meta>
+    </meta_list>
+    <output_format>string</output_format>
+    <fields>
+      <field type="string"/>
+    </fields>
+  </variable>
+  <variable class="sev" name="project_dir">
+    <info><![CDATA[<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN" "http://www.w3.org/TR/REC-html40/strict.dtd">
+<html><head><meta name="qrichtext" content="1" /><style type="text/css">
+p, li { white-space: pre-wrap; }
+</style></head><body style=" font-family:'Bitstream Vera Sans'; font-size:10pt; font-weight:400; font-style:normal;">
+<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">This variable defines the project directory.</p></body></html>]]></info>
+    <user_rule>isDirRequired</user_rule>
+    <meta_list>
+      <meta>Project</meta>
+      <meta>LCRM</meta>
+    </meta_list>
+    <output_format>string</output_format>
+    <fields>
+      <field type="directory"/>
+    </fields>
+  </variable>
+  <variable class="sev" name="project_name">
+    <info><![CDATA[<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN" "http://www.w3.org/TR/REC-html40/strict.dtd">
+<html><head><meta name="qrichtext" content="1" /><style type="text/css">
+p, li { white-space: pre-wrap; }
+</style></head><body style=" font-family:'Bitstream Vera Sans'; font-size:10pt; font-weight:400; font-style:normal;">
+<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">This variable defines the project name.</p>
+<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">It is also used to identify the project in job distribution and in metrics processing.</p></body></html>]]></info>
+    <user_rule>isSimpleStringRequired</user_rule>
+    <meta_list>
+      <meta>Project</meta>
+      <meta>LCRM</meta>
+    </meta_list>
+    <output_format>string</output_format>
+    <fields>
+      <field type="string"/>
+    </fields>
+  </variable>
+  <variable class="sev" name="rc_method">
+    <info><![CDATA[<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN" "http://www.w3.org/TR/REC-html40/strict.dtd">
+<html><head><meta name="qrichtext" content="1" /><style type="text/css">
+p, li { white-space: pre-wrap; }
+</style></head><body style=" font-family:'Bitstream Vera Sans'; font-size:10pt; font-weight:400; font-style:normal;">
+<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">This variable defines the revision control system to be used.</p></body></html>]]></info>
+    <meta_list>
+      <meta>Revision Control</meta>
+      <meta>LCRM</meta>
+    </meta_list>
+    <output_format>string</output_format>
+    <restart>1</restart>
+    <fields>
+      <field type="string" source="from_proc">
+        <proc>var_get_rc_method</proc>
+      </field>
+    </fields>
+  </variable>
+  <variable class="sev" name="release_dir">
+    <info><![CDATA[<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN" "http://www.w3.org/TR/REC-html40/strict.dtd">
+<html><head><meta name="qrichtext" content="1" /><style type="text/css">
+p, li { white-space: pre-wrap; }
+</style></head><body style=" font-family:'Bitstream Vera Sans'; font-size:10pt; font-weight:400; font-style:normal;">
+<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">This variable defines the release directory.</p></body></html>]]></info>
+    <user_rule>isDirRequired</user_rule>
+    <meta_list>
+      <meta>Project</meta>
+      <meta>LCRM</meta>
+    </meta_list>
+    <output_format>string</output_format>
+    <fields>
+      <field type="directory"/>
+    </fields>
+  </variable>
+  <variable class="sev" name="snapshot_dir">
+    <info><![CDATA[<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN" "http://www.w3.org/TR/REC-html40/strict.dtd">
+<html><head><meta name="qrichtext" content="1" /><style type="text/css">
+p, li { white-space: pre-wrap; }
+</style></head><body style=" font-family:'Bitstream Vera Sans'; font-size:10pt; font-weight:400; font-style:normal;">
+<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">This variable defines the snapshot directory.</p>
+<p style="-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;"><br /></p>
+<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">The snapshot directory can be used to store &quot;snapshots&quot; of QoR viewer data. The RTM procedure &quot;rtm_send_snapshot&quot; is used to transfer the data to the snapshot directory.</p></body></html>]]></info>
+    <user_rule>isDirRequired</user_rule>
+    <meta_list>
+      <meta>Project</meta>
+    </meta_list>
+    <output_format>string</output_format>
+    <fields>
+      <field type="directory"/>
+    </fields>
+  </variable>
+  <variable class="sev" name="techlib_dir">
+    <info><![CDATA[<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN" "http://www.w3.org/TR/REC-html40/strict.dtd">
+<html><head><meta name="qrichtext" content="1" /><style type="text/css">
+p, li { white-space: pre-wrap; }
+</style></head><body style=" font-family:'Bitstream Vera Sans'; font-size:10pt; font-weight:400; font-style:normal;">
+<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">This variable defines the techlib directory.<br /></p></body></html>]]></info>
+    <user_rule>isDirRequired</user_rule>
+    <meta_list>
+      <meta>Project</meta>
+      <meta>LCRM</meta>
+    </meta_list>
+    <output_format>string</output_format>
+    <restart>1</restart>
+    <fields>
+      <field type="directory"/>
+    </fields>
+  </variable>
+  <variable class="sev" name="techlib_name">
+    <info><![CDATA[<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN" "http://www.w3.org/TR/REC-html40/strict.dtd">
+<html><head><meta name="qrichtext" content="1" /><style type="text/css">
+p, li { white-space: pre-wrap; }
+</style></head><body style=" font-family:'Bitstream Vera Sans'; font-size:10pt; font-weight:400; font-style:normal;">
+<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">This variable defines the techlib name. </p>
+<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;"><span style=" font-style:italic; color:#0000ff;">Note that the </span><span style=" font-weight:600; font-style:italic; color:#0000ff;">LCRM</span><span style=" font-style:italic; color:#0000ff;"> does not use Lynx DS for techlib variable management but does use the generic techlib </span><span style=" font-weight:600; font-style:italic; color:#0000ff;">TECH</span><span style=" font-style:italic; color:#0000ff;"> for storing information like these LCRM-specifc system and common variable configurations.</span></p>
+<p style="-qt-paragraph-type:empty; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; color:#0000ff;"><br /></p></body></html>]]></info>
+    <user_rule>verifyTechlibName</user_rule>
+    <meta_list>
+      <meta>Project</meta>
+      <meta>LCRM</meta>
+    </meta_list>
+    <output_format>string</output_format>
+    <restart>1</restart>
+    <fields>
+      <field type="string"/>
+    </fields>
+  </variable>
+  <variable class="sev" name="ver_cdesigner">
+    <info><![CDATA[<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN" "http://www.w3.org/TR/REC-html40/strict.dtd">
+<html><head><meta name="qrichtext" content="1" /><style type="text/css">
+p, li { white-space: pre-wrap; }
+</style></head><body style=" font-family:'Bitstream Vera Sans'; font-size:10pt; font-weight:400; font-style:normal;">
+<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">This variable defines the version for: Custom Designer</p></body></html>]]></info>
+    <meta_list>
+      <meta>Tool Versions</meta>
+      <meta>LCRM</meta>
+    </meta_list>
+    <output_format>string</output_format>
+    <fields>
+      <field type="string"/>
+    </fields>
+  </variable>
+  <variable class="sev" name="ver_dc">
+    <info><![CDATA[<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN" "http://www.w3.org/TR/REC-html40/strict.dtd">
+<html><head><meta name="qrichtext" content="1" /><style type="text/css">
+p, li { white-space: pre-wrap; }
+</style></head><body style=" font-family:'Bitstream Vera Sans'; font-size:10pt; font-weight:400; font-style:normal;">
+<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">This variable defines the version for: Design Compiler</p></body></html>]]></info>
+    <meta_list>
+      <meta>Tool Versions</meta>
+      <meta>LCRM</meta>
+    </meta_list>
+    <output_format>string</output_format>
+    <fields>
+      <field type="string"/>
+    </fields>
+  </variable>
+  <variable class="sev" name="ver_enable">
+    <info><![CDATA[<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN" "http://www.w3.org/TR/REC-html40/strict.dtd">
+<html><head><meta name="qrichtext" content="1" /><style type="text/css">
+p, li { white-space: pre-wrap; }
+</style></head><body style=" font-family:'Bitstream Vera Sans'; font-size:10pt; font-weight:400; font-style:normal;">
+<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">This variable enables automation for tool version control.</p></body></html>]]></info>
+    <user_rule>isBoolean</user_rule>
+    <meta_list>
+      <meta>Tool Versions</meta>
+      <meta>LCRM</meta>
+    </meta_list>
+    <output_format>string</output_format>
+    <fields>
+      <field type="boolean"/>
+    </fields>
+  </variable>
+  <variable class="sev" name="ver_fm">
+    <info><![CDATA[<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN" "http://www.w3.org/TR/REC-html40/strict.dtd">
+<html><head><meta name="qrichtext" content="1" /><style type="text/css">
+p, li { white-space: pre-wrap; }
+</style></head><body style=" font-family:'Bitstream Vera Sans'; font-size:10pt; font-weight:400; font-style:normal;">
+<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">This variable defines the version for: Formality</p></body></html>]]></info>
+    <meta_list>
+      <meta>Tool Versions</meta>
+      <meta>LCRM</meta>
+    </meta_list>
+    <output_format>string</output_format>
+    <fields>
+      <field type="string"/>
+    </fields>
+  </variable>
+  <variable class="sev" name="ver_hercules">
+    <info><![CDATA[<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN" "http://www.w3.org/TR/REC-html40/strict.dtd">
+<html><head><meta name="qrichtext" content="1" /><style type="text/css">
+p, li { white-space: pre-wrap; }
+</style></head><body style=" font-family:'Bitstream Vera Sans'; font-size:10pt; font-weight:400; font-style:normal;">
+<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">This variable defines the version for: Hercules</p></body></html>]]></info>
+    <meta_list>
+      <meta>Tool Versions</meta>
+      <meta>LCRM</meta>
+    </meta_list>
+    <output_format>string</output_format>
+    <fields>
+      <field type="string"/>
+    </fields>
+  </variable>
+  <variable class="sev" name="ver_hspice">
+    <info><![CDATA[<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN" "http://www.w3.org/TR/REC-html40/strict.dtd">
+<html><head><meta name="qrichtext" content="1" /><style type="text/css">
+p, li { white-space: pre-wrap; }
+</style></head><body style=" font-family:'Bitstream Vera Sans'; font-size:10pt; font-weight:400; font-style:normal;">
+<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">This variable defines the version for: HSpice</p></body></html>]]></info>
+    <meta_list>
+      <meta>Tool Versions</meta>
+      <meta>LCRM</meta>
+    </meta_list>
+    <output_format>string</output_format>
+    <fields>
+      <field type="string"/>
+    </fields>
+  </variable>
+  <variable class="sev" name="ver_icc">
+    <info><![CDATA[<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN" "http://www.w3.org/TR/REC-html40/strict.dtd">
+<html><head><meta name="qrichtext" content="1" /><style type="text/css">
+p, li { white-space: pre-wrap; }
+</style></head><body style=" font-family:'Bitstream Vera Sans'; font-size:10pt; font-weight:400; font-style:normal;">
+<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">This variable defines the version for: IC Compiler</p></body></html>]]></info>
+    <meta_list>
+      <meta>Tool Versions</meta>
+      <meta>LCRM</meta>
+    </meta_list>
+    <output_format>string</output_format>
+    <fields>
+      <field type="string"/>
+    </fields>
+  </variable>
+  <variable class="sev" name="ver_icv">
+    <info><![CDATA[<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN" "http://www.w3.org/TR/REC-html40/strict.dtd">
+<html><head><meta name="qrichtext" content="1" /><style type="text/css">
+p, li { white-space: pre-wrap; }
+</style></head><body style=" font-family:'Bitstream Vera Sans'; font-size:10pt; font-weight:400; font-style:normal;">
+<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">This variable defines the version for: IC Validator</p></body></html>]]></info>
+    <meta_list>
+      <meta>Tool Versions</meta>
+      <meta>LCRM</meta>
+    </meta_list>
+    <output_format>string</output_format>
+    <fields>
+      <field type="string"/>
+    </fields>
+  </variable>
+  <variable class="sev" name="ver_icwb">
+    <info><![CDATA[<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN" "http://www.w3.org/TR/REC-html40/strict.dtd">
+<html><head><meta name="qrichtext" content="1" /><style type="text/css">
+p, li { white-space: pre-wrap; }
+</style></head><body style=" font-family:'Bitstream Vera Sans'; font-size:10pt; font-weight:400; font-style:normal;">
+<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">This variable defines the version for: IC Workbench</p></body></html>]]></info>
+    <meta_list>
+      <meta>Tool Versions</meta>
+      <meta>LCRM</meta>
+    </meta_list>
+    <output_format>string</output_format>
+    <fields>
+      <field type="string"/>
+    </fields>
+  </variable>
+  <variable class="sev" name="ver_integrator">
+    <info><![CDATA[<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN" "http://www.w3.org/TR/REC-html40/strict.dtd">
+<html><head><meta name="qrichtext" content="1" /><style type="text/css">
+p, li { white-space: pre-wrap; }
+</style></head><body style=" font-family:'Bitstream Vera Sans'; font-size:10pt; font-weight:400; font-style:normal;">
+<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">This variable defines the version for: Integrator</p></body></html>]]></info>
+    <meta_list>
+      <meta>Tool Versions</meta>
+      <meta>LCRM</meta>
+    </meta_list>
+    <output_format>string</output_format>
+    <fields>
+      <field type="string"/>
+    </fields>
+  </variable>
+  <variable class="sev" name="ver_leda">
+    <info><![CDATA[<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN" "http://www.w3.org/TR/REC-html40/strict.dtd">
+<html><head><meta name="qrichtext" content="1" /><style type="text/css">
+p, li { white-space: pre-wrap; }
+</style></head><body style=" font-family:'Bitstream Vera Sans'; font-size:10pt; font-weight:400; font-style:normal;">
+<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">This variable defines the version for: Leda</p></body></html>]]></info>
+    <meta_list>
+      <meta>Tool Versions</meta>
+      <meta>LCRM</meta>
+    </meta_list>
+    <output_format>string</output_format>
+    <fields>
+      <field type="string"/>
+    </fields>
+  </variable>
+  <variable class="sev" name="ver_mvtools">
+    <info><![CDATA[<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN" "http://www.w3.org/TR/REC-html40/strict.dtd">
+<html><head><meta name="qrichtext" content="1" /><style type="text/css">
+p, li { white-space: pre-wrap; }
+</style></head><body style=" font-family:'Bitstream Vera Sans'; font-size:10pt; font-weight:400; font-style:normal;">
+<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">This variable defines the version for: MVTools</p></body></html>]]></info>
+    <meta_list>
+      <meta>Tool Versions</meta>
+      <meta>LCRM</meta>
+    </meta_list>
+    <output_format>string</output_format>
+    <fields>
+      <field type="string"/>
+    </fields>
+  </variable>
+  <variable class="sev" name="ver_mw">
+    <info><![CDATA[<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN" "http://www.w3.org/TR/REC-html40/strict.dtd">
+<html><head><meta name="qrichtext" content="1" /><style type="text/css">
+p, li { white-space: pre-wrap; }
+</style></head><body style=" font-family:'Bitstream Vera Sans'; font-size:10pt; font-weight:400; font-style:normal;">
+<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">This variable defines the version for: Milkyway</p></body></html>]]></info>
+    <meta_list>
+      <meta>Tool Versions</meta>
+      <meta>LCRM</meta>
+    </meta_list>
+    <output_format>string</output_format>
+    <fields>
+      <field type="string"/>
+    </fields>
+  </variable>
+  <variable class="sev" name="ver_nanosim">
+    <info><![CDATA[<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN" "http://www.w3.org/TR/REC-html40/strict.dtd">
+<html><head><meta name="qrichtext" content="1" /><style type="text/css">
+p, li { white-space: pre-wrap; }
+</style></head><body style=" font-family:'Bitstream Vera Sans'; font-size:10pt; font-weight:400; font-style:normal;">
+<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">This variable defines the version for: NanoSim</p></body></html>]]></info>
+    <meta_list>
+      <meta>Tool Versions</meta>
+      <meta>LCRM</meta>
+    </meta_list>
+    <output_format>string</output_format>
+    <fields>
+      <field type="string"/>
+    </fields>
+  </variable>
+  <variable class="sev" name="ver_nanotime">
+    <info><![CDATA[<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN" "http://www.w3.org/TR/REC-html40/strict.dtd">
+<html><head><meta name="qrichtext" content="1" /><style type="text/css">
+p, li { white-space: pre-wrap; }
+</style></head><body style=" font-family:'Bitstream Vera Sans'; font-size:10pt; font-weight:400; font-style:normal;">
+<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">This variable defines the version for: nanotime</p></body></html>]]></info>
+    <meta_list>
+      <meta>Tool Versions</meta>
+      <meta>LCRM</meta>
+    </meta_list>
+    <output_format>string</output_format>
+    <fields>
+      <field type="string"/>
+    </fields>
+  </variable>
+  <variable class="sev" name="ver_pr">
+    <info><![CDATA[<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN" "http://www.w3.org/TR/REC-html40/strict.dtd">
+<html><head><meta name="qrichtext" content="1" /><style type="text/css">
+p, li { white-space: pre-wrap; }
+</style></head><body style=" font-family:'Bitstream Vera Sans'; font-size:10pt; font-weight:400; font-style:normal;">
+<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">This variable defines the version for: Primerail</p></body></html>]]></info>
+    <meta_list>
+      <meta>Tool Versions</meta>
+      <meta>LCRM</meta>
+    </meta_list>
+    <output_format>string</output_format>
+    <fields>
+      <field type="string"/>
+    </fields>
+  </variable>
+  <variable class="sev" name="ver_pt">
+    <info><![CDATA[<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN" "http://www.w3.org/TR/REC-html40/strict.dtd">
+<html><head><meta name="qrichtext" content="1" /><style type="text/css">
+p, li { white-space: pre-wrap; }
+</style></head><body style=" font-family:'Bitstream Vera Sans'; font-size:10pt; font-weight:400; font-style:normal;">
+<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">This variable defines the version for: Primetime &amp; Galaxy Constraint Analyzer</p></body></html>]]></info>
+    <meta_list>
+      <meta>Tool Versions</meta>
+      <meta>LCRM</meta>
+    </meta_list>
+    <output_format>string</output_format>
+    <fields>
+      <field type="string"/>
+    </fields>
+  </variable>
+  <variable class="sev" name="ver_pylcc">
+    <info><![CDATA[<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN" "http://www.w3.org/TR/REC-html40/strict.dtd">
+<html><head><meta name="qrichtext" content="1" /><style type="text/css">
+p, li { white-space: pre-wrap; }
+</style></head><body style=" font-family:'Bitstream Vera Sans'; font-size:10pt; font-weight:400; font-style:normal;">
+<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">This variable defines the version for: Primeyield-LCC</p></body></html>]]></info>
+    <meta_list>
+      <meta>Tool Versions</meta>
+      <meta>LCRM</meta>
+    </meta_list>
+    <output_format>string</output_format>
+    <fields>
+      <field type="string"/>
+    </fields>
+  </variable>
+  <variable class="sev" name="ver_star">
+    <info><![CDATA[<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN" "http://www.w3.org/TR/REC-html40/strict.dtd">
+<html><head><meta name="qrichtext" content="1" /><style type="text/css">
+p, li { white-space: pre-wrap; }
+</style></head><body style=" font-family:'Bitstream Vera Sans'; font-size:10pt; font-weight:400; font-style:normal;">
+<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">This variable defines the version for: StarRCXT</p></body></html>]]></info>
+    <meta_list>
+      <meta>Tool Versions</meta>
+      <meta>LCRM</meta>
+    </meta_list>
+    <output_format>string</output_format>
+    <fields>
+      <field type="string"/>
+    </fields>
+  </variable>
+  <variable class="sev" name="ver_tcl">
+    <info><![CDATA[<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN" "http://www.w3.org/TR/REC-html40/strict.dtd">
+<html><head><meta name="qrichtext" content="1" /><style type="text/css">
+p, li { white-space: pre-wrap; }
+</style></head><body style=" font-family:'Bitstream Vera Sans'; font-size:10pt; font-weight:400; font-style:normal;">
+<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">This variable defines the version for: Tcl</p></body></html>]]></info>
+    <meta_list>
+      <meta>Tool Versions</meta>
+      <meta>LCRM</meta>
+    </meta_list>
+    <output_format>string</output_format>
+    <fields>
+      <field type="string"/>
+    </fields>
+  </variable>
+  <variable class="sev" name="ver_tx">
+    <info><![CDATA[<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN" "http://www.w3.org/TR/REC-html40/strict.dtd">
+<html><head><meta name="qrichtext" content="1" /><style type="text/css">
+p, li { white-space: pre-wrap; }
+</style></head><body style=" font-family:'Bitstream Vera Sans'; font-size:10pt; font-weight:400; font-style:normal;">
+<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">This variable defines the version for: TetraMAX</p></body></html>]]></info>
+    <meta_list>
+      <meta>Tool Versions</meta>
+      <meta>LCRM</meta>
+    </meta_list>
+    <output_format>string</output_format>
+    <fields>
+      <field type="string"/>
+    </fields>
+  </variable>
+  <variable class="sev" name="ver_vcs">
+    <info><![CDATA[<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN" "http://www.w3.org/TR/REC-html40/strict.dtd">
+<html><head><meta name="qrichtext" content="1" /><style type="text/css">
+p, li { white-space: pre-wrap; }
+</style></head><body style=" font-family:'Bitstream Vera Sans'; font-size:10pt; font-weight:400; font-style:normal;">
+<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">This variable defines the version for: VCS</p></body></html>]]></info>
+    <meta_list>
+      <meta>Tool Versions</meta>
+      <meta>LCRM</meta>
+    </meta_list>
+    <output_format>string</output_format>
+    <fields>
+      <field type="string"/>
+    </fields>
+  </variable>
+  <variable class="sev" name="ver_vcst">
+    <info><![CDATA[<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN" "http://www.w3.org/TR/REC-html40/strict.dtd">
+<html><head><meta name="qrichtext" content="1" /><style type="text/css">
+p, li { white-space: pre-wrap; }
+</style></head><body style=" font-family:'Bitstream Vera Sans'; font-size:10pt; font-weight:400; font-style:normal;">
+<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">This variable defines the version for: VC Static</p>
+<p style="-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;"><br /></p></body></html>]]></info>
+    <meta_list>
+      <meta>Tool Versions</meta>
+      <meta>LCRM</meta>
+    </meta_list>
+    <output_format>string</output_format>
+    <fields>
+      <field type="string"/>
+    </fields>
+  </variable>
+  <variable class="sev" name="ver_verdi">
+    <info><![CDATA[<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN" "http://www.w3.org/TR/REC-html40/strict.dtd">
+<html><head><meta name="qrichtext" content="1" /><style type="text/css">
+p, li { white-space: pre-wrap; }
+</style></head><body style=" font-family:'Bitstream Vera Sans'; font-size:10pt; font-weight:400; font-style:normal;">
+<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">This variable defines the version for: Verdi Suite (nAnalyzer)</p></body></html>]]></info>
+    <meta_list>
+      <meta>Tool Versions</meta>
+      <meta>LCRM</meta>
+    </meta_list>
+    <output_format>string</output_format>
+    <fields>
+      <field type="string"/>
+    </fields>
+  </variable>
+  <lib_variable name="lib,##LIB##,db_ccs_filelist,##OC_TYPE##">
+    <info><![CDATA[<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN" "http://www.w3.org/TR/REC-html40/strict.dtd">
+<html><head><meta name="qrichtext" content="1" /><style type="text/css">
+p, li { white-space: pre-wrap; }
+</style></head><body style=" font-family:'Bitstream Vera Sans'; font-size:10pt; font-weight:400; font-style:normal;">
+<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">NOTE: Not used in LCRM. Provided here to illustrate Lynx Design System capabilities.<br /><br />Liberty files of type CCS (.db format) (##OC_TYPE##)</p></body></html>]]></info>
+    <user_rule>verifyLiberty</user_rule>
+    <expansion_variable>setup,oc_types_list</expansion_variable>
+    <output_format>list</output_format>
+    <fields>
+      <field type="file" source="from_user"/>
+    </fields>
+  </lib_variable>
+  <lib_variable name="lib,##LIB##,db_nldm_filelist,##OC_TYPE##">
+    <info><![CDATA[<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN" "http://www.w3.org/TR/REC-html40/strict.dtd">
+<html><head><meta name="qrichtext" content="1" /><style type="text/css">
+p, li { white-space: pre-wrap; }
+</style></head><body style=" font-family:'Bitstream Vera Sans'; font-size:10pt; font-weight:400; font-style:normal;">
+<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">NOTE: Not used in LCRM. Provided here to illustrate Lynx Design System capabilities.<br /><br />Liberty files of type NLDM (.db format) (##OC_TYPE##)</p></body></html>]]></info>
+    <user_rule>verifyLiberty</user_rule>
+    <expansion_variable>setup,oc_types_list</expansion_variable>
+    <output_format>list</output_format>
+    <fields>
+      <field type="file" source="from_user"/>
+    </fields>
+  </lib_variable>
+  <lib_variable name="lib,##LIB##,gds_filelist">
+    <info><![CDATA[<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN" "http://www.w3.org/TR/REC-html40/strict.dtd">
+<html><head><meta name="qrichtext" content="1" /><style type="text/css">
+p, li { white-space: pre-wrap; }
+</style></head><body style=" font-family:'Bitstream Vera Sans'; font-size:10pt; font-weight:400; font-style:normal;">
+<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">NOTE: Not used in LCRM. Provided here to illustrate Lynx Design System capabilities.<br /><br />GDS file library</p></body></html>]]></info>
+    <user_rule>isFileOptional</user_rule>
+    <output_format>list</output_format>
+    <fields>
+      <field type="file" source="from_user"/>
+    </fields>
+  </lib_variable>
+  <lib_variable name="lib,##LIB##,hspice_filelist">
+    <info><![CDATA[<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN" "http://www.w3.org/TR/REC-html40/strict.dtd">
+<html><head><meta name="qrichtext" content="1" /><style type="text/css">
+p, li { white-space: pre-wrap; }
+</style></head><body style=" font-family:'Bitstream Vera Sans'; font-size:10pt; font-weight:400; font-style:normal;">
+<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">NOTE: Not used in LCRM. Provided here to illustrate Lynx Design System capabilities.<br /><br />HSPICE files</p></body></html>]]></info>
+    <user_rule>isFileRequired</user_rule>
+    <output_format>list</output_format>
+    <fields>
+      <field type="file" source="from_user"/>
+    </fields>
+  </lib_variable>
+  <lib_variable name="lib,##LIB##,lvs_filelist">
+    <info><![CDATA[<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN" "http://www.w3.org/TR/REC-html40/strict.dtd">
+<html><head><meta name="qrichtext" content="1" /><style type="text/css">
+p, li { white-space: pre-wrap; }
+</style></head><body style=" font-family:'Bitstream Vera Sans'; font-size:10pt; font-weight:400; font-style:normal;">
+<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">NOTE: Not used in LCRM. Provided here to illustrate Lynx Design System capabilities.<br /><br />LVS files</p></body></html>]]></info>
+    <user_rule>isFileRequired</user_rule>
+    <output_format>list</output_format>
+    <fields>
+      <field type="file" source="from_user"/>
+    </fields>
+  </lib_variable>
+  <lib_variable name="lib,##LIB##,mw_reflist">
+    <info><![CDATA[<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN" "http://www.w3.org/TR/REC-html40/strict.dtd">
+<html><head><meta name="qrichtext" content="1" /><style type="text/css">
+p, li { white-space: pre-wrap; }
+</style></head><body style=" font-family:'Bitstream Vera Sans'; font-size:10pt; font-weight:400; font-style:normal;">
+<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">NOTE: Not used in LCRM. Provided here to illustrate Lynx Design System capabilities.<br /><br />Milkyway Reference Libraries</p></body></html>]]></info>
+    <user_rule>isDirRequired</user_rule>
+    <output_format>list</output_format>
+    <fields>
+      <field type="directory" source="from_user"/>
+    </fields>
+  </lib_variable>
+  <lib_variable name="lib,##LIB##,use_ccs">
+    <info><![CDATA[<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN" "http://www.w3.org/TR/REC-html40/strict.dtd">
+<html><head><meta name="qrichtext" content="1" /><style type="text/css">
+p, li { white-space: pre-wrap; }
+</style></head><body style=" font-family:'Bitstream Vera Sans'; font-size:10pt; font-weight:400; font-style:normal;">
+<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">NOTE: Not used in LCRM. Provided here to illustrate Lynx Design System capabilities.<br /><br />Enable use of CCS format Liberty files.</p></body></html>]]></info>
+    <user_rule>isBoolean</user_rule>
+    <fields>
+      <field type="boolean"/>
+    </fields>
+  </lib_variable>
+  <lib_variable name="lib,##LIB##,vlog_sim_filelist">
+    <info><![CDATA[<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN" "http://www.w3.org/TR/REC-html40/strict.dtd">
+<html><head><meta name="qrichtext" content="1" /><style type="text/css">
+p, li { white-space: pre-wrap; }
+</style></head><body style=" font-family:'Bitstream Vera Sans'; font-size:10pt; font-weight:400; font-style:normal;">
+<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">NOTE: Not used in LCRM. Provided here to illustrate Lynx Design System capabilities.<br /><br />Verilog files for library cells uses for gate-level simulation.</p></body></html>]]></info>
+    <user_rule>isFileRequired</user_rule>
+    <output_format>list</output_format>
+    <fields>
+      <field type="file" source="from_user"/>
+    </fields>
+  </lib_variable>
+  <lib_variable name="lib,##LIB##,vlog_tmax_filelist">
+    <info><![CDATA[<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN" "http://www.w3.org/TR/REC-html40/strict.dtd">
+<html><head><meta name="qrichtext" content="1" /><style type="text/css">
+p, li { white-space: pre-wrap; }
+</style></head><body style=" font-family:'Bitstream Vera Sans'; font-size:10pt; font-weight:400; font-style:normal;">
+<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">NOTE: Not used in LCRM. Provided here to illustrate Lynx Design System capabilities.<br /><br />Verilog files for library cells used for ATPG with TetraMAX.</p></body></html>]]></info>
+    <user_rule>isFileRequired</user_rule>
+    <output_format>list</output_format>
+    <fields>
+      <field type="file" source="from_user"/>
+    </fields>
+  </lib_variable>
+  <variable class="svar" name="setup,mm_types_list">
+    <info><![CDATA[<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN" "http://www.w3.org/TR/REC-html40/strict.dtd">
+<html><head><meta name="qrichtext" content="1" /><style type="text/css">
+p, li { white-space: pre-wrap; }
+</style></head><body style=" font-family:'Bitstream Vera Sans'; font-size:10pt; font-weight:400; font-style:normal;">
+<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">NOTE: Not used in LCRM. Provided here to illustrate Lynx Design System capabilities.<br /><br />This variable defines the valid set of operating mode names.<br />These names, which are arbitrary strings, provide<br />convenient handles for specifying operating modes.<br />These variables must use characters that are alpha/numeric/underscore only.<br />Examples: normal, lowpower, standby, test, etc.</p></body></html>]]></info>
+    <user_rule>isSimpleStringRequired</user_rule>
+    <meta_list>
+      <meta>Auto Variable Expansion</meta>
+    </meta_list>
+    <output_format>list</output_format>
+    <save_option>common_only</save_option>
+    <list_must_be_unique>1</list_must_be_unique>
+    <fields>
+      <field type="string" source="from_user"/>
+    </fields>
+  </variable>
+  <variable class="svar" name="tag_01">
+    <info><![CDATA[<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN" "http://www.w3.org/TR/REC-html40/strict.dtd">
+<html><head><meta name="qrichtext" content="1" /><style type="text/css">
+p, li { white-space: pre-wrap; }
+</style></head><body style=" font-family:'Bitstream Vera Sans'; font-size:10pt; font-weight:400; font-style:normal;">
+<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">This is one of the 20 tag metrics which are useful for grouping metrics across the</p>
+<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">flow. Add strings that can then be used when filtering in Management Cockpit.</p>
+<p style="-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;"><br /></p>
+<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;"><span style=" font-weight:600; color:#0000ff;">LCRM</span><span style=" color:#0000ff;"> users can use </span><span style=" font-weight:600; color:#0000ff;">TAGs</span><span style=" color:#0000ff;"> but they must be set in the </span><span style=" font-style:italic; text-decoration: underline; color:#0000ff;">block</span><span style=" color:#0000ff;"> variables to be</span></p>
+<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;"><span style=" color:#0000ff;">honored, </span><span style=" font-style:italic; text-decoration: underline; color:#0000ff;">not the common</span><span style=" color:#0000ff;">.</span></p></body></html>]]></info>
+    <meta_list>
+      <meta>Tags</meta>
+      <meta>LCRM</meta>
+    </meta_list>
+    <output_format>string</output_format>
+    <fields>
+      <field type="string" source="from_user" name="TagValue"/>
+    </fields>
+  </variable>
+  <variable class="svar" name="tag_02">
+    <info><![CDATA[<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN" "http://www.w3.org/TR/REC-html40/strict.dtd">
+<html><head><meta name="qrichtext" content="1" /><style type="text/css">
+p, li { white-space: pre-wrap; }
+</style></head><body style=" font-family:'Bitstream Vera Sans'; font-size:10pt; font-weight:400; font-style:normal;">
+<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">This is one of the 20 tag metrics which are useful for grouping metrics across the</p>
+<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">flow. Add strings that can then be used when filtering in Management Cockpit.</p>
+<p style="-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;"><br /></p>
+<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;"><span style=" font-weight:600; color:#0000ff;">LCRM</span><span style=" color:#0000ff;"> users can use </span><span style=" font-weight:600; color:#0000ff;">TAGs</span><span style=" color:#0000ff;"> but they must be set in the </span><span style=" font-style:italic; text-decoration: underline; color:#0000ff;">block</span><span style=" color:#0000ff;"> variables to be</span></p>
+<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;"><span style=" color:#0000ff;">honored, </span><span style=" font-style:italic; text-decoration: underline; color:#0000ff;">not the common</span><span style=" color:#0000ff;">.</span></p></body></html>]]></info>
+    <meta_list>
+      <meta>Tags</meta>
+      <meta>LCRM</meta>
+    </meta_list>
+    <output_format>string</output_format>
+    <fields>
+      <field type="string" source="from_user" name="TagValue"/>
+    </fields>
+  </variable>
+  <variable class="svar" name="tag_03">
+    <info><![CDATA[<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN" "http://www.w3.org/TR/REC-html40/strict.dtd">
+<html><head><meta name="qrichtext" content="1" /><style type="text/css">
+p, li { white-space: pre-wrap; }
+</style></head><body style=" font-family:'Bitstream Vera Sans'; font-size:10pt; font-weight:400; font-style:normal;">
+<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">This is one of the 20 tag metrics which are useful for grouping metrics across the</p>
+<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">flow. Add strings that can then be used when filtering in Management Cockpit.</p>
+<p style="-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;"><br /></p>
+<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;"><span style=" font-weight:600; color:#0000ff;">LCRM</span><span style=" color:#0000ff;"> users can use </span><span style=" font-weight:600; color:#0000ff;">TAGs</span><span style=" color:#0000ff;"> but they must be set in the </span><span style=" font-style:italic; text-decoration: underline; color:#0000ff;">block</span><span style=" color:#0000ff;"> variables to be</span></p>
+<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;"><span style=" color:#0000ff;">honored, </span><span style=" font-style:italic; text-decoration: underline; color:#0000ff;">not the common</span><span style=" color:#0000ff;">.</span></p></body></html>]]></info>
+    <meta_list>
+      <meta>Tags</meta>
+      <meta>LCRM</meta>
+    </meta_list>
+    <output_format>string</output_format>
+    <fields>
+      <field type="string" source="from_user" name="TagValue"/>
+    </fields>
+  </variable>
+  <variable class="svar" name="tag_04">
+    <info><![CDATA[<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN" "http://www.w3.org/TR/REC-html40/strict.dtd">
+<html><head><meta name="qrichtext" content="1" /><style type="text/css">
+p, li { white-space: pre-wrap; }
+</style></head><body style=" font-family:'Bitstream Vera Sans'; font-size:10pt; font-weight:400; font-style:normal;">
+<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">This is one of the 20 tag metrics which are useful for grouping metrics across the</p>
+<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">flow. Add strings that can then be used when filtering in Management Cockpit.</p>
+<p style="-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;"><br /></p>
+<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;"><span style=" font-weight:600; color:#0000ff;">LCRM</span><span style=" color:#0000ff;"> users can use </span><span style=" font-weight:600; color:#0000ff;">TAGs</span><span style=" color:#0000ff;"> but they must be set in the </span><span style=" font-style:italic; text-decoration: underline; color:#0000ff;">block</span><span style=" color:#0000ff;"> variables to be</span></p>
+<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;"><span style=" color:#0000ff;">honored, </span><span style=" font-style:italic; text-decoration: underline; color:#0000ff;">not the common</span><span style=" color:#0000ff;">.</span></p></body></html>]]></info>
+    <meta_list>
+      <meta>Tags</meta>
+      <meta>LCRM</meta>
+    </meta_list>
+    <output_format>string</output_format>
+    <fields>
+      <field type="string" source="from_user" name="TagValue"/>
+    </fields>
+  </variable>
+  <variable class="svar" name="tag_05">
+    <info><![CDATA[<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN" "http://www.w3.org/TR/REC-html40/strict.dtd">
+<html><head><meta name="qrichtext" content="1" /><style type="text/css">
+p, li { white-space: pre-wrap; }
+</style></head><body style=" font-family:'Bitstream Vera Sans'; font-size:10pt; font-weight:400; font-style:normal;">
+<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">This is one of the 20 tag metrics which are useful for grouping metrics across the</p>
+<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">flow. Add strings that can then be used when filtering in Management Cockpit.</p>
+<p style="-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;"><br /></p>
+<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;"><span style=" font-weight:600; color:#0000ff;">LCRM</span><span style=" color:#0000ff;"> users can use </span><span style=" font-weight:600; color:#0000ff;">TAGs</span><span style=" color:#0000ff;"> but they must be set in the </span><span style=" font-style:italic; text-decoration: underline; color:#0000ff;">block</span><span style=" color:#0000ff;"> variables to be</span></p>
+<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;"><span style=" color:#0000ff;">honored, </span><span style=" font-style:italic; text-decoration: underline; color:#0000ff;">not the common</span><span style=" color:#0000ff;">.</span></p></body></html>]]></info>
+    <meta_list>
+      <meta>Tags</meta>
+      <meta>LCRM</meta>
+    </meta_list>
+    <output_format>string</output_format>
+    <fields>
+      <field type="string" source="from_user" name="TagValue"/>
+    </fields>
+  </variable>
+  <variable class="svar" name="tag_06">
+    <info><![CDATA[<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN" "http://www.w3.org/TR/REC-html40/strict.dtd">
+<html><head><meta name="qrichtext" content="1" /><style type="text/css">
+p, li { white-space: pre-wrap; }
+</style></head><body style=" font-family:'Bitstream Vera Sans'; font-size:10pt; font-weight:400; font-style:normal;">
+<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">This is one of the 20 tag metrics which are useful for grouping metrics across the</p>
+<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">flow. Add strings that can then be used when filtering in Management Cockpit.</p>
+<p style="-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;"><br /></p>
+<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;"><span style=" font-weight:600; color:#0000ff;">LCRM</span><span style=" color:#0000ff;"> users can use </span><span style=" font-weight:600; color:#0000ff;">TAGs</span><span style=" color:#0000ff;"> but they must be set in the </span><span style=" font-style:italic; text-decoration: underline; color:#0000ff;">block</span><span style=" color:#0000ff;"> variables to be</span></p>
+<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;"><span style=" color:#0000ff;">honored, </span><span style=" font-style:italic; text-decoration: underline; color:#0000ff;">not the common</span><span style=" color:#0000ff;">.</span></p></body></html>]]></info>
+    <meta_list>
+      <meta>Tags</meta>
+      <meta>LCRM</meta>
+    </meta_list>
+    <output_format>string</output_format>
+    <fields>
+      <field type="string" source="from_user" name="TagValue"/>
+    </fields>
+  </variable>
+  <variable class="svar" name="tag_07">
+    <info><![CDATA[<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN" "http://www.w3.org/TR/REC-html40/strict.dtd">
+<html><head><meta name="qrichtext" content="1" /><style type="text/css">
+p, li { white-space: pre-wrap; }
+</style></head><body style=" font-family:'Bitstream Vera Sans'; font-size:10pt; font-weight:400; font-style:normal;">
+<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">This is one of the 20 tag metrics which are useful for grouping metrics across the</p>
+<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">flow. Add strings that can then be used when filtering in Management Cockpit.</p>
+<p style="-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;"><br /></p>
+<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;"><span style=" font-weight:600; color:#0000ff;">LCRM</span><span style=" color:#0000ff;"> users can use </span><span style=" font-weight:600; color:#0000ff;">TAGs</span><span style=" color:#0000ff;"> but they must be set in the </span><span style=" font-style:italic; text-decoration: underline; color:#0000ff;">block</span><span style=" color:#0000ff;"> variables to be</span></p>
+<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;"><span style=" color:#0000ff;">honored, </span><span style=" font-style:italic; text-decoration: underline; color:#0000ff;">not the common</span><span style=" color:#0000ff;">.</span></p></body></html>]]></info>
+    <meta_list>
+      <meta>Tags</meta>
+      <meta>LCRM</meta>
+    </meta_list>
+    <output_format>string</output_format>
+    <fields>
+      <field type="string" source="from_user" name="TagValue"/>
+    </fields>
+  </variable>
+  <variable class="svar" name="tag_08">
+    <info><![CDATA[<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN" "http://www.w3.org/TR/REC-html40/strict.dtd">
+<html><head><meta name="qrichtext" content="1" /><style type="text/css">
+p, li { white-space: pre-wrap; }
+</style></head><body style=" font-family:'Bitstream Vera Sans'; font-size:10pt; font-weight:400; font-style:normal;">
+<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">This is one of the 20 tag metrics which are useful for grouping metrics across the</p>
+<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">flow. Add strings that can then be used when filtering in Management Cockpit.</p>
+<p style="-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;"><br /></p>
+<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;"><span style=" font-weight:600; color:#0000ff;">LCRM</span><span style=" color:#0000ff;"> users can use </span><span style=" font-weight:600; color:#0000ff;">TAGs</span><span style=" color:#0000ff;"> but they must be set in the </span><span style=" font-style:italic; text-decoration: underline; color:#0000ff;">block</span><span style=" color:#0000ff;"> variables to be</span></p>
+<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;"><span style=" color:#0000ff;">honored, </span><span style=" font-style:italic; text-decoration: underline; color:#0000ff;">not the common</span><span style=" color:#0000ff;">.</span></p></body></html>]]></info>
+    <meta_list>
+      <meta>Tags</meta>
+      <meta>LCRM</meta>
+    </meta_list>
+    <output_format>string</output_format>
+    <fields>
+      <field type="string" source="from_user" name="TagValue"/>
+    </fields>
+  </variable>
+  <variable class="svar" name="tag_09">
+    <info><![CDATA[<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN" "http://www.w3.org/TR/REC-html40/strict.dtd">
+<html><head><meta name="qrichtext" content="1" /><style type="text/css">
+p, li { white-space: pre-wrap; }
+</style></head><body style=" font-family:'Bitstream Vera Sans'; font-size:10pt; font-weight:400; font-style:normal;">
+<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">This is one of the 20 tag metrics which are useful for grouping metrics across the</p>
+<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">flow. Add strings that can then be used when filtering in Management Cockpit.</p>
+<p style="-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;"><br /></p>
+<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;"><span style=" font-weight:600; color:#0000ff;">LCRM</span><span style=" color:#0000ff;"> users can use </span><span style=" font-weight:600; color:#0000ff;">TAGs</span><span style=" color:#0000ff;"> but they must be set in the </span><span style=" font-style:italic; text-decoration: underline; color:#0000ff;">block</span><span style=" color:#0000ff;"> variables to be</span></p>
+<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;"><span style=" color:#0000ff;">honored, </span><span style=" font-style:italic; text-decoration: underline; color:#0000ff;">not the common</span><span style=" color:#0000ff;">.</span></p></body></html>]]></info>
+    <meta_list>
+      <meta>Tags</meta>
+      <meta>LCRM</meta>
+    </meta_list>
+    <output_format>string</output_format>
+    <fields>
+      <field type="string" source="from_user" name="TagValue"/>
+    </fields>
+  </variable>
+  <variable class="svar" name="tag_10">
+    <info><![CDATA[<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN" "http://www.w3.org/TR/REC-html40/strict.dtd">
+<html><head><meta name="qrichtext" content="1" /><style type="text/css">
+p, li { white-space: pre-wrap; }
+</style></head><body style=" font-family:'Bitstream Vera Sans'; font-size:10pt; font-weight:400; font-style:normal;">
+<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">This is one of the 20 tag metrics which are useful for grouping metrics across the</p>
+<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">flow. Add strings that can then be used when filtering in Management Cockpit.</p>
+<p style="-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;"><br /></p>
+<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;"><span style=" font-weight:600; color:#0000ff;">LCRM</span><span style=" color:#0000ff;"> users can use </span><span style=" font-weight:600; color:#0000ff;">TAGs</span><span style=" color:#0000ff;"> but they must be set in the </span><span style=" font-style:italic; text-decoration: underline; color:#0000ff;">block</span><span style=" color:#0000ff;"> variables to be</span></p>
+<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;"><span style=" color:#0000ff;">honored, </span><span style=" font-style:italic; text-decoration: underline; color:#0000ff;">not the common</span><span style=" color:#0000ff;">.</span></p></body></html>]]></info>
+    <meta_list>
+      <meta>Tags</meta>
+      <meta>LCRM</meta>
+    </meta_list>
+    <output_format>string</output_format>
+    <fields>
+      <field type="string" source="from_user" name="TagValue"/>
+    </fields>
+  </variable>
+  <variable class="svar" name="tag_11">
+    <info><![CDATA[<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN" "http://www.w3.org/TR/REC-html40/strict.dtd">
+<html><head><meta name="qrichtext" content="1" /><style type="text/css">
+p, li { white-space: pre-wrap; }
+</style></head><body style=" font-family:'Bitstream Vera Sans'; font-size:10pt; font-weight:400; font-style:normal;">
+<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">This is one of the 20 tag metrics which are useful for grouping metrics across the</p>
+<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">flow. Add strings that can then be used when filtering in Management Cockpit.</p>
+<p style="-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;"><br /></p>
+<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;"><span style=" font-weight:600; color:#0000ff;">LCRM</span><span style=" color:#0000ff;"> users can use </span><span style=" font-weight:600; color:#0000ff;">TAGs</span><span style=" color:#0000ff;"> but they must be set in the </span><span style=" font-style:italic; text-decoration: underline; color:#0000ff;">block</span><span style=" color:#0000ff;"> variables to be</span></p>
+<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;"><span style=" color:#0000ff;">honored, </span><span style=" font-style:italic; text-decoration: underline; color:#0000ff;">not the common</span><span style=" color:#0000ff;">.</span></p></body></html>]]></info>
+    <meta_list>
+      <meta>Tags</meta>
+      <meta>LCRM</meta>
+    </meta_list>
+    <output_format>string</output_format>
+    <fields>
+      <field type="string" source="from_user" name="TagValue"/>
+    </fields>
+  </variable>
+  <variable class="svar" name="tag_12">
+    <info><![CDATA[<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN" "http://www.w3.org/TR/REC-html40/strict.dtd">
+<html><head><meta name="qrichtext" content="1" /><style type="text/css">
+p, li { white-space: pre-wrap; }
+</style></head><body style=" font-family:'Bitstream Vera Sans'; font-size:10pt; font-weight:400; font-style:normal;">
+<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">This is one of the 20 tag metrics which are useful for grouping metrics across the</p>
+<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">flow. Add strings that can then be used when filtering in Management Cockpit.</p>
+<p style="-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;"><br /></p>
+<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;"><span style=" font-weight:600; color:#0000ff;">LCRM</span><span style=" color:#0000ff;"> users can use </span><span style=" font-weight:600; color:#0000ff;">TAGs</span><span style=" color:#0000ff;"> but they must be set in the </span><span style=" font-style:italic; text-decoration: underline; color:#0000ff;">block</span><span style=" color:#0000ff;"> variables to be</span></p>
+<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;"><span style=" color:#0000ff;">honored, </span><span style=" font-style:italic; text-decoration: underline; color:#0000ff;">not the common</span><span style=" color:#0000ff;">.</span></p></body></html>]]></info>
+    <meta_list>
+      <meta>Tags</meta>
+      <meta>LCRM</meta>
+    </meta_list>
+    <output_format>string</output_format>
+    <fields>
+      <field type="string" source="from_user" name="TagValue"/>
+    </fields>
+  </variable>
+  <variable class="svar" name="tag_13">
+    <info><![CDATA[<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN" "http://www.w3.org/TR/REC-html40/strict.dtd">
+<html><head><meta name="qrichtext" content="1" /><style type="text/css">
+p, li { white-space: pre-wrap; }
+</style></head><body style=" font-family:'Bitstream Vera Sans'; font-size:10pt; font-weight:400; font-style:normal;">
+<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">This is one of the 20 tag metrics which are useful for grouping metrics across the</p>
+<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">flow. Add strings that can then be used when filtering in Management Cockpit.</p>
+<p style="-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;"><br /></p>
+<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;"><span style=" font-weight:600; color:#0000ff;">LCRM</span><span style=" color:#0000ff;"> users can use </span><span style=" font-weight:600; color:#0000ff;">TAGs</span><span style=" color:#0000ff;"> but they must be set in the </span><span style=" font-style:italic; text-decoration: underline; color:#0000ff;">block</span><span style=" color:#0000ff;"> variables to be</span></p>
+<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;"><span style=" color:#0000ff;">honored, </span><span style=" font-style:italic; text-decoration: underline; color:#0000ff;">not the common</span><span style=" color:#0000ff;">.</span></p></body></html>]]></info>
+    <meta_list>
+      <meta>Tags</meta>
+      <meta>LCRM</meta>
+    </meta_list>
+    <output_format>string</output_format>
+    <fields>
+      <field type="string" source="from_user" name="TagValue"/>
+    </fields>
+  </variable>
+  <variable class="svar" name="tag_14">
+    <info><![CDATA[<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN" "http://www.w3.org/TR/REC-html40/strict.dtd">
+<html><head><meta name="qrichtext" content="1" /><style type="text/css">
+p, li { white-space: pre-wrap; }
+</style></head><body style=" font-family:'Bitstream Vera Sans'; font-size:10pt; font-weight:400; font-style:normal;">
+<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">This is one of the 20 tag metrics which are useful for grouping metrics across the</p>
+<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">flow. Add strings that can then be used when filtering in Management Cockpit.</p>
+<p style="-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;"><br /></p>
+<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;"><span style=" font-weight:600; color:#0000ff;">LCRM</span><span style=" color:#0000ff;"> users can use </span><span style=" font-weight:600; color:#0000ff;">TAGs</span><span style=" color:#0000ff;"> but they must be set in the </span><span style=" font-style:italic; text-decoration: underline; color:#0000ff;">block</span><span style=" color:#0000ff;"> variables to be</span></p>
+<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;"><span style=" color:#0000ff;">honored, </span><span style=" font-style:italic; text-decoration: underline; color:#0000ff;">not the common</span><span style=" color:#0000ff;">.</span></p></body></html>]]></info>
+    <meta_list>
+      <meta>Tags</meta>
+      <meta>LCRM</meta>
+    </meta_list>
+    <output_format>string</output_format>
+    <fields>
+      <field type="string" source="from_user" name="TagValue"/>
+    </fields>
+  </variable>
+  <variable class="svar" name="tag_15">
+    <info><![CDATA[<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN" "http://www.w3.org/TR/REC-html40/strict.dtd">
+<html><head><meta name="qrichtext" content="1" /><style type="text/css">
+p, li { white-space: pre-wrap; }
+</style></head><body style=" font-family:'Bitstream Vera Sans'; font-size:10pt; font-weight:400; font-style:normal;">
+<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">This is one of the 20 tag metrics which are useful for grouping metrics across the</p>
+<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">flow. Add strings that can then be used when filtering in Management Cockpit.</p>
+<p style="-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;"><br /></p>
+<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;"><span style=" font-weight:600; color:#0000ff;">LCRM</span><span style=" color:#0000ff;"> users can use </span><span style=" font-weight:600; color:#0000ff;">TAGs</span><span style=" color:#0000ff;"> but they must be set in the </span><span style=" font-style:italic; text-decoration: underline; color:#0000ff;">block</span><span style=" color:#0000ff;"> variables to be</span></p>
+<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;"><span style=" color:#0000ff;">honored, </span><span style=" font-style:italic; text-decoration: underline; color:#0000ff;">not the common</span><span style=" color:#0000ff;">.</span></p></body></html>]]></info>
+    <meta_list>
+      <meta>Tags</meta>
+      <meta>LCRM</meta>
+    </meta_list>
+    <output_format>string</output_format>
+    <fields>
+      <field type="string" source="from_user" name="TagValue"/>
+    </fields>
+  </variable>
+  <variable class="svar" name="tag_16">
+    <info><![CDATA[<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN" "http://www.w3.org/TR/REC-html40/strict.dtd">
+<html><head><meta name="qrichtext" content="1" /><style type="text/css">
+p, li { white-space: pre-wrap; }
+</style></head><body style=" font-family:'Bitstream Vera Sans'; font-size:10pt; font-weight:400; font-style:normal;">
+<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">This is one of the 20 tag metrics which are useful for grouping metrics across the</p>
+<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">flow. Add strings that can then be used when filtering in Management Cockpit.</p>
+<p style="-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;"><br /></p>
+<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;"><span style=" font-weight:600; color:#0000ff;">LCRM</span><span style=" color:#0000ff;"> users can use </span><span style=" font-weight:600; color:#0000ff;">TAGs</span><span style=" color:#0000ff;"> but they must be set in the </span><span style=" font-style:italic; text-decoration: underline; color:#0000ff;">block</span><span style=" color:#0000ff;"> variables to be</span></p>
+<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;"><span style=" color:#0000ff;">honored, </span><span style=" font-style:italic; text-decoration: underline; color:#0000ff;">not the common</span><span style=" color:#0000ff;">.</span></p></body></html>]]></info>
+    <meta_list>
+      <meta>Tags</meta>
+      <meta>LCRM</meta>
+    </meta_list>
+    <output_format>string</output_format>
+    <fields>
+      <field type="string" source="from_user" name="TagValue"/>
+    </fields>
+  </variable>
+  <variable class="svar" name="tag_17">
+    <info><![CDATA[<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN" "http://www.w3.org/TR/REC-html40/strict.dtd">
+<html><head><meta name="qrichtext" content="1" /><style type="text/css">
+p, li { white-space: pre-wrap; }
+</style></head><body style=" font-family:'Bitstream Vera Sans'; font-size:10pt; font-weight:400; font-style:normal;">
+<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">This is one of the 20 tag metrics which are useful for grouping metrics across the</p>
+<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">flow. Add strings that can then be used when filtering in Management Cockpit.</p>
+<p style="-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;"><br /></p>
+<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;"><span style=" font-weight:600; color:#0000ff;">LCRM</span><span style=" color:#0000ff;"> users can use </span><span style=" font-weight:600; color:#0000ff;">TAGs</span><span style=" color:#0000ff;"> but they must be set in the </span><span style=" font-style:italic; text-decoration: underline; color:#0000ff;">block</span><span style=" color:#0000ff;"> variables to be</span></p>
+<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;"><span style=" color:#0000ff;">honored, </span><span style=" font-style:italic; text-decoration: underline; color:#0000ff;">not the common</span><span style=" color:#0000ff;">.</span></p></body></html>]]></info>
+    <meta_list>
+      <meta>Tags</meta>
+      <meta>LCRM</meta>
+    </meta_list>
+    <output_format>string</output_format>
+    <fields>
+      <field type="string" source="from_user" name="TagValue"/>
+    </fields>
+  </variable>
+  <variable class="svar" name="tag_18">
+    <info><![CDATA[<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN" "http://www.w3.org/TR/REC-html40/strict.dtd">
+<html><head><meta name="qrichtext" content="1" /><style type="text/css">
+p, li { white-space: pre-wrap; }
+</style></head><body style=" font-family:'Bitstream Vera Sans'; font-size:10pt; font-weight:400; font-style:normal;">
+<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">This is one of the 20 tag metrics which are useful for grouping metrics across the</p>
+<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">flow. Add strings that can then be used when filtering in Management Cockpit.</p>
+<p style="-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;"><br /></p>
+<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;"><span style=" font-weight:600; color:#0000ff;">LCRM</span><span style=" color:#0000ff;"> users can use </span><span style=" font-weight:600; color:#0000ff;">TAGs</span><span style=" color:#0000ff;"> but they must be set in the </span><span style=" font-style:italic; text-decoration: underline; color:#0000ff;">block</span><span style=" color:#0000ff;"> variables to be</span></p>
+<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;"><span style=" color:#0000ff;">honored, </span><span style=" font-style:italic; text-decoration: underline; color:#0000ff;">not the common</span><span style=" color:#0000ff;">.</span></p></body></html>]]></info>
+    <meta_list>
+      <meta>Tags</meta>
+      <meta>LCRM</meta>
+    </meta_list>
+    <output_format>string</output_format>
+    <fields>
+      <field type="string" source="from_user" name="TagValue"/>
+    </fields>
+  </variable>
+  <variable class="svar" name="tag_19">
+    <info><![CDATA[<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN" "http://www.w3.org/TR/REC-html40/strict.dtd">
+<html><head><meta name="qrichtext" content="1" /><style type="text/css">
+p, li { white-space: pre-wrap; }
+</style></head><body style=" font-family:'Bitstream Vera Sans'; font-size:10pt; font-weight:400; font-style:normal;">
+<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">This is one of the 20 tag metrics which are useful for grouping metrics across the</p>
+<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">flow. Add strings that can then be used when filtering in Management Cockpit.</p>
+<p style="-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;"><br /></p>
+<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;"><span style=" font-weight:600; color:#0000ff;">LCRM</span><span style=" color:#0000ff;"> users can use </span><span style=" font-weight:600; color:#0000ff;">TAGs</span><span style=" color:#0000ff;"> but they must be set in the </span><span style=" font-style:italic; text-decoration: underline; color:#0000ff;">block</span><span style=" color:#0000ff;"> variables to be</span></p>
+<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;"><span style=" color:#0000ff;">honored, </span><span style=" font-style:italic; text-decoration: underline; color:#0000ff;">not the common</span><span style=" color:#0000ff;">.</span></p></body></html>]]></info>
+    <meta_list>
+      <meta>Tags</meta>
+      <meta>LCRM</meta>
+    </meta_list>
+    <output_format>string</output_format>
+    <fields>
+      <field type="string" source="from_user" name="TagValue"/>
+    </fields>
+  </variable>
+  <variable class="svar" name="tag_20">
+    <info><![CDATA[<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN" "http://www.w3.org/TR/REC-html40/strict.dtd">
+<html><head><meta name="qrichtext" content="1" /><style type="text/css">
+p, li { white-space: pre-wrap; }
+</style></head><body style=" font-family:'Bitstream Vera Sans'; font-size:10pt; font-weight:400; font-style:normal;">
+<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">This is one of the 20 tag metrics which are useful for grouping metrics across the</p>
+<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">flow. Add strings that can then be used when filtering in Management Cockpit.</p>
+<p style="-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;"><br /></p>
+<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;"><span style=" font-weight:600; color:#0000ff;">LCRM</span><span style=" color:#0000ff;"> users can use </span><span style=" font-weight:600; color:#0000ff;">TAGs</span><span style=" color:#0000ff;"> but they must be set in the </span><span style=" font-style:italic; text-decoration: underline; color:#0000ff;">block</span><span style=" color:#0000ff;"> variables to be</span></p>
+<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;"><span style=" color:#0000ff;">honored, </span><span style=" font-style:italic; text-decoration: underline; color:#0000ff;">not the common</span><span style=" color:#0000ff;">.</span></p></body></html>]]></info>
+    <meta_list>
+      <meta>Tags</meta>
+      <meta>LCRM</meta>
+    </meta_list>
+    <output_format>string</output_format>
+    <fields>
+      <field type="string" source="from_user" name="TagValue"/>
+    </fields>
+  </variable>
+  <variable class="svar" name="tech,nxtgrd_emf_file,##RC_TYPE##">
+    <info><![CDATA[<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN" "http://www.w3.org/TR/REC-html40/strict.dtd">
+<html><head><meta name="qrichtext" content="1" /><style type="text/css">
+p, li { white-space: pre-wrap; }
+</style></head><body style=" font-family:'Bitstream Vera Sans'; font-size:10pt; font-weight:400; font-style:normal;">
+<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">NOTE: Not used in LCRM. Provided here to illustrate Lynx Design System capabilities.<br /><br />This is the NXTGRD file for ##RC_TYPE## conditions<br />with metal fill estimation. If you do not<br />have an NXTGRD file with metal fill estimation capability,<br />simply use an NXTGRD file without metal fill estimation.</p></body></html>]]></info>
+    <user_rule>verifyStarRC</user_rule>
+    <meta_list>
+      <meta>Tech-ExtractionSetup</meta>
+    </meta_list>
+    <expansion_variable>setup,rc_types_list</expansion_variable>
+    <output_format>string</output_format>
+    <fields>
+      <field type="file" source="from_user"/>
+    </fields>
+  </variable>
+  <variable class="svar" name="tech,nxtgrd_file,##RC_TYPE##">
+    <info><![CDATA[<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN" "http://www.w3.org/TR/REC-html40/strict.dtd">
+<html><head><meta name="qrichtext" content="1" /><style type="text/css">
+p, li { white-space: pre-wrap; }
+</style></head><body style=" font-family:'Bitstream Vera Sans'; font-size:10pt; font-weight:400; font-style:normal;">
+<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">NOTE: Not used in LCRM. Provided here to illustrate Lynx Design System capabilities.<br /><br />This is the NXTGRD file for ##RC_TYPE## conditions<br />without metal fill estimation.<br />This file should NOT perform metal fill estimation.</p></body></html>]]></info>
+    <user_rule>verifyStarRC</user_rule>
+    <meta_list>
+      <meta>Tech-ExtractionSetup</meta>
+    </meta_list>
+    <expansion_variable>setup,rc_types_list</expansion_variable>
+    <output_format>string</output_format>
+    <fields>
+      <field type="file" source="from_user"/>
+    </fields>
+  </variable>
+  <variable class="svar" name="tech,tlup_emf_file,##RC_TYPE##">
+    <info><![CDATA[<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN" "http://www.w3.org/TR/REC-html40/strict.dtd">
+<html><head><meta name="qrichtext" content="1" /><style type="text/css">
+p, li { white-space: pre-wrap; }
+</style></head><body style=" font-family:'Bitstream Vera Sans'; font-size:10pt; font-weight:400; font-style:normal;">
+<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">NOTE: Not used in LCRM. Provided here to illustrate Lynx Design System capabilities.<br /><br />This is the TLU+ file for ##RC_TYPE## conditions<br />with metal fill estimation. If you do not have a<br />TLU+ file with metal fill estimation capability,<br />simply use an TLU+ file without metal fill estimation.</p></body></html>]]></info>
+    <user_rule>verifyStarRC</user_rule>
+    <meta_list>
+      <meta>Tech-ExtractionSetup</meta>
+    </meta_list>
+    <expansion_variable>setup,rc_types_list</expansion_variable>
+    <output_format>string</output_format>
+    <fields>
+      <field type="file" source="from_user"/>
+    </fields>
+  </variable>
+  <variable class="svar" name="tech,tlup_file,##RC_TYPE##">
+    <info><![CDATA[<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN" "http://www.w3.org/TR/REC-html40/strict.dtd">
+<html><head><meta name="qrichtext" content="1" /><style type="text/css">
+p, li { white-space: pre-wrap; }
+</style></head><body style=" font-family:'Bitstream Vera Sans'; font-size:10pt; font-weight:400; font-style:normal;">
+<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">NOTE: Not used in LCRM. Provided here to illustrate Lynx Design System capabilities.<br /><br />This is the TLU+ file for ##RC_TYPE## conditions<br />without metal fill estimation.<br />This file should NOT perform metal fill estimation.</p></body></html>]]></info>
+    <user_rule>verifyStarRC</user_rule>
+    <meta_list>
+      <meta>Tech-ExtractionSetup</meta>
+    </meta_list>
+    <expansion_variable>setup,rc_types_list</expansion_variable>
+    <output_format>string</output_format>
+    <fields>
+      <field type="file" source="from_user"/>
+    </fields>
+  </variable>
+  <variable class="env" name="FM_WAIT_LICENSE">
+    <info><![CDATA[<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN" "http://www.w3.org/TR/REC-html40/strict.dtd">
+<html><head><meta name="qrichtext" content="1" /><style type="text/css">
+p, li { white-space: pre-wrap; }
+</style></head><body style=" font-family:'Bitstream Vera Sans'; font-size:10pt; font-weight:400; font-style:normal;">
+<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">Shell environment variable to enable license queuing for Formality.<br />See Solvnet for additional details.</p></body></html>]]></info>
+    <meta_list>
+      <meta>Env</meta>
+      <meta>LCRM</meta>
+    </meta_list>
+    <output_format>string</output_format>
+    <fields>
+      <field type="string"/>
+    </fields>
+  </variable>
+  <variable class="env" name="HERCULES_LICENSE_WAIT">
+    <info><![CDATA[<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN" "http://www.w3.org/TR/REC-html40/strict.dtd">
+<html><head><meta name="qrichtext" content="1" /><style type="text/css">
+p, li { white-space: pre-wrap; }
+</style></head><body style=" font-family:'Bitstream Vera Sans'; font-size:10pt; font-weight:400; font-style:normal;">
+<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">Shell environment variable to enable license queuing for ICV.</p>
+<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">See Solvnet for additional details.</p></body></html>]]></info>
+    <meta_list>
+      <meta>Env</meta>
+      <meta>LCRM</meta>
+    </meta_list>
+    <output_format>string</output_format>
+    <fields>
+      <field type="string"/>
+    </fields>
+  </variable>
+  <variable class="env" name="ICV_LICENSE_WAIT">
+    <info><![CDATA[<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN" "http://www.w3.org/TR/REC-html40/strict.dtd">
+<html><head><meta name="qrichtext" content="1" /><style type="text/css">
+p, li { white-space: pre-wrap; }
+</style></head><body style=" font-family:'Bitstream Vera Sans'; font-size:10pt; font-weight:400; font-style:normal;">
+<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">Shell environment variable to enable license queuing for ICV.</p>
+<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">See Solvnet for additional details.</p></body></html>]]></info>
+    <meta_list>
+      <meta>Env</meta>
+      <meta>LCRM</meta>
+    </meta_list>
+    <output_format>string</output_format>
+    <fields>
+      <field type="string"/>
+    </fields>
+  </variable>
+  <variable class="env" name="SNPSLMD_QUEUE">
+    <info><![CDATA[<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN" "http://www.w3.org/TR/REC-html40/strict.dtd">
+<html><head><meta name="qrichtext" content="1" /><style type="text/css">
+p, li { white-space: pre-wrap; }
+</style></head><body style=" font-family:'Bitstream Vera Sans'; font-size:10pt; font-weight:400; font-style:normal;">
+<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">Shell environment variable to enable license queuing for synopsys tools.<br />See solvNet for additional details.</p></body></html>]]></info>
+    <meta_list>
+      <meta>Env</meta>
+      <meta>LCRM</meta>
+    </meta_list>
+    <output_format>string</output_format>
+    <fields>
+      <field type="string"/>
+    </fields>
+  </variable>
+  <variable class="env" name="SNPS_MAX_QUEUETIME">
+    <info><![CDATA[<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN" "http://www.w3.org/TR/REC-html40/strict.dtd">
+<html><head><meta name="qrichtext" content="1" /><style type="text/css">
+p, li { white-space: pre-wrap; }
+</style></head><body style=" font-family:'Bitstream Vera Sans'; font-size:10pt; font-weight:400; font-style:normal;">
+<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">Shell environment variable to specify the maximum time, in seconds,</p>
+<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">to wait for a tool feature license after the tool has started.<br />See solvNet for additional details.</p></body></html>]]></info>
+    <meta_list>
+      <meta>Env</meta>
+      <meta>LCRM</meta>
+    </meta_list>
+    <output_format>string</output_format>
+    <fields>
+      <field type="string"/>
+    </fields>
+  </variable>
+  <variable class="env" name="SNPS_MAX_WAITTIME">
+    <info><![CDATA[<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN" "http://www.w3.org/TR/REC-html40/strict.dtd">
+<html><head><meta name="qrichtext" content="1" /><style type="text/css">
+p, li { white-space: pre-wrap; }
+</style></head><body style=" font-family:'Bitstream Vera Sans'; font-size:10pt; font-weight:400; font-style:normal;">
+<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">Shell environment variable to specify the maximum time,</p>
+<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">in seconds, to wait for an initial tool license.</p>
+<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">See solvNet for additional details.</p></body></html>]]></info>
+    <meta_list>
+      <meta>Env</meta>
+      <meta>LCRM</meta>
+    </meta_list>
+    <output_format>string</output_format>
+    <fields>
+      <field type="string"/>
+    </fields>
+  </variable>
+  <variable class="env" name="STARRC_LICENSE_WAIT">
+    <info><![CDATA[<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN" "http://www.w3.org/TR/REC-html40/strict.dtd">
+<html><head><meta name="qrichtext" content="1" /><style type="text/css">
+p, li { white-space: pre-wrap; }
+</style></head><body style=" font-family:'Bitstream Vera Sans'; font-size:10pt; font-weight:400; font-style:normal;">
+<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">Shell environment variable to enable license queuing for STAR.<br />See solvNet for additional details.</p></body></html>]]></info>
+    <meta_list>
+      <meta>Env</meta>
+      <meta>LCRM</meta>
+    </meta_list>
+    <output_format>string</output_format>
+    <fields>
+      <field type="string"/>
+    </fields>
+  </variable>
+</variables>
