@@ -1,0 +1,116 @@
+
+<!--
+## HEADER $Id: //sps/flow/ds/scripts_global/conf/global_error_checks.xml#62 $
+## HEADER_MSG    Lynx Design System: Production Flow
+## HEADER_MSG    Version 2015.06-SP1
+## HEADER_MSG    Copyright (c) 2015 Synopsys
+## HEADER_MSG    Perforce Label: lynx_flow_2015.06-SP1
+## HEADER_MSG 
+-->
+<global_error_checks>
+  <global_error_check>
+    <name>General Checks</name>
+    <description><![CDATA[<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN" "http://www.w3.org/TR/REC-html40/strict.dtd">
+<html><head><meta name="qrichtext" content="1" /><style type="text/css">
+p, li { white-space: pre-wrap; }
+</style></head><body style=" font-family:'Bitstream Vera Sans'; font-size:10pt; font-weight:400; font-style:normal;">
+<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">These are general checks that apply to all tasks.</p></body></html>]]></description>
+    <logfile_pattern>*.log</logfile_pattern>
+    <must_have regexp="SNPS_INFO\s*:\s*METRIC\s*\|\s*TIMESTAMP\s*SYS\.START_TIME" severity="fatal"/>
+    <must_have regexp="SNPS_INFO\s*:\s*METRIC\s*\|\s*TIMESTAMP\s*SYS\.STOP_TIME" severity="fatal"/>
+    <must_not_have regexp="^SNPS_ERROR.*sproc_xfer" severity="fatal"/>
+    <must_not_have regexp="^SNPS_ERROR" severity="error"/>
+    <must_not_have regexp="^\s*Error\s*:" severity="error"/>
+    <must_not_have regexp="^\s*ERROR\s*:" severity="error"/>
+    <must_not_have regexp="^\s*RM-Error" severity="error"/>
+    <must_not_have regexp="^\s*SCRIPT-Error\s*:" severity="error"/>
+    <must_not_have regexp="can't read &quot;.*&quot;: no such element in array" severity="error"/>
+    <must_not_have regexp="can't read &quot;.*&quot;: no such variable" severity="error"/>
+    <must_not_have regexp="wrong # args: should be" severity="error"/>
+    <must_not_have regexp="^Error: Internal licensing error number -35" severity="fatal"/>
+    <must_not_have regexp="^Release = .* Architecture = .* Program = .*" severity="fatal"/>
+    <must_allow regexp="\(CMD-041\)"/>
+    <must_allow regexp="\(CMD-013\)"/>
+    <must_not_have regexp="^Fatal" severity="fatal"/>
+    <must_not_have regexp="^Error-" severity="error"/>
+    <must_not_have regexp="^[*] \[ERROR\]" severity="error"/>
+    <must_not_have regexp="invalid command name" severity="fatal"/>
+  </global_error_check>
+  <global_error_check>
+    <name>Design Compiler Only</name>
+    <description><![CDATA[<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN" "http://www.w3.org/TR/REC-html40/strict.dtd">
+<html><head><meta name="qrichtext" content="1" /><style type="text/css">
+p, li { white-space: pre-wrap; }
+</style></head><body style=" font-family:'Bitstream Vera Sans'; font-size:10pt; font-weight:400; font-style:normal;">
+<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">These checks are unique to Design Compiler</p></body></html>]]></description>
+    <logfile_pattern>*.log</logfile_pattern>
+    <tools>dc|dct|de</tools>
+    <must_not_have regexp="\(SPG-003\)" severity="error"/>
+    <must_not_have regexp="\(SPG-010\)" severity="error"/>
+    <must_not_have regexp="\(SPG-013\)" severity="error"/>
+    <must_not_have regexp="\(DCT-034\)" severity="error"/>
+    <must_not_have regexp="\(DCT-204\)" severity="error"/>
+    <must_not_have regexp=" Can not find DEF file" severity="error"/>
+  </global_error_check>
+  <global_error_check>
+    <name>IC Compiler Only</name>
+    <description><![CDATA[<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN" "http://www.w3.org/TR/REC-html40/strict.dtd">
+<html><head><meta name="qrichtext" content="1" /><style type="text/css">
+p, li { white-space: pre-wrap; }
+</style></head><body style=" font-family:'Bitstream Vera Sans'; font-size:10pt; font-weight:400; font-style:normal;">
+<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">These checks are unique to IC Compiler</p></body></html>]]></description>
+    <logfile_pattern>*.log</logfile_pattern>
+    <tools>icc</tools>
+    <must_not_have regexp="write_gds failed" severity="error"/>
+  </global_error_check>
+  <global_error_check>
+    <name>MV Tools Only</name>
+    <description><![CDATA[<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN" "http://www.w3.org/TR/REC-html40/strict.dtd">
+<html><head><meta name="qrichtext" content="1" /><style type="text/css">
+p, li { white-space: pre-wrap; }
+</style></head><body style=" font-family:'Bitstream Vera Sans'; font-size:10pt; font-weight:400; font-style:normal;">
+<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">These checks are unique to the MV tools</p></body></html>]]></description>
+    <logfile_pattern>*.log</logfile_pattern>
+    <tools>mvrc_shell|vc_static|vsi</tools>
+    <must_not_have regexp="^\s*error\s+\S+\s+\S+\s+[1-9][0-9]*" severity="error"/>
+    <must_not_have regexp=".MVRC. ERROR" severity="error"/>
+    <must_not_have regexp=".MVCMP. ERROR" severity="error"/>
+    <must_not_have regexp="\[Error\]" severity="error"/>
+    <must_not_have regexp="not supported in Golden UPF flow" severity="error"/>
+  </global_error_check>
+  <global_error_check>
+    <name>DC/ICC/PT/FM/PR</name>
+    <description><![CDATA[<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN" "http://www.w3.org/TR/REC-html40/strict.dtd">
+<html><head><meta name="qrichtext" content="1" /><style type="text/css">
+p, li { white-space: pre-wrap; }
+</style></head><body style=" font-family:'Bitstream Vera Sans'; font-size:10pt; font-weight:400; font-style:normal;">
+<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">These checks are applicable to DC, ICC, PT, FM, and PR.</p>
+<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">(general Galaxy error messages)</p></body></html>]]></description>
+    <logfile_pattern>*.log</logfile_pattern>
+    <tools>dc|dct|de|fm|icc|pr|pt|pt_dmsa</tools>
+    <must_not_have regexp="\(TRANS-4\)" severity="error"/>
+    <must_not_have regexp="\(LINK-5\)" severity="error"/>
+    <must_not_have regexp="\(LNK-005\)" severity="error"/>
+    <must_not_have regexp="\(CMD-081\)" severity="error"/>
+    <must_not_have regexp="\(UID-95\)" severity="error"/>
+    <must_not_have regexp="\(UID-1036\)" severity="error"/>
+    <must_not_have regexp="\(SEL-004\)" severity="error"/>
+    <must_not_have regexp="\(TEST-224\)" severity="error"/>
+    <must_not_have regexp="\(TEST-176\)" severity="error"/>
+    <must_not_have regexp="\(TEST-374\)" severity="error"/>
+    <must_not_have regexp="\(PWR-662\)" severity="error"/>
+    <must_not_have regexp="\(MV-160\)" severity="error"/>
+    <must_not_have regexp=" Can not find DEF file" severity="error"/>
+  </global_error_check>
+  <global_error_check>
+    <name>Leda Only</name>
+    <description><![CDATA[<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN" "http://www.w3.org/TR/REC-html40/strict.dtd">
+<html><head><meta name="qrichtext" content="1" /><style type="text/css">
+p, li { white-space: pre-wrap; }
+</style></head><body style=" font-family:'Bitstream Vera Sans'; font-size:10pt; font-weight:400; font-style:normal;">
+<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">These checks are unique for LEDA.</p></body></html>]]></description>
+    <logfile_pattern>*.log</logfile_pattern>
+    <tools>leda</tools>
+    <must_not_have regexp="\[ERROR\]" severity="error"/>
+  </global_error_check>
+</global_error_checks>

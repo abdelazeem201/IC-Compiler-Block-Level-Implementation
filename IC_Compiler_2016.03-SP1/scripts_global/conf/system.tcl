@@ -1,0 +1,453 @@
+## -----------------------------------------------------------------------------
+## HEADER $Id: //sps/flow/ds/scripts_global/conf/system.tcl#652 $
+## HEADER_MSG    Lynx Design System: Production Flow
+## HEADER_MSG    Version 2015.06-SP1
+## HEADER_MSG    Copyright (c) 2015 Synopsys
+## HEADER_MSG    Perforce Label: lynx_flow_2015.06-SP1
+## HEADER_MSG
+## -----------------------------------------------------------------------------
+## DESCRIPTION:
+## * This is the system.tcl.
+## -----------------------------------------------------------------------------
+
+## -----------------------------------------------------------------------------
+## This variable enables Advanced Resource Optimization. (ARO)
+## -----------------------------------------------------------------------------
+
+set SEV(aro_enable) "0"
+
+## -----------------------------------------------------------------------------
+## This variable defines the port on the ARO server.
+## -----------------------------------------------------------------------------
+
+set SEV(aro_port) "32223"
+
+## -----------------------------------------------------------------------------
+## This variable defines the name of the ARO server.
+## This is a machine's host name.
+## -----------------------------------------------------------------------------
+
+set SEV(aro_server) "lumen-lynx1"
+
+## -----------------------------------------------------------------------------
+## This variable defines the job distribution application that will be employed.
+## -----------------------------------------------------------------------------
+
+set SEV(job_app) "lsf"
+
+## -----------------------------------------------------------------------------
+## This variable enables job distribution.
+## -----------------------------------------------------------------------------
+
+set SEV(job_enable) "0"
+
+## -----------------------------------------------------------------------------
+## This variable can be used to provide additional controls  for job distribution functions.
+## It's function is TBD per end-user modifications.
+##
+## -----------------------------------------------------------------------------
+
+set SEV(job_misc1) "misc1"
+
+## -----------------------------------------------------------------------------
+## This variable can be used to provide additional controls  for job distribution functions.
+## It's function is TBD per end-user modifications.
+##
+## -----------------------------------------------------------------------------
+
+set SEV(job_misc2) "misc2"
+
+## -----------------------------------------------------------------------------
+## This variable can be used to provide additional controls  for job distribution functions.
+## It's function is TBD per end-user modifications.
+##
+## -----------------------------------------------------------------------------
+
+set SEV(job_misc3) "misc3"
+
+## -----------------------------------------------------------------------------
+## For LSF:
+## This variable can be used to provide additional controls  for job distribution functions.
+## It's function is TBD per end-user modifications.
+##
+## For GRD:
+## This variable specifies the name of the resource
+## which is used to specify the "number-of-cpus-per-slot".
+## -----------------------------------------------------------------------------
+
+set SEV(job_misc4) "mt"
+
+## -----------------------------------------------------------------------------
+## This variable defines job distribution options.
+## -----------------------------------------------------------------------------
+
+set SEV(job_options) ""
+
+## -----------------------------------------------------------------------------
+## This variable defines the queue name that is used for batch execution of tasks.
+## -----------------------------------------------------------------------------
+
+set SEV(job_queue_batch) "normal"
+
+## -----------------------------------------------------------------------------
+## This variable defines the queue name that is used for
+## execution of child jobs that are distributed by the primary task.
+## The child queue is expected to have a higher priority than the batch queue
+## for this job distribution feature to be effective.
+## If there is no provision for a child job queue, just leave this variable blank,
+## and the queue specified by SEV(job_queue_batch) will be used by default
+## -----------------------------------------------------------------------------
+
+set SEV(job_queue_child) "normal"
+
+## -----------------------------------------------------------------------------
+## This variable defines the queue name that is used for interactive execution of tasks.
+## -----------------------------------------------------------------------------
+
+set SEV(job_queue_interactive) "heavy-interact"
+
+## -----------------------------------------------------------------------------
+## This variable defines the queue name that is used for execution of the
+## synchronization jobs that are associated with the primary job for a task.
+## Ideally this queue should be configured to service very short jobs.
+## If one is not available, you can set to SEV(job_queue_batch).
+## -----------------------------------------------------------------------------
+
+set SEV(job_queue_sync) "short"
+
+## -----------------------------------------------------------------------------
+## This variable defines the job distribution resources.
+## Important Note:
+## Do not use square bracket characters when defining this variable!
+## If you need a "[" character, then use "((" instead.
+## If you need a "]" character, then use "))" instead.
+## LSF makes use of square bracket characters in resource specifications.
+## This causes problems in Tcl scripts, because Tcl treats square bracket
+## characters as command delimiters. Lynx makes the needed conversions.
+## -----------------------------------------------------------------------------
+
+set SEV(job_resources) "rusage((mem=4000)) select((qsci))"
+## set SEV(job_resources) "rusage((mem=4000)) select((qsci && cpuf==27.0))"
+
+## -----------------------------------------------------------------------------
+## This variable is used by the sproc_source procedure and controls log file verbosity.
+## If set to "0":
+## When sourcing all files, quiet mode is controlled by the procedure call.
+## If set to "1":
+## When sourcing standard header files, quiet mode is selected.
+## When sourcing all other files, quiet mode is controlled by the procedure call.
+## If set to "2":
+## When sourcing all files, quiet mode is selected.
+## -----------------------------------------------------------------------------
+
+set SEV(log_level) "0"
+
+## -----------------------------------------------------------------------------
+## This variable controls metric forwarding.
+## If set to "0": Metrics are not forwarded.
+## If set to "1": Metrics are forwarded.
+## Note that the MC project receving metrics must have forwarding enabled for this variable to have an effect.
+##
+##
+## -----------------------------------------------------------------------------
+
+set SEV(metrics_enable_forward) "0"
+
+## -----------------------------------------------------------------------------
+## This variable controls what metrics are present in a log file.
+## If set to "0": Only SYS metrics
+## If set to "1": All metrics
+##
+## -----------------------------------------------------------------------------
+
+set SEV(metrics_enable_generation) "1"
+
+## -----------------------------------------------------------------------------
+## This variable controls what metrics are sent from the RTM to the MC.
+## If set to "0": No metrics sent
+## If set to "1": Only SYS metrics sent
+## If set to "2": All metrics sent
+##
+## -----------------------------------------------------------------------------
+
+set SEV(metrics_enable_transfer) "2"
+
+## -----------------------------------------------------------------------------
+## When this variable is set to "1", a task will fail if
+## there are any Metrics or Metrics Server errors.
+## -----------------------------------------------------------------------------
+
+set SEV(metrics_flag_errors) "1"
+
+## -----------------------------------------------------------------------------
+## This variable defines the port on the metrics database server.
+## -----------------------------------------------------------------------------
+
+set SEV(metrics_port) "32222"
+
+## -----------------------------------------------------------------------------
+## This variable defines the name of the metrics database server.
+## This is a machine's host name.
+## -----------------------------------------------------------------------------
+
+set SEV(metrics_server) "lumen-lynx3"
+
+## -----------------------------------------------------------------------------
+## This variable defines the project directory.
+## -----------------------------------------------------------------------------
+
+set SEV(project_dir) "NULL"
+
+## -----------------------------------------------------------------------------
+## This variable defines the project name.
+## It is also used to identify the project in job distribution and in metrics processing.
+## -----------------------------------------------------------------------------
+
+set SEV(project_name) "lcrm"
+
+## -----------------------------------------------------------------------------
+## This variable defines the project's "publish" directory.
+## -----------------------------------------------------------------------------
+
+set SEV(publish_dir) "/global/lynx_home/PUBLISH/Lynx"
+
+## -----------------------------------------------------------------------------
+## This variable defines the revision control system to be used.
+## -----------------------------------------------------------------------------
+
+set SEV(rc_method) "none"
+
+## -----------------------------------------------------------------------------
+## This variable defines the release directory.
+## -----------------------------------------------------------------------------
+
+set SEV(release_dir) "NULL"
+
+## -----------------------------------------------------------------------------
+## This variable defines the snapshot directory.
+##
+## The snapshot directory can be used to store "snapshots" of QoR viewer data. The RTM procedure "rtm_send_snapshot" is used to transfer the data to the snapshot directory.
+## -----------------------------------------------------------------------------
+
+set SEV(snapshot_dir) "NULL"
+
+## -----------------------------------------------------------------------------
+## This variable defines the techlib directory.
+##
+## -----------------------------------------------------------------------------
+
+set SEV(techlib_dir) "NULL"
+
+## -----------------------------------------------------------------------------
+## This variable defines the techlib name.
+## If this is a new techlib, make sure you also run Project->Create Techlib
+## -----------------------------------------------------------------------------
+
+set SEV(techlib_name) "TECH"
+
+## -----------------------------------------------------------------------------
+## This variable defines the version for: Custom Designer
+## -----------------------------------------------------------------------------
+
+set SEV(ver_cdesigner) "customdesigner/2014.12-1"
+
+## -----------------------------------------------------------------------------
+## This variable defines the version for: Design Compiler
+## -----------------------------------------------------------------------------
+
+set SEV(ver_dc) "syn/2015.06"
+
+## -----------------------------------------------------------------------------
+## This variable enables automation for tool version control.
+## -----------------------------------------------------------------------------
+
+set SEV(ver_enable) "0"
+
+## -----------------------------------------------------------------------------
+## This variable defines the version for: Formality
+## -----------------------------------------------------------------------------
+
+set SEV(ver_fm) "fm/2015.06"
+
+## -----------------------------------------------------------------------------
+## This variable defines the version for: Hercules
+## -----------------------------------------------------------------------------
+
+set SEV(ver_hercules) "hercules/2008.09-SP5-3"
+
+## -----------------------------------------------------------------------------
+## This variable defines the version for: HSpice
+## -----------------------------------------------------------------------------
+
+set SEV(ver_hspice) "hspice/2015.06"
+
+## -----------------------------------------------------------------------------
+## This variable defines the version for: IC Compiler
+## -----------------------------------------------------------------------------
+
+set SEV(ver_icc) "icc/2015.06"
+
+## -----------------------------------------------------------------------------
+## This variable defines the version for: IC Compiler2
+## -----------------------------------------------------------------------------
+
+set SEV(ver_icc2) "icc2/2015.06"
+
+## -----------------------------------------------------------------------------
+## This variable defines the version for: IC Validator
+## -----------------------------------------------------------------------------
+
+set SEV(ver_icv) "icv/2015.06-1"
+
+## -----------------------------------------------------------------------------
+## This variable defines the version for: IC Workbench
+## -----------------------------------------------------------------------------
+
+set SEV(ver_icwb) "icwbev_plus/2015.06"
+
+## -----------------------------------------------------------------------------
+## This variable defines the version for: integrator
+## -----------------------------------------------------------------------------
+
+set SEV(ver_integrator) "integrator/2015.06"
+
+## -----------------------------------------------------------------------------
+## This variable defines the version for: Leda
+## -----------------------------------------------------------------------------
+
+set SEV(ver_leda) "leda/2014.12-SP2"
+
+## -----------------------------------------------------------------------------
+## This variable defines the version for: MVTools
+## -----------------------------------------------------------------------------
+
+set SEV(ver_mvtools) "mvtools/2014.12-SP2"
+
+## -----------------------------------------------------------------------------
+## This variable defines the version for: Milkyway
+## -----------------------------------------------------------------------------
+
+set SEV(ver_mw) "mw/2015.06"
+
+## -----------------------------------------------------------------------------
+## This variable defines the version for: NanoSim
+## -----------------------------------------------------------------------------
+
+set SEV(ver_nanosim) "ns/2013.03"
+
+## -----------------------------------------------------------------------------
+## This variable defines the version for: NanoTime
+## -----------------------------------------------------------------------------
+
+set SEV(ver_nanotime) "nt/2015.06"
+
+## -----------------------------------------------------------------------------
+## This variable defines the version for: Primerail
+## -----------------------------------------------------------------------------
+
+set SEV(ver_pr) "pr/2015.06"
+
+## -----------------------------------------------------------------------------
+## This variable defines the version for: Primetime & Galaxy Constraint Analyzer
+## -----------------------------------------------------------------------------
+
+set SEV(ver_pt) "pt/2015.06"
+
+## -----------------------------------------------------------------------------
+## This variable defines the version for: Primeyield-LCC
+## -----------------------------------------------------------------------------
+
+set SEV(ver_pylcc) "pylcc/2008.09-SP4-11"
+
+## -----------------------------------------------------------------------------
+## This variable defines the version for: StarRCXT
+## -----------------------------------------------------------------------------
+
+set SEV(ver_star) "star_rcxt/2015.06"
+
+## -----------------------------------------------------------------------------
+## This variable defines the version for: Tcl
+## -----------------------------------------------------------------------------
+
+set SEV(ver_tcl) "activetcl/8.5.12"
+
+## -----------------------------------------------------------------------------
+## This variable defines the version for: TetraMAX
+## -----------------------------------------------------------------------------
+
+set SEV(ver_tx) "tx/2015.06"
+
+## -----------------------------------------------------------------------------
+## This variable defines the version for: VCS
+## -----------------------------------------------------------------------------
+
+set SEV(ver_vcs) "vcs/2014.12-SP2"
+
+## -----------------------------------------------------------------------------
+## This variable defines the version for: VC Static
+##
+## -----------------------------------------------------------------------------
+
+set SEV(ver_vcst) "vcstatic/2014.12-SP2"
+
+## -----------------------------------------------------------------------------
+## This variable defines the version for: Verdi Suite (nAnalyzer)
+## -----------------------------------------------------------------------------
+
+set SEV(ver_verdi) "verdi/2014.12-SP2"
+
+## -----------------------------------------------------------------------------
+## Shell environment variable to enable license queuing for Formality.
+## See Solvnet for additional details.
+## -----------------------------------------------------------------------------
+
+set env(FM_WAIT_LICENSE) "1"
+
+## -----------------------------------------------------------------------------
+## Shell environment variable to enable license queuing for ICV.
+## See Solvnet for additional details.
+## -----------------------------------------------------------------------------
+
+set env(HERCULES_LICENSE_WAIT) "1"
+
+## -----------------------------------------------------------------------------
+## Shell environment variable to enable license queuing for ICV.
+## See Solvnet for additional details.
+## -----------------------------------------------------------------------------
+
+set env(ICV_LICENSE_WAIT) "1"
+
+## -----------------------------------------------------------------------------
+## Shell environment variable to enable license queuing for synopsys tools.
+## See solvNet for additional details.
+## -----------------------------------------------------------------------------
+
+set env(SNPSLMD_QUEUE) "true"
+
+## -----------------------------------------------------------------------------
+## Shell environment variable to specify the maximum time, in seconds,
+## to wait for a tool feature license after the tool has started.
+## See solvNet for additional details.
+## -----------------------------------------------------------------------------
+
+set env(SNPS_MAX_QUEUETIME) "60"
+
+## -----------------------------------------------------------------------------
+## Shell environment variable to specify the maximum time,
+## in seconds, to wait for an initial tool license.
+## See solvNet for additional details.
+## -----------------------------------------------------------------------------
+
+set env(SNPS_MAX_WAITTIME) "600"
+
+## -----------------------------------------------------------------------------
+## Shell environment variable to enable license queuing for STAR.
+## See solvNet for additional details.
+## -----------------------------------------------------------------------------
+
+set env(STARRC_LICENSE_WAIT) "yes"
+
+## -----------------------------------------------------------------------------
+## End Of File
+## -----------------------------------------------------------------------------
+

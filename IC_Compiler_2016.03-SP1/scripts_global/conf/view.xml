@@ -1,0 +1,166 @@
+
+<!--
+## HEADER $Id: //sps/flow/ds/scripts_global/conf/view.xml#51 $
+## HEADER_MSG    Lynx Design System: Production Flow
+## HEADER_MSG    Version 2015.06-SP1
+## HEADER_MSG    Copyright (c) 2015 Synopsys
+## HEADER_MSG    Perforce Label: lynx_flow_2015.06-SP1
+## HEADER_MSG 
+-->
+<flow name="view_tasks">
+    <note name="note-1" title="Warning!" always_show_detail="1">
+        <text>These are VIEW TASKS only!
+
+Do not add any other type of flow object to this file.
+
+New view tasks can be created via cut &amp; paste
+of existing view tasks.</text>
+    </note>
+    <view_task name="cdesigner">
+        <step>00_view</step>
+        <script_file>$SEV(gscript_dir)/view/view_cdesigner.tcl</script_file>
+        <dst>VIEW_cdesigner</dst>
+        <tool>cdesigner</tool>
+    </view_task>
+    <view_task name="dc">
+        <step>00_view</step>
+        <script_file>$SEV(gscript_dir)/view/view_dc.tcl</script_file>
+        <dst>VIEW_dc</dst>
+        <tool>dc</tool>
+    </view_task>
+    <view_task name="dct">
+        <step>00_view</step>
+        <script_file>$SEV(gscript_dir)/view/view_dc.tcl</script_file>
+        <dst>VIEW_dct</dst>
+        <tool>dct</tool>
+    </view_task>
+    <view_task name="de">
+        <step>00_view</step>
+        <script_file>$SEV(gscript_dir)/view/view_dc.tcl</script_file>
+        <dst>VIEW_de</dst>
+        <tool>de</tool>
+    </view_task>
+    <view_task name="fm">
+        <step>00_view</step>
+        <script_file>$SEV(gscript_dir)/view/view_fm.tcl</script_file>
+        <dst>VIEW_fm</dst>
+        <tool>fm</tool>
+    </view_task>
+    <view_task name="gca">
+        <step>00_view</step>
+        <script_file>$SEV(gscript_dir)/view/view_gca.tcl</script_file>
+        <dst>VIEW_gca</dst>
+        <tool>gca</tool>
+    </view_task>
+    <view_task name="icc">
+        <step>00_view</step>
+        <script_file>$SEV(gscript_dir)/view/view_icc.tcl</script_file>
+        <dst>VIEW_icc</dst>
+        <tool>icc</tool>
+    </view_task>
+    <view_task name="icc2">
+        <step>00_view</step>
+        <script_file>$SEV(gscript_dir)/icc2/view/view_icc2.tcl</script_file>
+        <dst>VIEW_icc2</dst>
+        <tool>icc2</tool>
+    </view_task>
+    <view_task name="icc2lm">
+        <step>00_view</step>
+        <script_file>$SEV(gscript_dir)/icc2/view/view_icc2lm.tcl</script_file>
+        <dst>VIEW_icc2lm</dst>
+        <tool>icc2lm</tool>
+    </view_task>
+    <view_task name="icwb">
+        <step>00_view</step>
+        <script_file>$SEV(gscript_dir)/view/view_icwb.tcl</script_file>
+        <dst>VIEW_icwb</dst>
+        <tool>tcl_job</tool>
+        <aux_tools>icwb hercules icv</aux_tools>
+    </view_task>
+    <view_task name="leda">
+        <step>00_view</step>
+        <script_file>$SEV(gscript_dir)/view/view_leda.tcl</script_file>
+        <dst>VIEW_leda</dst>
+        <tool>leda</tool>
+    </view_task>
+    <view_task name="mw">
+        <step>00_view</step>
+        <script_file>$SEV(gscript_dir)/view/view_mw.tcl</script_file>
+        <dst>VIEW_mw</dst>
+        <tool>mw</tool>
+    </view_task>
+    <view_task name="pr">
+        <step>00_view</step>
+        <script_file>$SEV(gscript_dir)/view/view_pr.tcl</script_file>
+        <dst>VIEW_pr</dst>
+        <tool>pr</tool>
+    </view_task>
+    <view_task name="pt">
+        <step>00_view</step>
+        <script_file>$SEV(gscript_dir)/view/view_pt.tcl</script_file>
+        <dst>VIEW_pt</dst>
+        <tool>pt</tool>
+    </view_task>
+    <view_task name="pt_dmsa">
+        <step>00_view</step>
+        <script_file>$SEV(gscript_dir)/view/view_pt_dmsa.tcl</script_file>
+        <dst>VIEW_pt_dmsa</dst>
+        <tool>pt_dmsa</tool>
+    </view_task>
+    <view_task name="tcl">
+        <step>00_view</step>
+        <script_file>$SEV(gscript_dir)/view/view_tcl.tcl</script_file>
+        <dst>VIEW_tcl</dst>
+        <tool>tcl</tool>
+    </view_task>
+    <view_task name="tcl_job">
+        <step>00_view</step>
+        <script_file>$SEV(gscript_dir)/view/view_tcl.tcl</script_file>
+        <dst>VIEW_tcl_job</dst>
+        <tool>tcl_job</tool>
+    </view_task>
+    <view_task name="tx">
+        <step>00_view</step>
+        <script_file>$SEV(gscript_dir)/view/view_tx.tcl</script_file>
+        <dst>VIEW_tx</dst>
+        <tool>tx</tool>
+    </view_task>
+    <view_task name="vc_static">
+        <step>00_view</step>
+        <script_file>$SEV(gscript_dir)/view/view_vc_static.tcl</script_file>
+        <dst>VIEW_vc_static</dst>
+        <tool>tcl_job</tool>
+        <gui>1</gui>
+        <aux_tools>vc_static</aux_tools>
+    </view_task>
+    <view_task name="verdi">
+        <step>00_view</step>
+        <script_file>$SEV(gscript_dir)/view/view_verdi.tcl</script_file>
+        <dst>VIEW_verdi</dst>
+        <tool>tcl_job</tool>
+        <aux_tools>verdi</aux_tools>
+    </view_task>
+    <graph grid_width="380" grid_height="330">
+        <node name="note-1" x="190" y="70"/>
+        <node name="cdesigner" x="220" y="300"/>
+        <node name="dc" x="40" y="150"/>
+        <node name="dct" x="50" y="180"/>
+        <node name="de" x="40" y="210"/>
+        <node name="fm" x="110" y="150"/>
+        <node name="gca" x="200" y="150"/>
+        <node name="icc" x="40" y="240"/>
+        <node name="icc2" x="50" y="270"/>
+        <node name="icc2lm" x="60" y="300"/>
+        <node name="icwb" x="120" y="300"/>
+        <node name="leda" x="200" y="240"/>
+        <node name="mw" x="120" y="240"/>
+        <node name="pr" x="190" y="180"/>
+        <node name="pt" x="110" y="180"/>
+        <node name="pt_dmsa" x="130" y="210"/>
+        <node name="tcl" x="280" y="180"/>
+        <node name="tcl_job" x="300" y="150"/>
+        <node name="tx" x="190" y="210"/>
+        <node name="vc_static" x="130" y="270"/>
+        <node name="verdi" x="200" y="270"/>
+    </graph>
+</flow>

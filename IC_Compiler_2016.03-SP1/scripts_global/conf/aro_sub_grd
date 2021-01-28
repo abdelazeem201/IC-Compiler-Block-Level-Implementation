@@ -1,0 +1,299 @@
+#! /bin/sh
+## -----------------------------------------------------------------------------
+## HEADER $Id: //sps/flow/ds/scripts_global/conf/aro_sub_grd#24 $
+## HEADER_MSG    Lynx Design System: Production Flow
+## HEADER_MSG    Version 2015.06-SP1
+## HEADER_MSG    Copyright (c) 2015 Synopsys
+## HEADER_MSG    Perforce Label: lynx_flow_2015.06-SP1
+## HEADER_MSG 
+## -----------------------------------------------------------------------------
+
+## -----------------------------------------------------------------------------
+## This script supports LSF only.
+## -----------------------------------------------------------------------------
+
+## -----------------------------------------------------------------------------
+## Define the command for qsub.
+## -----------------------------------------------------------------------------
+
+real_qsub=qsub
+
+## -----------------------------------------------------------------------------
+## Define location and name of temporary files used by this script.
+## -----------------------------------------------------------------------------
+
+debug=0
+
+my_dir=`dirname $0`
+my_tcl=$my_dir/aro_opt.tcl
+
+my_pid=$$
+my_user=`whoami`
+my_host=`hostname`
+my_date=`date "+%Y_%m_%d_%H_%M_%S"`
+my_tmp=/tmp/aro-$my_user/$my_host.$my_date.$my_pid
+mkdir -p $my_tmp
+
+file_aro_opt_optimize_results=$my_tmp/aro_opt_optimize.sh
+file_aro_opt_optimize_log=$my_tmp/aro_opt_optimize.log
+
+file_aro_opt_finalize_results=$my_tmp/aro_opt_finalize.sh
+file_aro_opt_finalize_log=$my_tmp/aro_opt_finalize.log
+
+file_aro_info_wo_jobid=$my_tmp/aro_info_wo_jobid
+
+file_sub_stdout=$my_tmp/sub_stdout
+file_command_lines=$my_tmp/command_lines
+
+## -----------------------------------------------------------------------------
+## Print debugging information about the original command.
+## -----------------------------------------------------------------------------
+
+echo "Command Line Debug Information" > $file_command_lines
+echo "" >> $file_command_lines
+echo "Original command:" >> $file_command_lines
+echo "qsub $*" >> $file_command_lines
+echo "" >> $file_command_lines
+
+## -----------------------------------------------------------------------------
+## Parse out the options for:
+## - Job Name (jname)
+## - Queue Name (queue)
+## - Resources (resource)
+## - All other options for qsub will be in args_misc, except
+## - for the command to be qsub'd, which will be in args_cmd
+## -----------------------------------------------------------------------------
+
+for i in "$@" ; do
+  args_cmd=$i
+done
+
+aro_enable=1
+aro_no_opt=0
+aro_server=undefined
+aro_port=undefined
+jname=""
+resource=""
+now_val=""
+args_misc=""
+
+flag_bypass=0
+
+while [ $# -gt 0 ]
+do
+  if [ "$1" = "$args_cmd" ]
+    then
+      shift
+    else
+      case $1 in
+        -aro_enable)
+          shift
+          aro_enable=$1 ;;
+        -aro_no_opt)
+          shift
+          aro_no_opt=$1 ;;
+        -aro_server)
+          shift
+          aro_server=$1 ;;
+        -aro_port)
+          shift
+          aro_port=$1 ;;
+        -N)
+          shift
+          jname=$1 ;;
+        -l)
+          shift
+          if [ "$resource" == "" ]
+            then
+              resource=$1
+            else
+              resource="$resource $1"
+          fi ;;
+        -now)
+          shift
+          now_val=$1 ;;
+        *)
+          tmp=`echo $1 | sed 's/.* .*/ABCD_WXYZ/'`
+          if [ "$tmp" == "ABCD_WXYZ" ]
+            then
+              flag_arg_contains_spaces=1
+            else
+              flag_arg_contains_spaces=0
+          fi
+          if [ "$flag_arg_contains_spaces" = "1" ]
+            then
+              argnew=\'$1\'
+            else
+              argnew=$1
+          fi
+          args_misc="$args_misc $argnew" ;;
+      esac
+      shift
+  fi
+done
+
+if [ "$now_val" == "" ]
+  then
+    now_val=no
+fi
+
+## -----------------------------------------------------------------------------
+## Bypass processing
+## -----------------------------------------------------------------------------
+
+## -------------------------------------
+## Detect conditions for bypass
+##
+## - ARO not enabled (aro_enable)
+## - Required ARO information missing (jname)
+## - Required ARO information missing (resource)
+## - Synchronous operation specified. (need to see if Galaxy does this)
+##
+## -------------------------------------
+
+if [ "$aro_enable" == "0" ]
+  then
+    flag_bypass=1
+fi
+
+if [ "$jname" == "" ]
+  then
+    flag_bypass=1
+fi
+
+if [ "$resource" == "" ]
+  then
+    flag_bypass=1
+fi
+
+if [ "$now_val" == "yes" ]
+  then
+    flag_bypass=1
+fi
+
+## -------------------------------------
+## Run the original qsub
+## -------------------------------------
+
+if [ "$flag_bypass" == "1" ]
+  then
+    cmd="$real_qsub"
+    cmd="$cmd -now $now_val"
+    if [ "$jname" != "" ]
+      then
+        cmd="$cmd -N $jname"
+    fi
+    if [ "$resource" != "" ]
+      then
+        cmd="$cmd -l '$resource'"
+    fi
+    cmd="$cmd $args_misc '$args_cmd'"
+
+    echo "Bypass command:" >> $file_command_lines
+    echo "$cmd" >> $file_command_lines
+    echo "" >> $file_command_lines
+
+    results=`eval $cmd`
+    echo $results
+    exit
+fi
+
+## -----------------------------------------------------------------------------
+## Set the values for queue & memory.
+## -----------------------------------------------------------------------------
+
+queue=-1
+
+flag_memory=`echo $resource | sed 's/.*\(mem_free=\)[0-9]*M.*/\1/'`
+
+if [ "$flag_memory" = "mem_free=" ]
+  then
+    memory=`echo $resource | sed 's/.*mem_free=\([0-9]*\).*/\1/'`
+  else
+    memory=-1
+fi
+
+## -----------------------------------------------------------------------------
+## Call Tcl script for "optimization".
+##  - file_aro_opt_optimize_results will contain sh variable settings for new_queue & new_memory.
+##  - file_aro_info_wo_jobid will contain front-end ARO information absent the JOBID.
+## -----------------------------------------------------------------------------
+
+eval $my_tcl \
+  -function optimize \
+  -file1 $file_aro_opt_optimize_results \
+  -file2 $file_aro_info_wo_jobid \
+  -jname $jname \
+  -queue $queue \
+  -memory $memory \
+  -aro_no_opt $aro_no_opt \
+  -aro_server $aro_server \
+  -aro_port $aro_port > $file_aro_opt_optimize_log 2>&1
+
+## -----------------------------------------------------------------------------
+## Get the values for new_queue & new_memory; and debug if errors.
+## -----------------------------------------------------------------------------
+
+source $file_aro_opt_optimize_results
+
+## -----------------------------------------------------------------------------
+## Update the memory value in the resource string.
+## -----------------------------------------------------------------------------
+
+new_resource=`echo $resource | sed 's/mem_free=\([0-9]*\)/mem_free='$new_memory'/'`
+
+## -----------------------------------------------------------------------------
+## Re-assemble and run the original command.
+## -----------------------------------------------------------------------------
+
+cmd="$real_qsub"
+cmd="$cmd -now $now_val"
+if [ "$jname" != "" ]
+  then
+    cmd="$cmd -N $jname"
+fi
+if [ "$resource" != "" ]
+  then
+    cmd="$cmd -l '$new_resource'"
+fi
+cmd="$cmd $args_misc '$args_cmd'"
+
+echo "Modified command:" >> $file_command_lines
+echo "$cmd" >> $file_command_lines
+echo "" >> $file_command_lines
+
+results=`eval $cmd`
+echo $results
+echo $results > $file_sub_stdout
+
+## -----------------------------------------------------------------------------
+## Now convert the aro_tmp file into the aro_info file.
+## -----------------------------------------------------------------------------
+
+eval $my_tcl \
+  -js_type grd \
+  -function finalize \
+  -file1 $file_sub_stdout \
+  -file2 $file_aro_info_wo_jobid \
+  -file3 $file_aro_opt_finalize_results \
+  -aro_server $aro_server \
+  -aro_port $aro_port > $file_aro_opt_finalize_log 2>&1
+
+## -----------------------------------------------------------------------------
+## Debug if errors.
+## -----------------------------------------------------------------------------
+
+source $file_aro_opt_finalize_results
+
+## -----------------------------------------------------------------------------
+## Clean up
+## -----------------------------------------------------------------------------
+
+if [ "$debug" == "0" ]
+  then
+    rm -rf $my_tmp
+fi
+
+## -----------------------------------------------------------------------------
+## End of File
+## -----------------------------------------------------------------------------

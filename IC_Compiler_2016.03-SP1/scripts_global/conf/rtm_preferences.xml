@@ -1,0 +1,11 @@
+<!--
+## HEADER $Id: //sps/flow/ds/scripts_global/conf/rtm_preferences.xml#15 $
+## HEADER_MSG    Lynx Design System: Production Flow
+## HEADER_MSG    Version 2015.06-SP1
+## HEADER_MSG    Copyright (c) 2015 Synopsys
+## HEADER_MSG    Perforce Label: lynx_flow_2015.06-SP1
+## HEADER_MSG 
+-->
+
+<config name="rtm_shell">
+</config>

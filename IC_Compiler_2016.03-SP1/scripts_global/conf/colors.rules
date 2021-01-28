@@ -1,0 +1,56 @@
+{
+"*" : [
+{
+"color" : {
+"B" : 33,
+"G" : 33,
+"R" : 255,
+"Type" : "color"
+},
+"enable" : true,
+"expr" : "expr $x == $xmax",
+"order" : 2,
+"pattern" : "*",
+"type" : "Eval"
+},
+{
+"color" : {
+"B" : 33,
+"G" : 255,
+"R" : 33,
+"Type" : "color"
+},
+"enable" : true,
+"expr" : "expr $x == $xmin",
+"order" : 1,
+"pattern" : "*",
+"type" : "Eval"
+}
+],
+"Critical Path Slack" : [
+{
+"color_max" : {
+"B" : 33,
+"G" : 255,
+"R" : 33,
+"Type" : "color"
+},
+"color_mid" : {
+"B" : 33,
+"G" : 255,
+"R" : 255,
+"Type" : "color"
+},
+"color_min" : {
+"B" : 33,
+"G" : 33,
+"R" : 255,
+"Type" : "color"
+},
+"enable" : true,
+"order" : 0,
+"pattern" : "Critical Path Slack",
+"type" : "HeatMap"
+}
+]
+}
