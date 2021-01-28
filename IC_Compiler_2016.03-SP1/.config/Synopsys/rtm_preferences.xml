@@ -1,0 +1,232 @@
+
+<config name="rtm_shell">
+    <group name="rtm" version="0">
+        <!--
+          This setting is controlled by the RTM.-->
+        <setting key="gui_console" control="none" value="false"/>
+    </group>
+    <group name="edit" version="1">
+        <!--
+          This setting controls the grid style for the flow editor background.
+              'dots'   : Grid is displayed as dots.
+              'lines'  : Grid is displayed as lines.
+              'hidden' : Grid is not visible.-->
+        <setting key="flow_edit_grid_style" control="none" value="dots"/>
+        <!--
+          This setting controls the initial state of the task property editing dialog.
+              'edit_overrides_always' : Dialog always starts in override mode.
+              'edit_overrides_auto'   : Dialog starts in override mode if the task has overrides.
+              'edit_overrides_never'  : Dialog never starts in override mode.-->
+        <setting key="task_override_edit_mode" control="none" value="edit_overrides_auto"/>
+        <!--
+          This setting enables a pop-up warning when editing a global script.
+              'true'  : Enable pop-up warning.
+              'false' : Disable pop-up warning.-->
+        <setting key="global_script_edit_warning" control="none" value="true"/>
+        <!--
+          When drawing an edge to a task in the flow editor, this variable controls
+              what happens if the 'from' task's DESTINATION differs from the 'to' task's SOURCE.
+              'always_ask'           : Ask user if SOURCE should be updated.
+              'always_change_source' : Always update the SOURCE.
+              'always_keep_source'   : Always preserve the SOURCE.-->
+        <setting key="change_source_mode" control="none" value="always_ask"/>
+        <!--
+          This is an internal setting - Warning: Do Not Use.-->
+        <setting key="keep_edges" control="none" value="false"/>
+        <!--
+          This is an internal setting - Warning: Do Not Use.-->
+        <setting key="copy_overrides" control="none" value="true"/>
+    </group>
+    <group name="exec" version="0">
+        <!--
+          This setting controls the maximum number of simultaneous tasks that will be allowed during flow execution.
+              '0' : An unlimited number of tasks will be allowed.
+              'N' : A positive integer value specifying the maximum number of tasks allowed.-->
+        <setting key="rtm_task_limit" control="none" value="0"/>
+        <!--
+          This setting controls the default behavior for view task execution.
+              'true' : Add a time stamp to the name of the view task log file.
+              'false' : Do not add a time stamp to the name of the view task log file.-->
+        <setting key="add_time_stamp_for_view_tasks" control="none" value="false"/>
+        <!--
+          This setting determines the default state of execution monitor with respect to milestones.
+              'true'  : Honor tasks marked as milestones; These tasks and their parents are not considered when running a flow.
+              'false' : Ignore milestones; These tasks and their parents are considered when running a flow.-->
+        <setting key="honor_milestones_enable" control="none" value="false"/>
+        <!--
+          This settings controls pass file creation based on error checking results.
+              'no_error_no_fatals' : The pass file is created if there are no error and no fatals detected in the log file.
+              'no_fatals'          : The pass file is created if there are no fatals in the log file. (errors are allowed)
+              'always'             : The pass file is always created independent of log file contents.-->
+        <setting key="pass_file_generation_mode" control="none" value="no_error_or_fatal"/>
+        <!--
+          This setting controls how the flow responds tasks that do not produce pass files.
+              'true'  : Halt flow execution if any task fails to produce a pass file.
+              'false' : Continue flow execution where possible.-->
+        <setting key="halt_flow_if_no_pass_file" control="none" value="true"/>
+        <!--
+          This setting controls how to handle tasks that are already running when a flow is halted.
+              'true'  : Kill all running tasks.
+              'false' : Allow all running tasks to terminate normally.-->
+        <setting key="halt_flow_kill_tasks" control="none" value="false"/>
+        <!--
+          This setting enables email notifications upon flow terminations.
+              'true'  : Send email notification when flow terminates.
+              'false' : No email notification when flow terminates.
+              See rtm_notify procedure for details.-->
+        <setting key="notification_enable" control="none" value="false"/>
+        <!--
+          This setting provides an email address for flow notifications.
+              See rtm_notify procedure for details.-->
+        <setting key="notification_email" control="none" value=""/>
+        <!--
+          This setting provides misc options for flow notifications.
+              See rtm_notify procedure for details.-->
+        <setting key="notification_options" control="none" value="0"/>
+        <!--
+          This setting enables a popup notification upon flow terminations.
+              'true'  : Enable pop-up notification.
+              'false' : Disable pop-up notification.-->
+        <setting key="notification_popup_enable" control="none" value="true"/>
+    </group>
+    <group name="general" version="0">
+        <!--
+          This setting defines the application to use for viewing text files.-->
+        <setting key="viewer_app" control="none" value="./ref/tools/view.tk"/>
+        <!--
+          This setting defines the argument for opening the viewer app to a specfic line number.-->
+        <setting key="viewer_goto_line_arg" control="none" value="+#"/>
+        <!--
+          This setting defines whether or not the viewer app needs an xterm
+              'true'  : Run viewing application in an Xterm.
+              'false' : Run viewing application directly.-->
+        <setting key="viewer_uses_xterm" control="none" value="false"/>
+        <!--
+          This setting defines the application to use for editing text files.-->
+        <setting key="editor_app" control="none" value="./ref/tools/view.tk"/>
+        <!--
+          This setting defines whether or not the editor app needs an xterm
+              'true'  : Run editing application in an Xterm.
+              'false' : Run editing application directly.-->
+        <setting key="editor_uses_xterm" control="none" value="false"/>
+        <!--
+          This setting defines the argument for opening the editor app to a specfic line number.-->
+        <setting key="editor_goto_line_arg" control="none" value="+#"/>
+        <!--
+          This setting defines the application to use for viewing HTML files.-->
+        <setting key="browser_app" control="none" value="firefox"/>
+        <!--
+          This setting controls the 'style' used for the GUI.
+              Available settings are:
+                Windows
+                Motif
+                CDE
+                Plastique
+                Cleanlooks-->
+        <setting key="gui_style" control="none" value="snpslook"/>
+    </group>
+    <group name="windows" version="0">
+        <!--
+          This is an internal setting - Warning: Do Not Use.-->
+        <setting key="qor_main_view_geom" control="none" value="@ByteArray()"/>
+        <!--
+          This is an internal setting - Warning: Do Not Use.-->
+        <setting key="variable_editor_geom" control="none" value="@ByteArray()"/>
+        <!--
+          This is an internal setting - Warning: Do Not Use.-->
+        <setting key="flow_editor_geom" control="none" value="@ByteArray()"/>
+        <!--
+          This is an internal setting - Warning: Do Not Use.-->
+        <setting key="flow_editor2_geom" control="none" value="@ByteArray(\x1\xd9\xd0\xcb\0\x1\0\0\0\0\x2\xfc\0\0\0\x41\0\0\x6\x7f\0\0\x3\x92\0\0\x2\xff\0\0\0W\0\0\x6|\0\0\x3\x8f\0\0\0\0\0\0)"/>
+        <!--
+          This is an internal setting - Warning: Do Not Use.-->
+        <setting key="task_props_geom" control="none" value="@ByteArray()"/>
+        <!--
+          This is an internal setting - Warning: Do Not Use.-->
+        <setting key="definitions_editor_geom" control="none" value="@ByteArray()"/>
+        <!--
+          This is an internal setting - Warning: Do Not Use.-->
+        <setting key="execution_monitor_geom" control="none" value="@ByteArray(\x1\xd9\xd0\xcb\0\x1\0\0\0\0\0\0\0\0\0\0\0\0\x4\xb5\0\0\x2p\0\0\0\x3\0\0\0\x16\0\0\x4\xb2\0\0\x2m\0\0\0\0\0\0)"/>
+        <!--
+          This is an internal setting - Warning: Do Not Use.-->
+        <setting key="qor_main_view_state" control="none" value="@ByteArray()"/>
+        <!--
+          This is an internal setting - Warning: Do Not Use.-->
+        <setting key="variable_editor_state" control="none" value="@ByteArray()"/>
+        <!--
+          This is an internal setting - Warning: Do Not Use.-->
+        <setting key="flow_editor_state" control="none" value="@ByteArray()"/>
+        <!--
+          This is an internal setting - Warning: Do Not Use.-->
+        <setting key="flow_editor2_state" control="none" value="@ByteArray()"/>
+        <!--
+          This is an internal setting - Warning: Do Not Use.-->
+        <setting key="definitions_editor_state" control="none" value="@ByteArray()"/>
+        <!--
+          This is an internal setting - Warning: Do Not Use.-->
+        <setting key="execution_monitor_state" control="none" value="@ByteArray()"/>
+    </group>
+    <group name="monitor" version="0">
+        <!--
+          This setting controls the font used by the execution monitor.-->
+        <setting key="font" control="none" value=""/>
+        <!--
+          This setting controls how the execution monitor orders rows.
+              Available settings are:
+                per_flow_order
+                per_log_timestamp
+                per_table_setup-->
+        <setting key="sort_mode" control="none" value="per_flow_order"/>
+        <!--
+          When the sort_mode is per_table_setup, this setting specifies the column to sort on.-->
+        <setting key="sort_on_column" control="none" value="step"/>
+        <!--
+          When the sort_mode is per_table_setup, this setting specifies the sort order.
+              Available settings are:
+                '0' (Ascending)
+                '1' (Descending)-->
+        <setting key="sort_on_order" control="none" value="1"/>
+        <!--
+          This setting controls which rows are displayed in the execution monitor.
+              'true'  : Only show tasks that are in the flow.
+              'false' : Show all tasks.-->
+        <setting key="show_flow_tasks_only" control="none" value="true"/>
+        <!--
+          This setting controls the column display used by the execution monitor and is for RTM use only.-->
+        <setting key="column_data" control="none" value="S\tstep\t1\t77\t1\tStep\nS\ttype\t2\t42\t1\tType\nS\ttype_name\t3\t0\t0\tType Name\nS\tmilestone\t4\t25\t1\tMilestone\nS\tshort_name\t5\t263\t1\tObject\nS\tp_status\t6\t0\t0\tPass Status\nS\tc_status\t7\t128\t1\tCombined Status\nS\tdst\t8\t149\t1\tDst\nS\tsrc\t9\t0\t0\tSrc\nS\tblock\t10\t0\t0\tBlock\nS\tlogfile_time\t11\t0\t0\tLog Time Stamp\nS\tpassfile_time\t12\t0\t0\tPass Time Stamp\nM\tmetric_0\t14\t75\t1\tFatals\tSYS.FATAL\t1\nM\tmetric_1\t15\t75\t1\tErrors\tSYS.ERROR\t1\nM\tmetric_2\t16\t75\t1\tWarnings\tINFO.WARNING\t1\nM\tmetric_3\t17\t75\t1\tIssues\tINFO.ISSUE\t1\nM\tmetric_4\t18\t75\t1\tNotes\tINFO.NOTE\t1\nM\tmetric_5\t19\t0\t0\tMETRIC_5\tMETRIC_5\t0\nM\tmetric_6\t20\t0\t0\tMETRIC_6\tMETRIC_6\t0\nM\tmetric_7\t21\t0\t0\tMETRIC_7\tMETRIC_7\t0\nM\tmetric_8\t22\t0\t0\tMETRIC_8\tMETRIC_8\t0\nM\tmetric_9\t23\t0\t0\tMETRIC_9\tMETRIC_9\t0"/>
+    </group>
+    <group name="qor_viewer" version="0">
+        <!--
+          This is an internal setting - Warning: Do Not Use.-->
+        <setting key="report_preferences" control="none" value="&quot;{\n\&quot;flow_summary_color\&quot; : false,\n\&quot;flow_summary_flip\&quot; : false,\n\&quot;flow_summary_legend\&quot; : true,\n\&quot;matrix_color\&quot; : false,\n\&quot;matrix_flip\&quot; : false,\n\&quot;matrix_legend\&quot; : true,\n\&quot;multi_block_scenario_color\&quot; : false,\n\&quot;multi_block_scenario_flip\&quot; : false,\n\&quot;multi_block_scenario_legend\&quot; : true,\n\&quot;path_browser_color\&quot; : false,\n\&quot;path_browser_flip\&quot; : false,\n\&quot;path_browser_legend\&quot; : true,\n\&quot;scenario_matrix_color\&quot; : false,\n\&quot;scenario_matrix_flip\&quot; : false,\n\&quot;scenario_matrix_legend\&quot; : true,\n\&quot;scenario_trend_color\&quot; : false,\n\&quot;scenario_trend_flip\&quot; : false,\n\&quot;scenario_trend_legend\&quot; : true,\n\&quot;table_color\&quot; : false,\n\&quot;table_flip\&quot; : false,\n\&quot;table_legend\&quot; : true\n}&quot;"/>
+    </group>
+    <group name="flow_check_config" version="0">
+        <!--
+          This flow check identifies tasks that have unrecognized tool names.
+              'error'   : Violations are treated as errors.
+              'warning' : Violations are treated as warnings.-->
+        <setting key="UnrecognizedToolName" control="none" value="Warning"/>
+        <!--
+          This flow check identifies mux tasks that do not have exactly one enabled port.
+              'error'   : Violations are treated as errors.
+              'warning' : Violations are treated as warnings.
+              'info'    : Violations are treated as information.-->
+        <setting key="OnlyOneMuxPortEnabled" control="none" value="Warning"/>
+        <!--
+          This flow check identifies tasks whose script does not exist.
+              'error'   : Violations are treated as errors.
+              'warning' : Violations are treated as warnings.-->
+        <setting key="MissingTaskScripts" control="none" value="Warning"/>
+        <!--
+          This flow check identifies task overrides in the block.xml file that are not found in the flow.xml files.
+              'error'   : Violations are treated as errors.
+              'warning' : Violations are treated as warnings.-->
+        <setting key="UnrecognizedTaskOverride" control="none" value="Warning"/>
+        <!--
+          This flow check identifies tasks with TEV variables that are not defined in the task's script.
+              'error'   : Violations are treated as errors.
+              'warning' : Violations are treated as warnings.
+              'info'    : Violations are treated as information.-->
+        <setting key="AuxTevDefined" control="none" value="Warning"/>
+    </group>
+</config>
