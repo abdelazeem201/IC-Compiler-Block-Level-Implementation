@@ -1,0 +1,12 @@
+#
+# Module setup
+#
+# To be used only on the education cluster and similar clusters
+# For all other cases, please refer to the file setup.csh
+#
+
+# Load modules
+
+module load icc/2016.03-SP1 
+module load icv/2015.12-SP2-2 
+module load lynx/2016.03 

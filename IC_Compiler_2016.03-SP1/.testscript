@@ -1,0 +1,193 @@
+#!/bin/bash
+#
+#
+# Test script for the IC Compiler Block-level Implementation workshop
+#
+###############################################################
+#
+# Check if we are supposed to perform GUI test as well
+test_gui=0
+if [[ $# == 1 ]]; then
+        if [[ "$1" == "-gui" ]]; then
+		test_gui=1
+	fi
+fi
+#
+#
+###############################################################
+
+###############################################################
+#
+#
+echo " "
+echo " ******************************************************"
+echo " Running the Synopsys Workshop Installation Test Script"
+echo " "
+echo "       Course Name:    IC Compiler Block-level Implementation"
+echo "       Course Version: 2016.03-SP1"
+echo "       Last Update:    2016-09-08"
+echo " ******************************************************"
+echo ""
+
+/bin/rm -rf .Test
+mkdir .Test
+results=".Test/results"
+echo IC Compiler Block-level Implementation Installation Test > $results
+echo >> $results
+
+LANG=C
+LC_ALL=C
+export LANG LC_ALL
+
+sha_files_pattern="ORCA_TOP ref .config scripts_global ICC-RM_J-2014.09-SP2.tar"
+sha_content_pattern="ref/design_data/* ref/SAED32_2012-12-25/tech/*/* ref/SAED32_2012-12-25/lib/std*/db*/* scripts_global/conf/*.tcl ORCA_TOP/rm_icc/tmp/Makefile ORCA_TOP/scripts_block/rm_setup/* ORCA_TOP/scripts_block/rm_icc_scripts/* ORCA_TOP/scripts_block/rm_icc_zrt_scripts/*"
+echo " Running  Test 1 - installation integrity check"
+sum=`find $sha_files_pattern -type f -follow | sort | sha1sum | awk '{print $1}'`
+if [ "$sum" = "9c46d53f9308dc299919a98a2514dfd3e7cceaaf" ]
+then
+    echo "Test 1a PASSED:   All files are installed "  >> $results
+else
+    echo "Test 1a FAILED:   There are files missing in the installation " | tee -a $results
+    echo "" | tee -a $results
+fi
+sum=`cat $sha_content_pattern | sha1sum | awk '{print $1}'`
+if [ "$sum" = "743d153f4f56ad29e8e5dd2adc7d7d285ecc57f9" ]
+then
+    echo "Test 1b PASSED:   Files are consistent"  >> $results
+else
+    echo "Test 1b FAILED:   File consistency problems found" | tee -a $results
+    echo "" | tee -a $results
+fi
+
+cd .Test
+results="./results"
+tmpout=/tmp/tmpout$$
+echo "exit" > exit.cmd
+
+echo " Running  Test 2 - testing executables"
+type icc_shell 1>$tmpout 2>&1
+if [ ! -z "`grep 'not found' $tmpout`" ]
+then
+    echo "Test 2a FAILED:   Cannot locate icc_shell executable in current search path" | tee -a $results
+else
+    location=`cat $tmpout`
+	# Now execute the tool, and check the version
+	echo "     2a  running icc_shell ..."
+	icc_shell -x exit  1>icc.log 2>&1
+	echo >> icc.log
+	ver=`grep -P 'L-2016.03-SP1(\s|\.|$)' icc.log`
+	if [ "$ver" = "" ]
+    then
+        echo "Test 2a FAILED:   wrong version: icc_shell" | tee -a $results
+		echo "  Version NEEDED: 2016.03-SP1  (L-2016.03-SP1)" >> $results
+    elif [ "`awk '/No such file/ {print "NOTHING"}' icc.log`" = "NOTHING" ]
+    then
+        echo "Test 2a FAILED:   Cannot locate icc_shell" | tee -a $results
+	else
+        echo "Test 2a PASSED:   $location" >> $results
+    fi
+fi
+
+type icv 1>$tmpout 2>&1
+if [ ! -z "`grep 'not found' $tmpout`" ]
+then
+    echo "Test 2b FAILED:   Cannot locate icv executable in current search path" | tee -a $results
+else
+    location=`cat $tmpout`
+	# Now execute the tool, and check the version
+	echo "     2b  running icv ..."
+	icv -V 1>icv.log 2>&1
+	echo >> icv.log
+	ver=`grep -P 'K-2015.12-SP2-2(\s|\.|$)' icv.log`
+	if [ "$ver" = "" ]
+    then
+        echo "Test 2b FAILED:   wrong version: icv" | tee -a $results
+		echo "  Version NEEDED: 2015.12-SP2-2  (K-2015.12-SP2-2)" >> $results
+    elif [ "`awk '/No such file/ {print "NOTHING"}' icv.log`" = "NOTHING" ]
+    then
+        echo "Test 2b FAILED:   Cannot locate icv" | tee -a $results
+	else
+        echo "Test 2b PASSED:   $location" >> $results
+    fi
+fi
+
+type rtm_shell 1>$tmpout 2>&1
+if [ ! -z "`grep 'not found' $tmpout`" ]
+then
+    echo "Test 2c FAILED:   Cannot locate rtm_shell executable in current search path" | tee -a $results
+else
+    location=`cat $tmpout`
+	# Now execute the tool, and check the version
+	echo "     2c  running rtm_shell ..."
+	rtm_shell -v 1>lynx.log 2>&1
+	echo >> lynx.log
+	ver=`grep -P 'L-2016.03(\s|\.|$)' lynx.log`
+	if [ "$ver" = "" ]
+    then
+        echo "Test 2c FAILED:   wrong version: rtm_shell" | tee -a $results
+		echo "  Version NEEDED: 2016.03  (L-2016.03)" >> $results
+    elif [ "`awk '/No such file/ {print "NOTHING"}' lynx.log`" = "NOTHING" ]
+    then
+        echo "Test 2c FAILED:   Cannot locate rtm_shell" | tee -a $results
+	else
+        echo "Test 2c PASSED:   $location" >> $results
+    fi
+fi
+
+if [ "$test_gui" = "1" ]
+then
+    echo " Running  Test 3 - testing GUIs"
+else
+    echo " Skipping Test 3 - GUI"
+fi
+# GUI tests here
+if [ "$test_gui" = "1" ]
+then
+    echo "     3a  running icc_shell in GUI mode..."
+	echo "        -> Please use the GUI to exit the tool"
+	echo "           The test is successful if you see the GUI!"
+    icc_shell -gui 
+fi
+
+# GUI tests here
+if [ "$test_gui" = "1" ]
+then
+    echo "     3b  running icv_vue in GUI mode..."
+	echo "        -> Please use the GUI to exit the tool"
+	echo "           The test is successful if you see the GUI!"
+    icv_vue 
+fi
+
+# GUI tests here
+if [ "$test_gui" = "1" ]
+then
+    echo "     3c  running rtm_shell in GUI mode..."
+	echo "        -> Please use the GUI to exit the tool"
+	echo "           The test is successful if you see the GUI!"
+    rtm_shell -gui
+fi
+
+/bin/rm -f 
+# results reporting - if grep finds 'FAIL' it returns with 0, else 1
+grep FAIL $results >& /dev/null
+if [ "$?" = "0" ]
+then
+  echo "" >> $results
+  echo "  *******************************************************" >> $results
+  echo "  * Recommended Suggestions for Corrections of FAILURES *" >> $results
+  echo "  *******************************************************" >> $results
+  echo "" >> $results
+  echo "  1. Make sure the class materials installed correctly.    " >> $results
+  echo "" >> $results
+  echo "  2. Make sure the required executables are in your path." >> $results
+  echo "" >> $results
+  echo "     Have a look at the tool log files in .Test/" >> $results
+  echo ""
+  echo " Installation Test FAILS for IC Compiler Block-level Implementation workshop" | tee -a $results
+  echo " For details execute: cat .Test/results"
+else
+  echo ""
+  echo " Installation Test PASSED for IC Compiler Block-level Implementation workshop" | tee -a $results
+  echo ""
+fi
+cd ..
