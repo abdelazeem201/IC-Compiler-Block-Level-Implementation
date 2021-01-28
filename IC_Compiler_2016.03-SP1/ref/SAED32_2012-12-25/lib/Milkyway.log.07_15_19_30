@@ -1,0 +1,88 @@
+Connection to IPC server failed.
+Starting IPC Server. (Port = 1924)
+IPC Server started successfully.
+No PseudoColor Visual avaiable, try TrueColor instead
+;; ;# Scheme
+                  Milkyway(TM)
+  Version H-2013.03-SP2 for RHEL32 -- May 28, 2013
+                                                  
+
+Linux 2.6.9-67.ELsmp #1 SMP Wed Nov 7 13:56:44 EST 2007 x86_64
+
+Host: attocs334 (IA.32)
+
+Copyright (C) 1991-2013 Synopsys, Inc. All rights reserved.
+Your use of this program is subject to the terms and conditions of
+a written license agreement between you, or your company, and Synopsys.
+Use the Tcl command "help about" for additional information about
+certain restrictions on your use of this software and its inputs and outputs.
+Install Path: /global/apps5/mw_2013.03-SP2
+
+Loading /global/apps5/mw_2013.03-SP2/etc/scheme/.avntrc
+#t
+ Info: loading setup file(s)
+Info: sourcing installation .synopsys_milkyway.tcl
+Info: sourced /global/apps5/mw_2013.03-SP2/etc/auxx/tcllib/astro/milkyway.tbc
+Initialization completed
+;; configureWindow 0 "25x24+612+447"
+;; cmMarkCellType
+;; setFormField "Mark Cell Type" "Library Name" "stdcell_hvt/milkyway/saed32nm_hvt_1p9m/"
+;; setFormField "Mark Cell Type" "Cell Name" ".HFILL.*"
+;; setFormField "Mark Cell Type" "pattern match" "1"
+;; setFormField "Mark Cell Type" "Cell Type" "std filler"
+;; formApply "Mark Cell Type"
+Marked cell SHFILL128_HVT.FRAM type as std filler.
+Marked cell SHFILL128_HVT.CEL type as std filler.
+Marked cell SHFILL1_HVT.FRAM type as std filler.
+Marked cell SHFILL1_HVT.CEL type as std filler.
+Marked cell SHFILL2_HVT.FRAM type as std filler.
+Marked cell SHFILL2_HVT.CEL type as std filler.
+Marked cell SHFILL3_HVT.FRAM type as std filler.
+Marked cell SHFILL3_HVT.CEL type as std filler.
+Marked cell SHFILL64_HVT.FRAM type as std filler.
+Marked cell SHFILL64_HVT.CEL type as std filler.
+Marked cell DHFILLH2_HVT.FRAM type as std filler.
+Marked cell DHFILLH2_HVT.CEL type as std filler.
+Marked cell DHFILLHL2_HVT.FRAM type as std filler.
+Marked cell DHFILLHL2_HVT.CEL type as std filler.
+Marked cell DHFILLHLHLS11_HVT.FRAM type as std filler.
+Marked cell DHFILLHLHLS11_HVT.CEL type as std filler.
+Updated cell type for 16 cells
+;; setFormField "Mark Cell Type" "Library Name" "stdcell_hvt/milkyway/saed32nm_lvt_1p9m/"
+;; formApply "Mark Cell Type"
+Invalid library name: Library not found.
+
+Fail to execute command
+;; setFormField "Mark Cell Type" "Library Name" "stdcell_lvt/milkyway/saed32nm_lvt_1p9m/"
+;; formApply "Mark Cell Type"
+Marked cell SHFILL128_LVT.FRAM type as std filler.
+Marked cell SHFILL128_LVT.CEL type as std filler.
+Marked cell SHFILL1_LVT.FRAM type as std filler.
+Marked cell SHFILL1_LVT.CEL type as std filler.
+Marked cell SHFILL2_LVT.FRAM type as std filler.
+Marked cell SHFILL2_LVT.CEL type as std filler.
+Marked cell SHFILL3_LVT.FRAM type as std filler.
+Marked cell SHFILL3_LVT.CEL type as std filler.
+Marked cell SHFILL64_LVT.FRAM type as std filler.
+Marked cell SHFILL64_LVT.CEL type as std filler.
+Marked cell DHFILLH2_LVT.FRAM type as std filler.
+Marked cell DHFILLH2_LVT.CEL type as std filler.
+Marked cell DHFILLHL2_LVT.FRAM type as std filler.
+Marked cell DHFILLHL2_LVT.CEL type as std filler.
+Marked cell DHFILLHLHLS11_LVT.FRAM type as std filler.
+Marked cell DHFILLHLHLS11_LVT.CEL type as std filler.
+Updated cell type for 16 cells
+;; setFormField "Mark Cell Type" "Library Name" "stdcell_rvt/milkyway/saed32nm_lvt_1p9m/"
+;; setFormField "Mark Cell Type" "Library Name" "stdcell_rvt/milkyway/saed32nm_rvt_1p9m/"
+;; formApply "Mark Cell Type"
+Invalid library name: Library not found.
+
+Fail to execute command
+;; formOK "Mark Cell Type"
+Invalid library name: Library not found.
+
+Fail to execute command
+;; formCancel "Mark Cell Type"
+;; menuQuit
+;; formYes "Dialog Box"
+Thank you for using Milkyway

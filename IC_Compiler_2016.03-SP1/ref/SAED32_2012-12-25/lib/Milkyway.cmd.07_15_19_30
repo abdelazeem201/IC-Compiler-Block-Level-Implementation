@@ -1,0 +1,19 @@
+;# Scheme
+configureWindow 0 "25x24+612+447"
+cmMarkCellType
+setFormField "Mark Cell Type" "Library Name" "stdcell_hvt/milkyway/saed32nm_hvt_1p9m/"
+setFormField "Mark Cell Type" "Cell Name" ".HFILL.*"
+setFormField "Mark Cell Type" "pattern match" "1"
+setFormField "Mark Cell Type" "Cell Type" "std filler"
+formApply "Mark Cell Type"
+setFormField "Mark Cell Type" "Library Name" "stdcell_hvt/milkyway/saed32nm_lvt_1p9m/"
+formApply "Mark Cell Type"
+setFormField "Mark Cell Type" "Library Name" "stdcell_lvt/milkyway/saed32nm_lvt_1p9m/"
+formApply "Mark Cell Type"
+setFormField "Mark Cell Type" "Library Name" "stdcell_rvt/milkyway/saed32nm_lvt_1p9m/"
+setFormField "Mark Cell Type" "Library Name" "stdcell_rvt/milkyway/saed32nm_rvt_1p9m/"
+formApply "Mark Cell Type"
+formOK "Mark Cell Type"
+formCancel "Mark Cell Type"
+menuQuit
+formYes "Dialog Box"
