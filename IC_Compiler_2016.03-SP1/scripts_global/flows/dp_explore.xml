@@ -1,0 +1,347 @@
+
+<!--
+## HEADER $Id: //sps/flow/ds/scripts_global/flows/dp_explore.xml#78 $
+## HEADER_MSG    Lynx Design System: Production Flow
+## HEADER_MSG    Version 2015.06-SP1
+## HEADER_MSG    Copyright (c) 2015 Synopsys
+## HEADER_MSG    Perforce Label: lynx_flow_2015.06-SP1
+## HEADER_MSG 
+-->
+<flow name="sf_dp_explore">
+    <note name="note-1" title="DP Explore Overview" always_show_detail="0">
+        <text>The DP Explore sub flow contains a collection of independent Galaxy based design exploration capabilities.  The following offerings are available:  
+
+Floorplan Exploration
+- RM based floorplan exploration collateral
+
+Data Flow Analysis
+- Provides the initial setup to get the design ready for interactive DFA analysis
+
+Minchip 
+- Executes the ICC estimate_fp_area feature
+
+Powerplan Exploration
+- Emerging ICC capability that simultaneously runs multiple power implementations</text>
+    </note>
+    <note name="note-2" title="Floorplan Exploration" always_show_detail="0">
+        <text>This path allows the user to perform several different design exploration scenarios.
+The runs are executed in parallel and implement different placement strategies, 
+enabling or disabling PNS, PNA, and/or IPO.  The &quot;dp_explore_summary&quot; task creates 
+an HTML page that contains key design metrics for each of the scenarios.  The HTML 
+is located in the summary task rpts directory, and can be used to aid in evaluating 
+the optimum result.</text>
+    </note>
+    <note name="note-3" title="Powerplan Exploration" always_show_detail="0">
+        <text>This path allows users to setup and run multiple power plan scenarios in parallel.  It 
+uses the ICC feature, explore_power_plan, which essentially runs TPNS plus power 
+analysis for each of the scenarios.  A summary table is created once all of the runs 
+have completed, and can be viewed in the &quot;icc_powerplan_exploration&quot; task logfile.  
+The user can then setup this scenario in the main DP flow (dp.xls), and use for the 
+design implementation.
+
+THIS CAPABILITY IS NOT FOR GENERAL USAGE AT THIS POINT.  PLEASE CONSULT 
+YOUR AC IF INTERESTED IN THIS TECHNOLOGY.  WE HAVE INTENTIONALLY DISABLED
+THIS PATH UNTIL THIS TECHNOLOGY BECOMES GENERALLY AVAILABLE.</text>
+    </note>
+    <note name="note-4" title="Data Flow Analysis" always_show_detail="0">
+        <text>This path sets up the design for interactive data flow analysis with the the ICC Data Flow 
+Analyzer.  The icc_setup_design_dfa task imports the design into ICC.  The  icc_create_floorplan_dfa 
+task initializes the design and runs an initial placement to seed the analysis.  The icc_run_interactive_dfa 
+task launches DFA and allows the user to interactively run the tool.  The usage for this path is to execute
+a &quot;run_flow&quot; for icc_create_flooplan_dfa.  You then execute a &quot;run_task&quot; for the icc_run_interactove_dfa
+task, setting the &quot;Don't exit&quot; switch.</text>
+    </note>
+    <note name="note-5" title="Minchip" always_show_detail="0">
+        <text>This path runs the &quot;estimate_fp_area&quot; feature, to evaluate the optimally sized design.  It is 
+assume that the design has been floorplanned and that all physical constraints have been
+applied.  This technology can be utilized at multiple points of floorplan maturity.  For that 
+reason, we leave it to the user to provide the source directory to run on.</text>
+    </note>
+    <tool_task name="icc_create_floorplan_dfa">
+        <step>20_dp</step>
+        <script_file>$SEV(gscript_dir)/dp/icc_create_floorplan.tcl</script_file>
+        <src>010_icc_setup_design_dfa</src>
+        <dst>020_icc_create_floorplan_dfa</dst>
+        <tool>icc</tool>
+        <variables>
+            <variable name="TEV(placement_strategy)" value="PROTO"/>
+            <variable name="TEV(spare_cell_insertion_file)" value=""/>
+            <variable name="TEV(dcap_insertion_file)" value=""/>
+            <variable name="TEV(scenario_management_file)" value="$SEV(bscript_dir)/conf/example.icc_traditional_scenario_management.tcl"/>
+            <variable name="TEV(report_level)" value="METRICS"/>
+        </variables>
+    </tool_task>
+    <tool_task name="icc_create_floorplan_pp_explore">
+        <step>20_dp</step>
+        <script_file>$SEV(gscript_dir)/dp/icc_create_floorplan.tcl</script_file>
+        <src>010_icc_setup_design_pp_explore</src>
+        <dst>020_icc_create_floorplan_pp_explore</dst>
+        <tool>icc</tool>
+        <variables>
+            <variable name="TEV(create_fp_placement_options)" value=""/>
+            <variable name="TEV(spare_cell_insertion_file)" value=""/>
+            <variable name="TEV(dcap_insertion_file)" value=""/>
+            <variable name="TEV(scenario_management_file)" value="$SEV(bscript_dir)/conf/example.icc_traditional_scenario_management.tcl"/>
+            <variable name="TEV(report_level)" value="METRICS"/>
+        </variables>
+    </tool_task>
+    <tool_task name="icc_dp_explore_0">
+        <step>20_dp</step>
+        <script_file>$SEV(gscript_dir)/dp/icc_dp_explore.tcl</script_file>
+        <src>020_icc_initialize_dp_explore</src>
+        <dst>030_icc_dp_explore_0</dst>
+        <tool>icc</tool>
+    </tool_task>
+    <tool_task name="icc_dp_explore_1">
+        <step>20_dp</step>
+        <script_file>$SEV(gscript_dir)/dp/icc_dp_explore.tcl</script_file>
+        <src>020_icc_initialize_dp_explore</src>
+        <dst>030_icc_dp_explore_1</dst>
+        <tool>icc</tool>
+        <variables>
+            <variable name="TEV(explore_name)" value="cong"/>
+            <variable name="TEV(scenario_management_file)" value="$SEV(bscript_dir)/conf/example.icc_traditional_scenario_management.tcl"/>
+        </variables>
+    </tool_task>
+    <tool_task name="icc_dp_explore_2">
+        <step>20_dp</step>
+        <script_file>$SEV(gscript_dir)/dp/icc_dp_explore.tcl</script_file>
+        <src>020_icc_initialize_dp_explore</src>
+        <dst>030_icc_dp_explore_2</dst>
+        <tool>icc</tool>
+        <variables>
+            <variable name="TEV(explore_name)" value="cong_timing"/>
+            <variable name="TEV(scenario_management_file)" value="$SEV(bscript_dir)/conf/example.icc_traditional_scenario_management.tcl"/>
+        </variables>
+    </tool_task>
+    <tool_task name="icc_dp_explore_3">
+        <step>20_dp</step>
+        <script_file>$SEV(gscript_dir)/dp/icc_dp_explore.tcl</script_file>
+        <src>020_icc_initialize_dp_explore</src>
+        <dst>030_icc_dp_explore_3</dst>
+        <tool>icc</tool>
+        <variables>
+            <variable name="TEV(explore_name)" value="macro_on_edge"/>
+            <variable name="TEV(scenario_management_file)" value="$SEV(bscript_dir)/conf/example.icc_traditional_scenario_management.tcl"/>
+        </variables>
+    </tool_task>
+    <tool_task name="icc_dp_explore_4">
+        <step>20_dp</step>
+        <script_file>$SEV(gscript_dir)/dp/icc_dp_explore.tcl</script_file>
+        <src>020_icc_initialize_dp_explore</src>
+        <dst>030_icc_dp_explore_4</dst>
+        <tool>icc</tool>
+        <variables>
+            <variable name="TEV(explore_name)" value="macro_on_edge_timing"/>
+            <variable name="TEV(scenario_management_file)" value="$SEV(bscript_dir)/conf/example.icc_traditional_scenario_management.tcl"/>
+        </variables>
+    </tool_task>
+    <tool_task name="icc_dp_explore_5">
+        <step>20_dp</step>
+        <script_file>$SEV(gscript_dir)/dp/icc_dp_explore.tcl</script_file>
+        <src>020_icc_initialize_dp_explore</src>
+        <dst>030_icc_dp_explore_5</dst>
+        <tool>icc</tool>
+        <variables>
+            <variable name="TEV(explore_name)" value="macro_on_edge_cong_timing"/>
+            <variable name="TEV(scenario_management_file)" value="$SEV(bscript_dir)/conf/example.icc_traditional_scenario_management.tcl"/>
+        </variables>
+    </tool_task>
+    <tool_task name="icc_dp_explore_6">
+        <step>20_dp</step>
+        <script_file>$SEV(gscript_dir)/dp/icc_dp_explore.tcl</script_file>
+        <src>020_icc_initialize_dp_explore</src>
+        <dst>030_icc_dp_explore_6</dst>
+        <tool>icc</tool>
+        <variables>
+            <variable name="TEV(explore_name)" value="hier_off"/>
+            <variable name="TEV(scenario_management_file)" value="$SEV(bscript_dir)/conf/example.icc_traditional_scenario_management.tcl"/>
+        </variables>
+    </tool_task>
+    <tool_task name="icc_dp_explore_7">
+        <step>20_dp</step>
+        <script_file>$SEV(gscript_dir)/dp/icc_dp_explore.tcl</script_file>
+        <src>020_icc_initialize_dp_explore</src>
+        <dst>030_icc_dp_explore_7</dst>
+        <tool>icc</tool>
+        <variables>
+            <variable name="TEV(explore_name)" value="hier_off_cong"/>
+            <variable name="TEV(scenario_management_file)" value="$SEV(bscript_dir)/conf/example.icc_traditional_scenario_management.tcl"/>
+        </variables>
+    </tool_task>
+    <tool_task name="icc_dp_explore_8">
+        <step>20_dp</step>
+        <script_file>$SEV(gscript_dir)/dp/icc_dp_explore.tcl</script_file>
+        <src>020_icc_initialize_dp_explore</src>
+        <dst>030_icc_dp_explore_8</dst>
+        <tool>icc</tool>
+        <variables>
+            <variable name="TEV(explore_name)" value="hier_off_grouping_macro_on_edge"/>
+            <variable name="TEV(scenario_management_file)" value="$SEV(bscript_dir)/conf/example.icc_traditional_scenario_management.tcl"/>
+        </variables>
+    </tool_task>
+    <tool_task name="icc_initialize_dp_explore">
+        <step>20_dp</step>
+        <script_file>$SEV(gscript_dir)/dp/icc_dp_explore_initialize.tcl</script_file>
+        <src>010_icc_setup_design_dp_explore</src>
+        <dst>020_icc_initialize_dp_explore</dst>
+        <tool>icc</tool>
+        <variables>
+            <variable name="TEV(scenario_management_file)" value="$SEV(bscript_dir)/conf/example.icc_traditional_scenario_management.tcl"/>
+        </variables>
+    </tool_task>
+    <tool_task name="icc_minchip">
+        <step>20_dp</step>
+        <script_file>$SEV(gscript_dir)/dp/icc_minchip.tcl</script_file>
+        <dst>100_icc_minchip</dst>
+        <tool>icc</tool>
+        <analysis_task>1</analysis_task>
+        <variables>
+            <variable name="TEV(scenario_management_file)" value="$SEV(bscript_dir)/conf/example.icc_traditional_scenario_management.tcl"/>
+        </variables>
+    </tool_task>
+    <tool_task name="icc_powerplan_pp_explore">
+        <step>20_dp</step>
+        <script_file>$SEV(gscript_dir)/dp/icc_power_exploration.tcl</script_file>
+        <src>020_icc_create_floorplan_pp_explore</src>
+        <dst>030_icc_powerplan_pp_explore</dst>
+        <bit>32</bit>
+        <tool>icc</tool>
+        <variables>
+            <variable name="TEV(scenario_management_file)" value="$SEV(bscript_dir)/conf/example.icc_traditional_scenario_management.tcl"/>
+        </variables>
+    </tool_task>
+    <tool_task name="icc_run_interactive_dfa">
+        <step>20_dp</step>
+        <script_file>$SEV(gscript_dir)/dp/icc_data_flow_analysis.tcl</script_file>
+        <src>020_icc_create_floorplan_dfa</src>
+        <dst>030_icc_run_interactive_dfa</dst>
+        <tool>icc</tool>
+        <variables>
+            <variable name="TEV(scenario_management_file)" value="$SEV(bscript_dir)/conf/example.icc_traditional_scenario_management.tcl"/>
+        </variables>
+    </tool_task>
+    <tool_task name="icc_setup_design_dfa">
+        <step>20_dp</step>
+        <script_file>$SEV(gscript_dir)/pnr/icc_setup_design.tcl</script_file>
+        <src>000_inputs_dfa</src>
+        <dst>010_icc_setup_design_dfa</dst>
+        <tool>icc</tool>
+        <variables>
+            <variable name="TEV(netlist_format)" value="DDC"/>
+            <variable name="TEV(scenario_management_file)" value="$SEV(bscript_dir)/conf/example.icc_traditional_scenario_management.tcl"/>
+            <variable name="TEV(pre_script)" value="$SEV(bscript_dir)/pnr/icc_clock_options.tcl"/>
+            <variable name="TEV(report_content)" value="BASIC SETTINGS"/>
+        </variables>
+    </tool_task>
+    <tool_task name="icc_setup_design_dp_explore">
+        <step>20_dp</step>
+        <script_file>$SEV(gscript_dir)/pnr/icc_setup_design.tcl</script_file>
+        <src>000_inputs_dp_explore</src>
+        <dst>010_icc_setup_design_dp_explore</dst>
+        <tool>icc</tool>
+        <variables>
+            <variable name="TEV(netlist_format)" value="DDC"/>
+            <variable name="TEV(scenario_management_file)" value="$SEV(bscript_dir)/conf/example.icc_traditional_scenario_management.tcl"/>
+            <variable name="TEV(pre_script)" value="$SEV(bscript_dir)/pnr/icc_clock_options.tcl"/>
+            <variable name="TEV(report_content)" value="BASIC SETTINGS"/>
+        </variables>
+    </tool_task>
+    <tool_task name="icc_setup_design_pp_explore">
+        <step>20_dp</step>
+        <script_file>$SEV(gscript_dir)/pnr/icc_setup_design.tcl</script_file>
+        <src>000_inputs_pp_explore</src>
+        <dst>010_icc_setup_design_pp_explore</dst>
+        <tool>icc</tool>
+        <variables>
+            <variable name="TEV(netlist_format)" value="DDC"/>
+            <variable name="TEV(scenario_management_file)" value="$SEV(bscript_dir)/conf/example.icc_traditional_scenario_management.tcl"/>
+            <variable name="TEV(pre_script)" value="$SEV(bscript_dir)/pnr/icc_clock_options.tcl"/>
+            <variable name="TEV(report_content)" value="BASIC SETTINGS"/>
+        </variables>
+    </tool_task>
+    <tool_task name="setup_dfa">
+        <step>20_dp</step>
+        <script_file>$SEV(gscript_dir)/dp/setup.tcl</script_file>
+        <dst>000_inputs_dfa</dst>
+        <tool>tcl</tool>
+        <metrics_enable_transfer>0</metrics_enable_transfer>
+    </tool_task>
+    <tool_task name="setup_dp_explore">
+        <step>20_dp</step>
+        <script_file>$SEV(gscript_dir)/dp/setup.tcl</script_file>
+        <dst>000_inputs_dp_explore</dst>
+        <tool>tcl</tool>
+        <metrics_enable_transfer>0</metrics_enable_transfer>
+    </tool_task>
+    <tool_task name="setup_pp_explore">
+        <step>20_dp</step>
+        <script_file>$SEV(gscript_dir)/dp/setup.tcl</script_file>
+        <dst>000_inputs_pp_explore</dst>
+        <tool>tcl</tool>
+        <metrics_enable_transfer>0</metrics_enable_transfer>
+    </tool_task>
+    <tool_task name="summary_dp_explore">
+        <step>20_dp</step>
+        <script_file>$SEV(gscript_dir)/dp/dp_explore_summary.tcl</script_file>
+        <src>010_icc_setup_design_dp_explore</src>
+        <dst>030_dp_explore_summary</dst>
+        <tool>tcl</tool>
+    </tool_task>
+    <edges>
+        <edge from="icc_create_floorplan_dfa" to="icc_run_interactive_dfa"/>
+        <edge from="icc_create_floorplan_pp_explore" to="icc_powerplan_pp_explore"/>
+        <edge from="icc_dp_explore_0" to="summary_dp_explore" points="31,28"/>
+        <edge from="icc_dp_explore_1" to="summary_dp_explore" points="31,32"/>
+        <edge from="icc_dp_explore_2" to="summary_dp_explore" points="31,36"/>
+        <edge from="icc_dp_explore_3" to="summary_dp_explore" points="31,40"/>
+        <edge from="icc_dp_explore_4" to="summary_dp_explore"/>
+        <edge from="icc_dp_explore_5" to="summary_dp_explore" points="31,48"/>
+        <edge from="icc_dp_explore_6" to="summary_dp_explore" points="31,52"/>
+        <edge from="icc_dp_explore_7" to="summary_dp_explore" points="31,56"/>
+        <edge from="icc_dp_explore_8" to="summary_dp_explore" points="31,60"/>
+        <edge from="icc_initialize_dp_explore" to="icc_dp_explore_0" points="13,28"/>
+        <edge from="icc_initialize_dp_explore" to="icc_dp_explore_1" points="13,32"/>
+        <edge from="icc_initialize_dp_explore" to="icc_dp_explore_2" points="13,36"/>
+        <edge from="icc_initialize_dp_explore" to="icc_dp_explore_3" points="13,40"/>
+        <edge from="icc_initialize_dp_explore" to="icc_dp_explore_4" points="13,44"/>
+        <edge from="icc_initialize_dp_explore" to="icc_dp_explore_5" points="13,48"/>
+        <edge from="icc_initialize_dp_explore" to="icc_dp_explore_6" points="13,52"/>
+        <edge from="icc_initialize_dp_explore" to="icc_dp_explore_7" points="13,56"/>
+        <edge from="icc_initialize_dp_explore" to="icc_dp_explore_8" points="13,60"/>
+        <edge from="icc_setup_design_dfa" to="icc_create_floorplan_dfa"/>
+        <edge from="icc_setup_design_dp_explore" to="icc_initialize_dp_explore"/>
+        <edge from="icc_setup_design_pp_explore" to="icc_create_floorplan_pp_explore"/>
+        <edge from="setup_dfa" to="icc_setup_design_dfa"/>
+        <edge from="setup_dp_explore" to="icc_setup_design_dp_explore"/>
+    </edges>
+    <graph grid_width="930" grid_height="630">
+        <node name="note-1" x="330" y="30"/>
+        <node name="note-2" x="140" y="80"/>
+        <node name="note-3" x="790" y="80"/>
+        <node name="note-4" x="470" y="80"/>
+        <node name="note-5" x="620" y="80"/>
+        <node name="icc_create_floorplan_dfa" x="470" y="200"/>
+        <node name="icc_create_floorplan_pp_explore" x="790" y="200"/>
+        <node name="icc_dp_explore_0" x="220" y="280"/>
+        <node name="icc_dp_explore_1" x="220" y="320"/>
+        <node name="icc_dp_explore_2" x="220" y="360"/>
+        <node name="icc_dp_explore_3" x="220" y="400"/>
+        <node name="icc_dp_explore_4" x="220" y="440"/>
+        <node name="icc_dp_explore_5" x="220" y="480"/>
+        <node name="icc_dp_explore_6" x="220" y="520"/>
+        <node name="icc_dp_explore_7" x="220" y="560"/>
+        <node name="icc_dp_explore_8" x="220" y="600"/>
+        <node name="icc_initialize_dp_explore" x="130" y="240"/>
+        <node name="icc_minchip" x="620" y="120"/>
+        <node name="icc_powerplan_pp_explore" x="790" y="240"/>
+        <node name="icc_run_interactive_dfa" x="470" y="240"/>
+        <node name="icc_setup_design_dfa" x="470" y="160"/>
+        <node name="icc_setup_design_dp_explore" x="130" y="180"/>
+        <node name="icc_setup_design_pp_explore" x="790" y="160"/>
+        <node name="setup_dfa" x="470" y="120"/>
+        <node name="setup_dp_explore" x="130" y="120"/>
+        <node name="setup_pp_explore" x="790" y="120"/>
+        <node name="summary_dp_explore" x="390" y="440"/>
+    </graph>
+</flow>

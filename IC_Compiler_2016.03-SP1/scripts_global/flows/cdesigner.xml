@@ -1,0 +1,64 @@
+
+<!--
+## HEADER $Id: //sps/flow/ds/scripts_global/flows/cdesigner.xml#54 $
+## HEADER_MSG    Lynx Design System: Production Flow
+## HEADER_MSG    Version 2015.06-SP1
+## HEADER_MSG    Copyright (c) 2015 Synopsys
+## HEADER_MSG    Perforce Label: lynx_flow_2015.06-SP1
+## HEADER_MSG 
+-->
+<flow name="sf_cdesigner">
+    <note name="note-1" title="ICC task to populate a MW for task3" always_show_detail="0">
+        <text>ICC task to populate a MW for task3</text>
+    </note>
+    <note name="object-1" title="task1 inserts keepouts into the design" always_show_detail="0">
+        <text>task1 inserts keepouts into the design</text>
+    </note>
+    <note name="object-2" title="task2 performs some CTS routing" always_show_detail="0">
+        <text>task2 performs some CTS routing</text>
+    </note>
+    <note name="object-3" title="task3 deletes blockages from task1" always_show_detail="0">
+        <text>task3 deletes blockages from task1</text>
+    </note>
+    <tool_task name="cd_test1_task1">
+        <step>20_dp</step>
+        <script_file>$SEV(gscript_dir)/cdesigner/cd_test1_task1.tcl</script_file>
+        <src>040_icc_commit</src>
+        <dst>040_icc_commit</dst>
+        <tool>cdesigner</tool>
+    </tool_task>
+    <tool_task name="cd_test1_task2">
+        <step>30_pnr</step>
+        <script_file>$SEV(gscript_dir)/cdesigner/cd_test1_task2.tcl</script_file>
+        <src>050_icc_clock_opt_psyn</src>
+        <dst>050_icc_clock_opt_psyn</dst>
+        <tool>cdesigner</tool>
+    </tool_task>
+    <tool_task name="cd_test1_task3">
+        <step>40_finish</step>
+        <script_file>$SEV(gscript_dir)/cdesigner/cd_test1_task3.tcl</script_file>
+        <src>010_icc_insert_filler_cells</src>
+        <dst>010_icc_insert_filler_cells</dst>
+        <tool>cdesigner</tool>
+    </tool_task>
+    <tool_task name="cd_test1_task3_prep">
+        <step>40_finish</step>
+        <script_file>$SEV(gscript_dir)/view/view_icc.tcl</script_file>
+        <src>000_inputs</src>
+        <dst>010_icc_insert_filler_cells</dst>
+        <tool>icc</tool>
+        <variables>
+            <variable name="TEV(restore_environmental_context)" value="0"/>
+        </variables>
+    </tool_task>
+    <graph grid_width="570" grid_height="180">
+        <node name="note-1" x="380" y="110"/>
+        <node name="object-1" x="390" y="30"/>
+        <node name="object-2" x="360" y="70"/>
+        <node name="object-3" x="380" y="150"/>
+        <node name="cd_test1_task1" x="90" y="30"/>
+        <node name="cd_test1_task2" x="90" y="70"/>
+        <node name="cd_test1_task3" x="90" y="150"/>
+        <node name="cd_test1_task3_prep" x="110" y="110"/>
+    </graph>
+</flow>

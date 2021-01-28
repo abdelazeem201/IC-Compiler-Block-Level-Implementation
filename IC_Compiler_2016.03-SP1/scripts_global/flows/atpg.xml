@@ -1,0 +1,132 @@
+
+<!--
+## HEADER $Id: //sps/flow/ds/scripts_global/flows/atpg.xml#79 $
+## HEADER_MSG    Lynx Design System: Production Flow
+## HEADER_MSG    Version 2015.06-SP1
+## HEADER_MSG    Copyright (c) 2015 Synopsys
+## HEADER_MSG    Perforce Label: lynx_flow_2015.06-SP1
+## HEADER_MSG 
+-->
+<flow name="sf_atpg">
+    <note name="note-1" title="atpg" always_show_detail="0">
+        <text>These tasks are used to perform atpg pattern generation in TetraMax. Primetime is used as required
+to configure delay and path pattern creation. VCS is used to demonstrate validation of the patterns
+in gate simulation.</text>
+    </note>
+    <join_task name="atpg_finish">
+        <step>40_finish</step>
+    </join_task>
+    <tool_task name="atpg_finish_pt">
+        <step>40_finish</step>
+        <script_file>$SEV(gscript_dir)/sta/execute_scenario.tcl</script_file>
+        <src>800_outputs</src>
+        <dst>900_outputs_atpg</dst>
+        <tool>pt</tool>
+        <analysis_task>1</analysis_task>
+        <variables>
+            <variable name="TEV(output_control)" value="SDF TMAX"/>
+        </variables>
+        <must_allow_list>
+            <must_allow regexp="PARA-075"/>
+            <must_allow regexp="DES-002"/>
+            <must_allow regexp="SEL-005"/>
+        </must_allow_list>
+    </tool_task>
+    <tool_task name="atpg_finish_tmax">
+        <step>40_finish</step>
+        <script_file>$SEV(gscript_dir)/atpg/rm_tmax.tcl</script_file>
+        <src>800_outputs</src>
+        <dst>900_outputs_atpg</dst>
+        <tool>tx</tool>
+        <analysis_task>1</analysis_task>
+        <variables>
+            <variable name="TEV(fault_dynamic_bridging)" value="1"/>
+            <variable name="TEV(fault_transition_delay)" value="1"/>
+            <variable name="TEV(fault_static_bridging)" value="1"/>
+        </variables>
+    </tool_task>
+    <tool_task name="atpg_finish_tmax2pt">
+        <step>40_finish</step>
+        <script_file>$SEV(gscript_dir)/atpg/rm_tmax.tcl</script_file>
+        <src>800_outputs</src>
+        <dst>900_outputs_atpg</dst>
+        <tool>tx</tool>
+        <analysis_task>1</analysis_task>
+        <variables>
+            <variable name="TEV(exception_flow)" value="1"/>
+            <variable name="TEV(fault_stuckat)" value="0"/>
+        </variables>
+    </tool_task>
+    <tool_task name="atpg_finish_vcs">
+        <step>40_finish</step>
+        <script_file>$SEV(gscript_dir)/atpg/atpg_finish_sim.tcl</script_file>
+        <src>800_outputs</src>
+        <dst>900_outputs_atpg</dst>
+        <tool>tcl_job</tool>
+        <analysis_task>1</analysis_task>
+        <aux_tools>tx vcs</aux_tools>
+        <must_not_have_list>
+            <must_not_have regexp="Error" severity="error"/>
+            <must_not_have regexp="ERROR" severity="error"/>
+            <must_not_have regexp="FAILED" severity="error"/>
+        </must_not_have_list>
+        <must_allow_list>
+            <must_allow regexp="BUS CONFLICT"/>
+        </must_allow_list>
+    </tool_task>
+    <tool_task name="atpg_syn_tmax">
+        <step>10_syn</step>
+        <script_file>$SEV(gscript_dir)/atpg/rm_tmax.tcl</script_file>
+        <src>800_outputs</src>
+        <dst>900_outputs_atpg</dst>
+        <tool>tx</tool>
+        <analysis_task>1</analysis_task>
+    </tool_task>
+    <tool_task name="atpg_syn_vcs">
+        <step>10_syn</step>
+        <script_file>$SEV(gscript_dir)/atpg/atpg_syn_sim.tcl</script_file>
+        <src>800_outputs</src>
+        <dst>900_outputs_atpg</dst>
+        <tool>tcl_job</tool>
+        <analysis_task>1</analysis_task>
+        <aux_tools>vcs tx</aux_tools>
+        <must_not_have_list>
+            <must_not_have regexp="Error" severity="error"/>
+            <must_not_have regexp="ERROR" severity="error"/>
+            <must_not_have regexp="FAILED" severity="error"/>
+        </must_not_have_list>
+        <must_allow_list>
+            <must_allow regexp="BUS CONFLICT"/>
+        </must_allow_list>
+    </tool_task>
+    <mux_task name="enable_atpg">
+        <step>40_finish</step>
+        <script_file>$SEV(gscript_dir)/conf/mux_task.tcl</script_file>
+        <src>900_outputs_atpg</src>
+        <tool>tcl</tool>
+        <variables>
+            <variable name="TEV(allow_none_selected)" value="1"/>
+        </variables>
+        <port_count>1</port_count>
+        <ports>1000000000000000</ports>
+    </mux_task>
+    <edges>
+        <edge from="atpg_finish_pt" to="atpg_finish_tmax"/>
+        <edge from="atpg_finish_tmax" to="atpg_finish_vcs"/>
+        <edge from="atpg_finish_tmax2pt" to="atpg_finish_pt"/>
+        <edge from="atpg_finish_vcs" to="enable_atpg/0"/>
+        <edge from="atpg_syn_tmax" to="atpg_syn_vcs"/>
+        <edge from="enable_atpg" to="atpg_finish"/>
+    </edges>
+    <graph grid_width="390" grid_height="400">
+        <node name="note-1" x="40" y="20"/>
+        <node name="atpg_finish" x="290" y="370"/>
+        <node name="atpg_finish_pt" x="290" y="110"/>
+        <node name="atpg_finish_tmax" x="290" y="170"/>
+        <node name="atpg_finish_tmax2pt" x="290" y="50"/>
+        <node name="atpg_finish_vcs" x="290" y="230"/>
+        <node name="atpg_syn_tmax" x="100" y="50"/>
+        <node name="atpg_syn_vcs" x="100" y="110"/>
+        <node name="enable_atpg" x="290" y="320"/>
+    </graph>
+</flow>

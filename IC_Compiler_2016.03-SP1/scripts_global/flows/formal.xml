@@ -1,0 +1,153 @@
+
+<!--
+## HEADER $Id: //sps/flow/ds/scripts_global/flows/formal.xml#91 $
+## HEADER_MSG    Lynx Design System: Production Flow
+## HEADER_MSG    Version 2015.06-SP1
+## HEADER_MSG    Copyright (c) 2015 Synopsys
+## HEADER_MSG    Perforce Label: lynx_flow_2015.06-SP1
+## HEADER_MSG 
+-->
+<flow name="sf_formal">
+    <note name="note-1" title="UPF Extra Checks" always_show_detail="0">
+        <text>The upf_extras joiner provides early 
+access to checks included by formal_syn.
+
+The formal_syn_check task builds
+the reference container which provides
+early validation of the RTL, upf, and libraries. 
+The formal_syn_upf_debug task performs
+verification with all power supplies forced on
+which runs faster and helps identify
+issues unrelated to MV cells.</text>
+    </note>
+    <join_task name="fm_syn_begin">
+        <step>10_syn</step>
+    </join_task>
+    <join_task name="fm_syn_end">
+        <step>10_syn</step>
+    </join_task>
+    <join_task name="upf_extras">
+        <step>10_syn</step>
+    </join_task>
+    <tool_task name="formal_dp">
+        <step>20_dp</step>
+        <script_file>$SEV(gscript_dir)/formal/formal.tcl</script_file>
+        <src>800_outputs</src>
+        <dst>900_outputs_formal</dst>
+        <tool>fm</tool>
+        <analysis_task>1</analysis_task>
+        <variables>
+            <variable name="TEV(ref)" value="000_inputs"/>
+            <variable name="TEV(setup_reference)" value="$SEV(gscript_dir)/formal/setup_netlist.tcl"/>
+            <variable name="TEV(gen_power_model)" value="1"/>
+        </variables>
+        <must_have_list>
+            <must_have regexp="Verification SUCCEEDED" severity="error"/>
+        </must_have_list>
+    </tool_task>
+    <tool_task name="formal_finish">
+        <step>40_finish</step>
+        <script_file>$SEV(gscript_dir)/formal/formal.tcl</script_file>
+        <src>800_outputs</src>
+        <dst>900_outputs_formal</dst>
+        <tool>fm</tool>
+        <analysis_task>1</analysis_task>
+        <variables>
+            <variable name="TEV(ref)" value="000_inputs"/>
+            <variable name="TEV(setup_reference)" value="$SEV(gscript_dir)/formal/setup_netlist.tcl"/>
+            <variable name="TEV(gen_power_model)" value="1"/>
+        </variables>
+        <must_have_list>
+            <must_have regexp="Verification SUCCEEDED" severity="error"/>
+        </must_have_list>
+    </tool_task>
+    <tool_task name="formal_pnr">
+        <step>30_pnr</step>
+        <script_file>$SEV(gscript_dir)/formal/formal.tcl</script_file>
+        <src>800_outputs</src>
+        <dst>900_outputs_formal</dst>
+        <tool>fm</tool>
+        <analysis_task>1</analysis_task>
+        <variables>
+            <variable name="TEV(ref)" value="000_inputs"/>
+            <variable name="TEV(setup_reference)" value="$SEV(gscript_dir)/formal/setup_netlist.tcl"/>
+            <variable name="TEV(gen_power_model)" value="1"/>
+        </variables>
+        <must_have_list>
+            <must_have regexp="Verification SUCCEEDED" severity="error"/>
+        </must_have_list>
+    </tool_task>
+    <tool_task name="formal_syn">
+        <step>10_syn</step>
+        <script_file>$SEV(gscript_dir)/formal/formal.tcl</script_file>
+        <src>800_outputs</src>
+        <dst>900_outputs_formal</dst>
+        <tool>fm</tool>
+        <analysis_task>1</analysis_task>
+        <variables>
+            <variable name="TEV(ref)" value="000_inputs"/>
+            <variable name="TEV(gen_power_model)" value="1"/>
+        </variables>
+        <must_have_list>
+            <must_have regexp="Verification SUCCEEDED" severity="error"/>
+        </must_have_list>
+        <must_allow_list>
+            <must_allow regexp="FMR_ELAB-1552"/>
+            <must_allow regexp="FM-036"/>
+        </must_allow_list>
+    </tool_task>
+    <tool_task name="formal_syn_check">
+        <step>10_syn</step>
+        <script_file>$SEV(gscript_dir)/formal/formal.tcl</script_file>
+        <src>800_outputs</src>
+        <dst>900_outputs_formal</dst>
+        <tool>fm</tool>
+        <analysis_task>1</analysis_task>
+        <variables>
+            <variable name="TEV(ref)" value="000_inputs"/>
+            <variable name="TEV(ref_check_only)" value="1"/>
+            <variable name="TEV(num_cores)" value="1"/>
+        </variables>
+        <must_allow_list>
+            <must_allow regexp="FMR_ELAB-1552"/>
+        </must_allow_list>
+    </tool_task>
+    <tool_task name="formal_syn_upf_debug">
+        <step>10_syn</step>
+        <script_file>$SEV(gscript_dir)/formal/formal.tcl</script_file>
+        <src>800_outputs</src>
+        <dst>900_outputs_formal</dst>
+        <tool>fm</tool>
+        <analysis_task>1</analysis_task>
+        <variables>
+            <variable name="TEV(ref)" value="000_inputs"/>
+            <variable name="TEV(verification_force_upf_supplies_on)" value="1"/>
+        </variables>
+        <must_have_list>
+            <must_have regexp="Verification SUCCEEDED" severity="error"/>
+        </must_have_list>
+        <must_allow_list>
+            <must_allow regexp="FMR_ELAB-1552"/>
+            <must_allow regexp="should be disabled for final verification"/>
+            <must_allow regexp="FM-036"/>
+        </must_allow_list>
+    </tool_task>
+    <edges>
+        <edge from="fm_syn_begin" to="formal_syn"/>
+        <edge from="formal_syn" to="fm_syn_end"/>
+        <edge from="formal_syn_check" to="upf_extras"/>
+        <edge from="formal_syn_upf_debug" to="upf_extras"/>
+    </edges>
+    <graph grid_width="620" grid_height="190">
+        <node name="note-1" x="340" y="30"/>
+        <node name="fm_syn_begin" x="80" y="40"/>
+        <node name="fm_syn_end" x="80" y="160"/>
+        <node name="upf_extras" x="550" y="110"/>
+        <node name="formal_dp" x="220" y="80"/>
+        <node name="formal_finish" x="240" y="160"/>
+        <node name="formal_pnr" x="220" y="120"/>
+        <node name="formal_syn" x="80" y="100"/>
+        <node name="formal_syn_check" x="400" y="80"/>
+        <node name="formal_syn_upf_debug" x="410" y="140"/>
+    </graph>
+</flow>

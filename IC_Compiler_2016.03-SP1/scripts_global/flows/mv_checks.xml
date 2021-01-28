@@ -1,0 +1,205 @@
+
+<!--
+## HEADER $Id: //sps/flow/ds/scripts_global/flows/mv_checks.xml#22 $
+## HEADER_MSG    Lynx Design System: Production Flow
+## HEADER_MSG    Version 2015.06-SP1
+## HEADER_MSG    Copyright (c) 2015 Synopsys
+## HEADER_MSG    Perforce Label: lynx_flow_2015.06-SP1
+## HEADER_MSG 
+-->
+<flow name="sf_mv">
+    <note name="note-1" title="VC Static LP" always_show_detail="0">
+        <text>VSI is the VC Static LP static checker.
+This product is capable of replacing MVRC checks as well as providing additional static checks</text>
+    </note>
+    <note name="note-4" title="VCS NLP" always_show_detail="0">
+        <text>These are demonstrations of VCS Native Low Power tasks using sample design testbench</text>
+    </note>
+    <join_task name="dp_ready">
+        <step>20_dp</step>
+    </join_task>
+    <join_task name="finish_ready">
+        <step>40_finish</step>
+    </join_task>
+    <join_task name="mv_dp">
+        <step>20_dp</step>
+    </join_task>
+    <join_task name="mv_finish">
+        <step>40_finish</step>
+    </join_task>
+    <join_task name="mv_netlist">
+        <step>10_syn</step>
+    </join_task>
+    <join_task name="mv_pnr">
+        <step>30_pnr</step>
+    </join_task>
+    <join_task name="mv_rtl">
+        <step>10_syn</step>
+    </join_task>
+    <join_task name="pnr_ready">
+        <step>30_pnr</step>
+    </join_task>
+    <join_task name="rtl_ready">
+        <step>10_syn</step>
+    </join_task>
+    <join_task name="syn_ready">
+        <step>10_syn</step>
+    </join_task>
+    <tool_task name="dp_vc_lp_pgnetlist">
+        <step>20_dp</step>
+        <script_file>$SEV(gscript_dir)/formal/vc_lp.tcl</script_file>
+        <src>800_outputs</src>
+        <dst>900_outputs_vc_lp_pgnetlist</dst>
+        <tool>vc_static</tool>
+        <analysis_task>1</analysis_task>
+        <variables>
+            <variable name="TEV(lp_mode)" value="PGNETLIST"/>
+        </variables>
+    </tool_task>
+    <tool_task name="finish_vc_lp_pgnetlist">
+        <step>40_finish</step>
+        <script_file>$SEV(gscript_dir)/formal/vc_lp.tcl</script_file>
+        <src>800_outputs</src>
+        <dst>900_outputs_vc_lp_pgnetlist</dst>
+        <tool>vc_static</tool>
+        <analysis_task>1</analysis_task>
+        <variables>
+            <variable name="TEV(lp_mode)" value="PGNETLIST"/>
+        </variables>
+    </tool_task>
+    <tool_task name="pgsim">
+        <step>40_finish</step>
+        <script_file>$SEV(bscript_dir)/formal/pgsim.tcl</script_file>
+        <src>800_outputs</src>
+        <dst>900_outputs_pgsim_netlist</dst>
+        <tool>tcl_job</tool>
+        <analysis_task>1</analysis_task>
+        <aux_tools>vcs</aux_tools>
+        <must_have_list>
+            <must_have regexp="SNPS_PASS" severity="error"/>
+        </must_have_list>
+    </tool_task>
+    <tool_task name="pnr_vc_lp_pgnetlist">
+        <step>30_pnr</step>
+        <script_file>$SEV(gscript_dir)/formal/vc_lp.tcl</script_file>
+        <src>800_outputs</src>
+        <dst>900_outputs_vc_lp_pgnetlist</dst>
+        <tool>vc_static</tool>
+        <analysis_task>1</analysis_task>
+        <variables>
+            <variable name="TEV(lp_mode)" value="PGNETLIST"/>
+        </variables>
+    </tool_task>
+    <tool_task name="sim_sdf_gen">
+        <step>40_finish</step>
+        <script_file>$SEV(gscript_dir)/sta/execute_scenario.tcl</script_file>
+        <src>800_outputs</src>
+        <dst>900_outputs_pgsim_netlist</dst>
+        <tool>pt</tool>
+        <analysis_task>1</analysis_task>
+        <variables>
+            <variable name="TEV(output_control)" value="SDF"/>
+        </variables>
+    </tool_task>
+    <tool_task name="syn_vc_lp_netlist">
+        <step>10_syn</step>
+        <script_file>$SEV(gscript_dir)/formal/vc_lp.tcl</script_file>
+        <src>800_outputs</src>
+        <dst>900_outputs_vc_lp_netlist</dst>
+        <tool>vc_static</tool>
+        <analysis_task>1</analysis_task>
+        <variables>
+            <variable name="TEV(lp_mode)" value="NETLIST"/>
+        </variables>
+    </tool_task>
+    <tool_task name="syn_vc_lp_rtl">
+        <step>10_syn</step>
+        <script_file>$SEV(gscript_dir)/formal/vc_lp.tcl</script_file>
+        <src>000_inputs</src>
+        <dst>900_outputs_vc_lp_rtl</dst>
+        <tool>vc_static</tool>
+        <analysis_task>1</analysis_task>
+        <variables>
+            <variable name="TEV(lp_mode)" value="RTL"/>
+        </variables>
+    </tool_task>
+    <tool_task name="syn_vcsnlp_netlist">
+        <step>10_syn</step>
+        <script_file>$SEV(bscript_dir)/formal/vcsnlp.tcl</script_file>
+        <src>800_outputs</src>
+        <dst>900_outputs_vcsnlp_netlist</dst>
+        <tool>tcl_job</tool>
+        <analysis_task>1</analysis_task>
+        <aux_tools>mvtools vcs</aux_tools>
+        <variables>
+            <variable name="TEV(rtl_sim)" value="0"/>
+        </variables>
+        <must_have_list>
+            <must_have regexp="SNPS_PASS" severity="error"/>
+        </must_have_list>
+    </tool_task>
+    <tool_task name="syn_vcsnlp_rtl">
+        <step>10_syn</step>
+        <script_file>$SEV(bscript_dir)/formal/vcsnlp.tcl</script_file>
+        <src>000_inputs</src>
+        <dst>900_outputs_vcsnlp_rtl</dst>
+        <tool>tcl_job</tool>
+        <analysis_task>1</analysis_task>
+        <aux_tools>mvtools vcs</aux_tools>
+        <must_have_list>
+            <must_have regexp="SNPS_PASS" severity="error"/>
+        </must_have_list>
+    </tool_task>
+    <mux_task name="mux_task-1">
+        <step>40_finish</step>
+        <script_file>$SEV(gscript_dir)/demo/demo_script.tcl</script_file>
+        <tool>tcl</tool>
+        <port_count>1</port_count>
+        <ports>1000000000000000</ports>
+    </mux_task>
+    <edges>
+        <edge from="dp_ready" to="dp_vc_lp_pgnetlist"/>
+        <edge from="dp_vc_lp_pgnetlist" to="mv_dp"/>
+        <edge from="finish_ready" to="finish_vc_lp_pgnetlist"/>
+        <edge from="finish_ready" to="pgsim"/>
+        <edge from="finish_ready" to="sim_sdf_gen"/>
+        <edge from="finish_vc_lp_pgnetlist" to="mv_finish"/>
+        <edge from="mux_task-1" to="mv_finish"/>
+        <edge from="pgsim" to="mux_task-1/0"/>
+        <edge from="pnr_ready" to="pnr_vc_lp_pgnetlist"/>
+        <edge from="pnr_vc_lp_pgnetlist" to="mv_pnr"/>
+        <edge from="rtl_ready" to="syn_vc_lp_rtl"/>
+        <edge from="rtl_ready" to="syn_vcsnlp_rtl" points="27,9"/>
+        <edge from="sim_sdf_gen" to="pgsim"/>
+        <edge from="syn_ready" to="syn_vc_lp_netlist"/>
+        <edge from="syn_ready" to="syn_vcsnlp_netlist" points="27,24"/>
+        <edge from="syn_vc_lp_netlist" to="mv_netlist"/>
+        <edge from="syn_vc_lp_rtl" to="mv_rtl"/>
+        <edge from="syn_vcsnlp_netlist" to="mv_netlist" points="27,30"/>
+        <edge from="syn_vcsnlp_rtl" to="mv_rtl" points="27,15"/>
+    </edges>
+    <graph grid_width="670" grid_height="500">
+        <node name="note-1" x="100" y="30"/>
+        <node name="note-4" x="270" y="30"/>
+        <node name="dp_ready" x="100" y="360"/>
+        <node name="finish_ready" x="450" y="360"/>
+        <node name="mv_dp" x="100" y="460"/>
+        <node name="mv_finish" x="450" y="460"/>
+        <node name="mv_netlist" x="100" y="320"/>
+        <node name="mv_pnr" x="270" y="460"/>
+        <node name="mv_rtl" x="100" y="170"/>
+        <node name="pnr_ready" x="270" y="360"/>
+        <node name="rtl_ready" x="100" y="70"/>
+        <node name="syn_ready" x="100" y="220"/>
+        <node name="dp_vc_lp_pgnetlist" x="100" y="410"/>
+        <node name="finish_vc_lp_pgnetlist" x="450" y="410"/>
+        <node name="pgsim" x="600" y="410"/>
+        <node name="pnr_vc_lp_pgnetlist" x="270" y="410"/>
+        <node name="sim_sdf_gen" x="600" y="360"/>
+        <node name="syn_vc_lp_netlist" x="100" y="270"/>
+        <node name="syn_vc_lp_rtl" x="100" y="120"/>
+        <node name="syn_vcsnlp_netlist" x="270" y="270"/>
+        <node name="syn_vcsnlp_rtl" x="270" y="120"/>
+        <node name="mux_task-1" x="600" y="470"/>
+    </graph>
+</flow>

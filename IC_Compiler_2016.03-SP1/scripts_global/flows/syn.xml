@@ -1,0 +1,287 @@
+
+<!--
+## HEADER $Id: //sps/flow/ds/scripts_global/flows/syn.xml#161 $
+## HEADER_MSG    Lynx Design System: Production Flow
+## HEADER_MSG    Version 2015.06-SP1
+## HEADER_MSG    Copyright (c) 2015 Synopsys
+## HEADER_MSG    Perforce Label: lynx_flow_2015.06-SP1
+## HEADER_MSG 
+-->
+<flow name="sf_syn">
+    <note name="note-1" title="Baseline Flow" always_show_detail="0">
+        <text>This baseline &quot;out-of-the-box&quot; (ootb) synthesis flow uses DCT configured 
+with normal defaults. It can produce excellent, correlated results. Additional 
+performance may be acheived through tuning for design specifics, adding 
+additional constraint details, or moving the to QOR flow branch.</text>
+    </note>
+    <note name="note-2" title="QOR Flow" always_show_detail="0">
+        <text>This synthesis flow is configured to apply more advanced techniques
+and detail to improve overall flow quality of results and correlation. 
+It reflects best practices but may require tuning to improve design
+specific results.
+
+This QOR flow uses Design Compiler Graphical advanced SPG physical synthesis.
+By default, the dc_compile_qor is configured to apply a USER physical constraint
+file but the recommended physical constraints is DEF, once available for the block.
+This design specific information is best set on the dc_compile_qor task using block 
+TEV overrides.
+
+Users would typically run a baseline or feasibility flow through DP step and then use 
+that DEF to drive the QOR flow. This phased flow approach will lead to refinement of
+accurate design details and allow Galaxy tools to do their best job. DCG users can 
+also use the link to ICC or ICC II Floorplanning found in 'syn_extras' subflow to refine 
+physical constraints to explore improving results.
+
+For best results, look at configuring DP and PNR flows to also use the QOR branch.
+
+Expect longer runtimes and more conservative delay calculations.</text>
+    </note>
+    <note name="note-3" title="SYN Bonus Content" always_show_detail="0"/>
+    <note name="object-2" title="RTL Exploration Flow" always_show_detail="0">
+        <text>Perform early synthesis using Design Explorer technology for higher 
+capacity, tolerance of 'dirty data', or faster TAT.</text>
+    </note>
+    <flow_inst name="flow_inst-1" flow="sf_vc"/>
+    <flow_inst name="flow_inst-2" flow="sf_power"/>
+    <flow_inst name="sf_atpg-1" flow="sf_atpg" text=""/>
+    <flow_inst name="sf_formal-1" flow="sf_formal" text=""/>
+    <flow_inst name="sf_formal-2" flow="sf_formal" text="mv_extras"/>
+    <flow_inst name="sf_mv-1" flow="sf_mv" text=""/>
+    <flow_inst name="sf_sta-1" flow="sf_sta" text=""/>
+    <flow_inst name="sf_syn_extras-1" flow="sf_syn_extras" text=""/>
+    <join_task name="analyze">
+        <step>10_syn</step>
+    </join_task>
+    <join_task name="analyze_mv">
+        <step>10_syn</step>
+    </join_task>
+    <join_task name="begin">
+        <step>10_syn</step>
+    </join_task>
+    <join_task name="build">
+        <step>10_syn</step>
+    </join_task>
+    <join_task name="xtra_checks">
+        <step>10_syn</step>
+    </join_task>
+    <tool_task name="dc_compile_baseline">
+        <step>10_syn</step>
+        <script_file>$SEV(gscript_dir)/syn/dc_compile.tcl</script_file>
+        <src>010_dc_elaborate_baseline</src>
+        <dst>020_dc_compile_baseline</dst>
+        <tool>dct</tool>
+        <variables>
+            <variable name="TEV(physical_file)" value="$SEV(bscript_dir)/conf/mpc.tcl"/>
+            <variable name="TEV(physical_format)" value="USER_FILE"/>
+            <variable name="TEV(create_block_abstraction)" value="0"/>
+        </variables>
+    </tool_task>
+    <tool_task name="dc_compile_qor">
+        <step>10_syn</step>
+        <script_file>$SEV(gscript_dir)/syn/dc_compile.tcl</script_file>
+        <src>010_dc_elaborate_qor</src>
+        <dst>020_dc_compile_qor</dst>
+        <tool>dct</tool>
+        <variables>
+            <variable name="TEV(physical_format)" value="USER_FILE"/>
+            <variable name="TEV(physical_file)" value="$SEV(bscript_dir)/conf/mpc.tcl"/>
+            <variable name="TEV(compile_cmd)" value="compile_ultra -gate_clock -spg"/>
+            <variable name="TEV(suppress_checks)" value="1"/>
+            <variable name="TEV(create_block_abstraction)" value="0"/>
+        </variables>
+    </tool_task>
+    <tool_task name="dc_dft_baseline">
+        <step>10_syn</step>
+        <script_file>$SEV(gscript_dir)/syn/dc_dft.tcl</script_file>
+        <src>020_dc_compile_baseline</src>
+        <dst>030_dc_dft_baseline</dst>
+        <tool>dct</tool>
+    </tool_task>
+    <tool_task name="dc_dft_exploration">
+        <step>10_syn</step>
+        <script_file>$SEV(gscript_dir)/syn/dc_dft.tcl</script_file>
+        <src>020_de_compile_exploration</src>
+        <dst>030_dc_dft_exploration</dst>
+        <tool>dct</tool>
+        <variables>
+            <variable name="TEV(constraints_design)" value=""/>
+            <variable name="TEV(inc_compile_cmd)" value=""/>
+            <variable name="TEV(port_buffer)" value="0"/>
+            <variable name="TEV(skip)" value="1"/>
+        </variables>
+    </tool_task>
+    <tool_task name="dc_dft_qor">
+        <step>10_syn</step>
+        <script_file>$SEV(gscript_dir)/syn/dc_dft.tcl</script_file>
+        <src>020_dc_compile_qor</src>
+        <dst>030_dc_dft_qor</dst>
+        <tool>dct</tool>
+        <variables>
+            <variable name="TEV(inc_compile_cmd)" value="compile_ultra -incremental -spg"/>
+            <variable name="TEV(optimize_netlist_enable)" value="1"/>
+        </variables>
+    </tool_task>
+    <tool_task name="dc_elaborate_baseline">
+        <step>10_syn</step>
+        <script_file>$SEV(gscript_dir)/syn/dc_elaborate.tcl</script_file>
+        <src>000_inputs</src>
+        <dst>010_dc_elaborate_baseline</dst>
+        <tool>dct</tool>
+    </tool_task>
+    <tool_task name="dc_elaborate_qor">
+        <step>10_syn</step>
+        <script_file>$SEV(gscript_dir)/syn/dc_elaborate.tcl</script_file>
+        <src>000_inputs</src>
+        <dst>010_dc_elaborate_qor</dst>
+        <tool>dct</tool>
+        <variables>
+            <variable name="TEV(syn_mode)" value="QOR"/>
+        </variables>
+    </tool_task>
+    <tool_task name="dc_gen_spef">
+        <step>10_syn</step>
+        <script_file>$SEV(gscript_dir)/syn/dc_gen_spef.tcl</script_file>
+        <src>700_results</src>
+        <dst>730_gen_spef</dst>
+        <tool>dct</tool>
+        <must_allow_list>
+            <must_allow regexp="LINK-5"/>
+        </must_allow_list>
+    </tool_task>
+    <tool_task name="de_compile_exploration">
+        <step>10_syn</step>
+        <script_file>$SEV(gscript_dir)/syn/dc_compile.tcl</script_file>
+        <src>010_de_elaborate_exploration</src>
+        <dst>020_de_compile_exploration</dst>
+        <tool>de</tool>
+        <variables>
+            <variable name="TEV(physical_file)" value="$SEV(bscript_dir)/conf/mpc.tcl"/>
+            <variable name="TEV(physical_format)" value="USER_FILE"/>
+            <variable name="TEV(create_block_abstraction)" value="1"/>
+        </variables>
+        <must_allow_list>
+            <must_allow regexp=".*set_max_leakage_power.*DESH-008."/>
+            <must_allow regexp="write_rp_groups"/>
+            <must_allow regexp=".*UPF-026.*"/>
+        </must_allow_list>
+    </tool_task>
+    <tool_task name="de_elaborate_exploration">
+        <step>10_syn</step>
+        <script_file>$SEV(gscript_dir)/syn/dc_elaborate.tcl</script_file>
+        <src>000_inputs</src>
+        <dst>010_de_elaborate_exploration</dst>
+        <tool>de</tool>
+        <variables>
+            <variable name="TEV(syn_mode)" value="EXPLORATION"/>
+        </variables>
+    </tool_task>
+    <tool_task name="promote">
+        <step>10_syn</step>
+        <script_file>$SEV(gscript_dir)/syn/promote.tcl</script_file>
+        <src>700_results</src>
+        <dst>800_outputs</dst>
+        <tool>tcl</tool>
+        <src_lock>1</src_lock>
+        <metrics_enable_transfer>0</metrics_enable_transfer>
+    </tool_task>
+    <tool_task name="promote_models">
+        <step>10_syn</step>
+        <script_file>$SEV(gscript_dir)/syn/promote_models.tcl</script_file>
+        <src>900_outputs_sta_models</src>
+        <dst>800_outputs_models</dst>
+        <tool>tcl</tool>
+    </tool_task>
+    <tool_task name="setup">
+        <step>10_syn</step>
+        <script_file>$SEV(gscript_dir)/syn/setup.tcl</script_file>
+        <dst>000_inputs</dst>
+        <tool>tcl</tool>
+        <metrics_enable_transfer>0</metrics_enable_transfer>
+    </tool_task>
+    <mux_task name="select_results">
+        <step>10_syn</step>
+        <script_file>$SEV(gscript_dir)/conf/mux_task.tcl</script_file>
+        <src>030_dc_dft_baseline</src>
+        <dst>700_results</dst>
+        <tool>tcl</tool>
+        <port_count>3</port_count>
+        <ports>0100000000000000</ports>
+    </mux_task>
+    <edges>
+        <edge from="analyze" to="analyze_mv"/>
+        <edge from="begin" to="setup"/>
+        <edge from="build" to="flow_inst-1/syn_cdc_netlist" points="69,46"/>
+        <edge from="build" to="flow_inst-2/power_syn_begin" points="41,46"/>
+        <edge from="build" to="sf_atpg-1/atpg_syn_tmax"/>
+        <edge from="build" to="sf_formal-1/fm_syn_begin" points="18,46"/>
+        <edge from="build" to="sf_formal-2/formal_syn_upf_debug" points="61,46"/>
+        <edge from="build" to="sf_mv-1/syn_ready" points="48,46"/>
+        <edge from="build" to="sf_sta-1/sta_syn_begin" points="26,46"/>
+        <edge from="dc_compile_baseline" to="dc_dft_baseline"/>
+        <edge from="dc_compile_qor" to="dc_dft_qor"/>
+        <edge from="dc_dft_baseline" to="select_results/1"/>
+        <edge from="dc_dft_exploration" to="select_results/0" points="12,25;31,26"/>
+        <edge from="dc_dft_qor" to="select_results/2" points="51,25;35,26"/>
+        <edge from="dc_elaborate_baseline" to="dc_compile_baseline"/>
+        <edge from="dc_elaborate_qor" to="dc_compile_qor"/>
+        <edge from="dc_gen_spef" to="promote"/>
+        <edge from="de_compile_exploration" to="dc_dft_exploration"/>
+        <edge from="de_elaborate_exploration" to="de_compile_exploration"/>
+        <edge from="flow_inst-1/functional_sim" to="xtra_checks"/>
+        <edge from="flow_inst-1/syn_cdc_netlist" to="xtra_checks"/>
+        <edge from="flow_inst-1/syn_cdc_rtl" to="xtra_checks"/>
+        <edge from="flow_inst-2/power_syn_end" to="analyze"/>
+        <edge from="promote" to="build"/>
+        <edge from="select_results" to="dc_gen_spef"/>
+        <edge from="setup" to="dc_elaborate_baseline" points="33,10"/>
+        <edge from="setup" to="dc_elaborate_qor" points="51,10"/>
+        <edge from="setup" to="de_elaborate_exploration" points="12,10"/>
+        <edge from="setup" to="flow_inst-1/functional_sim"/>
+        <edge from="setup" to="flow_inst-1/leda" points="72,13"/>
+        <edge from="setup" to="flow_inst-1/syn_cdc_rtl"/>
+        <edge from="setup" to="flow_inst-1/verdi_rtl" points="72,13"/>
+        <edge from="setup" to="sf_formal-2/formal_syn_check" points="59,48"/>
+        <edge from="setup" to="sf_mv-1/rtl_ready" points="59,48"/>
+        <edge from="sf_atpg-1/atpg_syn_vcs" to="analyze"/>
+        <edge from="sf_formal-1/fm_syn_end" to="analyze"/>
+        <edge from="sf_formal-1/fm_syn_end" to="promote_models"/>
+        <edge from="sf_formal-2/upf_extras" to="analyze_mv"/>
+        <edge from="sf_mv-1/mv_netlist" to="analyze_mv"/>
+        <edge from="sf_mv-1/mv_rtl" to="analyze_mv"/>
+        <edge from="sf_sta-1/sta_syn_end" to="analyze"/>
+        <edge from="sf_sta-1/syn_models_done" to="promote_models"/>
+    </edges>
+    <graph grid_width="800" grid_height="610">
+        <node name="note-1" x="330" y="60"/>
+        <node name="note-2" x="510" y="60"/>
+        <node name="note-3" x="140" y="370"/>
+        <node name="object-2" x="120" y="60"/>
+        <node name="flow_inst-1" x="720" y="530"/>
+        <node name="flow_inst-2" x="410" y="530"/>
+        <node name="sf_atpg-1" x="330" y="530"/>
+        <node name="sf_formal-1" x="180" y="530"/>
+        <node name="sf_formal-2" x="610" y="530"/>
+        <node name="sf_mv-1" x="480" y="530"/>
+        <node name="sf_sta-1" x="260" y="530"/>
+        <node name="sf_syn_extras-1" x="120" y="400"/>
+        <node name="analyze" x="330" y="580"/>
+        <node name="analyze_mv" x="480" y="580"/>
+        <node name="begin" x="590" y="30"/>
+        <node name="build" x="330" y="460"/>
+        <node name="xtra_checks" x="720" y="570"/>
+        <node name="dc_compile_baseline" x="330" y="170"/>
+        <node name="dc_compile_qor" x="510" y="170"/>
+        <node name="dc_dft_baseline" x="330" y="220"/>
+        <node name="dc_dft_exploration" x="120" y="220"/>
+        <node name="dc_dft_qor" x="510" y="220"/>
+        <node name="dc_elaborate_baseline" x="330" y="120"/>
+        <node name="dc_elaborate_qor" x="510" y="120"/>
+        <node name="dc_gen_spef" x="330" y="360"/>
+        <node name="de_compile_exploration" x="120" y="170"/>
+        <node name="de_elaborate_exploration" x="120" y="120"/>
+        <node name="promote" x="330" y="410"/>
+        <node name="promote_models" x="180" y="580"/>
+        <node name="setup" x="590" y="80"/>
+        <node name="select_results" x="330" y="310"/>
+    </graph>
+</flow>

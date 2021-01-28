@@ -1,0 +1,416 @@
+
+<!--
+## HEADER $Id: //sps/flow/ds/scripts_global/flows/sta.xml#96 $
+## HEADER_MSG    Lynx Design System: Production Flow
+## HEADER_MSG    Version 2015.06-SP1
+## HEADER_MSG    Copyright (c) 2015 Synopsys
+## HEADER_MSG    Perforce Label: lynx_flow_2015.06-SP1
+## HEADER_MSG 
+-->
+<flow name="sf_sta">
+    <note name="note-1" title="non-DMSA">
+        <text>This generator task is an alternative to dmsa. It will generate 
+a seperate PT task for each scenario.</text>
+    </note>
+    <note name="note-1-copy" title="scaling" always_show_detail="0">
+        <text>This task provides an example of using library scaling groups in STA.
+
+The TEV(library_scaling_file) is used to define and manage the library scaling groups
+used in PT. Users should review the PrimeTime documentation on this strategy and
+check that the library groups are defined as required by the technology and design.
+
+Use of library scaling is optional for most designs. One example is to consider scaling
+as an alternative to using link path per instance (LPPI) method of STA in multi-voltage 
+designs. 
+
+Always review STA library setup against project and vendor requirements.</text>
+    </note>
+    <note name="note-2" title="STA Models (non-DMSA)" always_show_detail="0">
+        <text>This is an alternative method to generate STA models using
+generated PT tasks rather than DMSA. They can be used to
+generate ILM or ETM models, depending on the user methodology.
+
+STA models are an optional strategy.</text>
+    </note>
+    <note name="note-2-copy" title="STA Models" always_show_detail="0">
+        <text>STA models are an optional strategy for hierarchical STA. Note that each
+step has a DMSA-based task to generate the models and a task to promote
+the models for use in upper level integration.
+
+These tasks use the same STA generate_scenarios script running in dmsa mode
+to create ILM or ETM models, depending on the user methodology.
+
+STA models are an optional strategy.</text>
+    </note>
+    <note name="note-3" title="SMVA Option">
+        <text>SMVA option allows STA using PT simultaneous multivoltage
+analysis. This allows checking of timing paths that cross power domains
+that may be operating in different ranges. This is complimentary to 
+the full dmsa analysis across each scenario. See PrimeTime documentation
+for more details.</text>
+    </note>
+    <join_task name="finish_models_done">
+        <step>40_finish</step>
+    </join_task>
+    <join_task name="pnr_models_done">
+        <step>30_pnr</step>
+    </join_task>
+    <join_task name="sta_finish_begin">
+        <step>40_finish</step>
+    </join_task>
+    <join_task name="sta_finish_end">
+        <step>40_finish</step>
+    </join_task>
+    <join_task name="sta_pnr_begin">
+        <step>30_pnr</step>
+    </join_task>
+    <join_task name="sta_pnr_end">
+        <step>30_pnr</step>
+    </join_task>
+    <join_task name="sta_syn_begin">
+        <step>10_syn</step>
+    </join_task>
+    <join_task name="sta_syn_end">
+        <step>10_syn</step>
+    </join_task>
+    <join_task name="syn_models_done">
+        <step>10_syn</step>
+    </join_task>
+    <tool_task name="gca_pnr">
+        <step>30_pnr</step>
+        <script_file>$SEV(gscript_dir)/sta/gca.tcl</script_file>
+        <src>800_outputs</src>
+        <dst>900_outputs_gca</dst>
+        <tool>gca</tool>
+        <analysis_task>1</analysis_task>
+        <must_allow_list>
+            <must_allow regexp="Error: Nothing matched for operating condition"/>
+        </must_allow_list>
+    </tool_task>
+    <tool_task name="gca_syn">
+        <step>10_syn</step>
+        <script_file>$SEV(gscript_dir)/sta/gca.tcl</script_file>
+        <src>800_outputs</src>
+        <dst>900_outputs_gca</dst>
+        <tool>gca</tool>
+        <analysis_task>1</analysis_task>
+        <must_allow_list>
+            <must_allow regexp="Error: Nothing matched for operating condition"/>
+        </must_allow_list>
+    </tool_task>
+    <tool_task name="sta_finish_dmsa">
+        <step>40_finish</step>
+        <script_file>$SEV(gscript_dir)/sta/generate_scenarios.tcl</script_file>
+        <src>800_outputs</src>
+        <dst>900_outputs_sta_dmsa</dst>
+        <tool>pt_dmsa</tool>
+        <analysis_task>1</analysis_task>
+        <variables>
+            <variable name="TEV(pt_reports_script)" value="$SEV(gscript_dir)/sta/reports_dmsa.tcl"/>
+            <variable name="TEV(noise_analysis)" value="1"/>
+            <variable name="TEV(power_analysis)" value="1"/>
+            <variable name="TEV(dmsa)" value="1"/>
+        </variables>
+    </tool_task>
+    <tool_task name="sta_finish_models">
+        <step>40_finish</step>
+        <script_file>$SEV(gscript_dir)/sta/generate_scenarios.tcl</script_file>
+        <src>800_outputs</src>
+        <dst>900_outputs_sta_models</dst>
+        <tool>pt_dmsa</tool>
+        <analysis_task>1</analysis_task>
+        <variables>
+            <variable name="TEV(pt_reports_script)" value="$SEV(gscript_dir)/sta/reports_dmsa.tcl"/>
+            <variable name="TEV(noise_analysis)" value="1"/>
+            <variable name="TEV(power_analysis)" value="1"/>
+            <variable name="TEV(dmsa)" value="1"/>
+            <variable name="TEV(output_control)" value="ETM"/>
+        </variables>
+    </tool_task>
+    <tool_task name="sta_finish_smva">
+        <step>40_finish</step>
+        <script_file>$SEV(gscript_dir)/sta/generate_scenarios.tcl</script_file>
+        <src>800_outputs</src>
+        <dst>900_outputs_sta_smva</dst>
+        <tool>pt_dmsa</tool>
+        <analysis_task>1</analysis_task>
+        <variables>
+            <variable name="TEV(pt_reports_script)" value="$SEV(gscript_dir)/sta/reports_dmsa.tcl"/>
+            <variable name="TEV(enable_smva_analysis)" value="1"/>
+            <variable name="TEV(noise_analysis)" value="0"/>
+            <variable name="TEV(power_analysis)" value="0"/>
+            <variable name="TEV(dmsa)" value="1"/>
+        </variables>
+        <must_have_list>
+            <must_have regexp="MVOLT-051" severity="error"/>
+        </must_have_list>
+    </tool_task>
+    <tool_task name="sta_pnr_dmsa">
+        <step>30_pnr</step>
+        <script_file>$SEV(gscript_dir)/sta/generate_scenarios.tcl</script_file>
+        <src>800_outputs</src>
+        <dst>900_outputs_sta_dmsa</dst>
+        <tool>pt_dmsa</tool>
+        <analysis_task>1</analysis_task>
+        <variables>
+            <variable name="TEV(pt_reports_script)" value="$SEV(gscript_dir)/sta/reports_dmsa.tcl"/>
+            <variable name="TEV(noise_analysis)" value="1"/>
+            <variable name="TEV(power_analysis)" value="1"/>
+            <variable name="TEV(dmsa)" value="1"/>
+        </variables>
+    </tool_task>
+    <tool_task name="sta_pnr_models">
+        <step>30_pnr</step>
+        <script_file>$SEV(gscript_dir)/sta/generate_scenarios.tcl</script_file>
+        <src>800_outputs</src>
+        <dst>900_outputs_sta_models</dst>
+        <tool>pt_dmsa</tool>
+        <analysis_task>1</analysis_task>
+        <variables>
+            <variable name="TEV(pt_reports_script)" value="$SEV(gscript_dir)/sta/reports_dmsa.tcl"/>
+            <variable name="TEV(noise_analysis)" value="1"/>
+            <variable name="TEV(power_analysis)" value="1"/>
+            <variable name="TEV(dmsa)" value="1"/>
+            <variable name="TEV(output_control)" value="ETM"/>
+        </variables>
+    </tool_task>
+    <tool_task name="sta_pnr_smva">
+        <step>30_pnr</step>
+        <script_file>$SEV(gscript_dir)/sta/generate_scenarios.tcl</script_file>
+        <src>800_outputs</src>
+        <dst>900_outputs_sta_smva</dst>
+        <tool>pt_dmsa</tool>
+        <analysis_task>1</analysis_task>
+        <variables>
+            <variable name="TEV(pt_reports_script)" value="$SEV(gscript_dir)/sta/reports_dmsa.tcl"/>
+            <variable name="TEV(enable_smva_analysis)" value="1"/>
+            <variable name="TEV(noise_analysis)" value="0"/>
+            <variable name="TEV(power_analysis)" value="0"/>
+            <variable name="TEV(dmsa)" value="1"/>
+        </variables>
+        <must_have_list>
+            <must_have regexp="MVOLT-051" severity="error"/>
+        </must_have_list>
+    </tool_task>
+    <tool_task name="sta_syn_dmsa">
+        <step>10_syn</step>
+        <script_file>$SEV(gscript_dir)/sta/generate_scenarios.tcl</script_file>
+        <src>800_outputs</src>
+        <dst>900_outputs_sta_dmsa</dst>
+        <tool>pt_dmsa</tool>
+        <analysis_task>1</analysis_task>
+        <variables>
+            <variable name="TEV(pt_reports_script)" value="$SEV(gscript_dir)/sta/reports_dmsa.tcl"/>
+            <variable name="TEV(si_mode)" value="SI_OFF"/>
+            <variable name="TEV(power_analysis)" value="1"/>
+            <variable name="TEV(dmsa)" value="1"/>
+            <variable name="TEV(para_format)" value="SPEF"/>
+        </variables>
+    </tool_task>
+    <tool_task name="sta_syn_models">
+        <step>10_syn</step>
+        <script_file>$SEV(gscript_dir)/sta/generate_scenarios.tcl</script_file>
+        <src>800_outputs</src>
+        <dst>900_outputs_sta_models</dst>
+        <tool>pt_dmsa</tool>
+        <analysis_task>1</analysis_task>
+        <variables>
+            <variable name="TEV(pt_reports_script)" value="$SEV(gscript_dir)/sta/reports_dmsa.tcl"/>
+            <variable name="TEV(si_mode)" value="SI_OFF"/>
+            <variable name="TEV(power_analysis)" value="1"/>
+            <variable name="TEV(dmsa)" value="1"/>
+            <variable name="TEV(output_control)" value="ETM"/>
+        </variables>
+    </tool_task>
+    <tool_task name="sta_syn_scaling">
+        <step>10_syn</step>
+        <script_file>$SEV(gscript_dir)/sta/generate_scenarios.tcl</script_file>
+        <src>800_outputs</src>
+        <dst>900_outputs_sta_scaling</dst>
+        <tool>pt_dmsa</tool>
+        <analysis_task>1</analysis_task>
+        <variables>
+            <variable name="TEV(pt_reports_script)" value="$SEV(gscript_dir)/sta/reports_dmsa.tcl"/>
+            <variable name="TEV(si_mode)" value="SI_OFF"/>
+            <variable name="TEV(power_analysis)" value="1"/>
+            <variable name="TEV(dmsa)" value="1"/>
+            <variable name="TEV(para_format)" value="SPEF"/>
+            <variable name="TEV(library_scaling_file)" value="$SEV(tscript_dir)/library_scaling.tcl"/>
+        </variables>
+    </tool_task>
+    <gen_task name="sta_finish">
+        <step>40_finish</step>
+        <script_file>$SEV(gscript_dir)/sta/generate_scenarios.tcl</script_file>
+        <src>800_outputs</src>
+        <dst>900_outputs_sta</dst>
+        <analysis_task>1</analysis_task>
+        <metrics_enable_transfer>0</metrics_enable_transfer>
+        <variables>
+            <variable name="TEV(noise_analysis)" value="1"/>
+            <variable name="TEV(power_analysis)" value="1"/>
+        </variables>
+    </gen_task>
+    <gen_task name="sta_finish_aocvm">
+        <step>40_finish</step>
+        <script_file>$SEV(gscript_dir)/sta/generate_scenarios.tcl</script_file>
+        <src>800_outputs</src>
+        <dst>900_outputs_sta_aocvm</dst>
+        <analysis_task>1</analysis_task>
+        <metrics_enable_transfer>0</metrics_enable_transfer>
+        <variables>
+            <variable name="TEV(noise_analysis)" value="1"/>
+            <variable name="TEV(power_analysis)" value="1"/>
+        </variables>
+    </gen_task>
+    <gen_task name="sta_finish_ccs">
+        <step>40_finish</step>
+        <script_file>$SEV(gscript_dir)/sta/generate_scenarios.tcl</script_file>
+        <src>800_outputs</src>
+        <dst>900_outputs_sta_ccs</dst>
+        <analysis_task>1</analysis_task>
+        <metrics_enable_transfer>0</metrics_enable_transfer>
+        <variables>
+            <variable name="TEV(map_nldm_to_ccs)" value="1"/>
+            <variable name="TEV(noise_analysis)" value="1"/>
+            <variable name="TEV(power_analysis)" value="1"/>
+        </variables>
+    </gen_task>
+    <gen_task name="sta_finish_flat">
+        <step>40_finish</step>
+        <script_file>$SEV(gscript_dir)/sta/generate_scenarios.tcl</script_file>
+        <src>800_outputs</src>
+        <dst>900_outputs_sta_flat</dst>
+        <analysis_task>1</analysis_task>
+        <metrics_enable_transfer>0</metrics_enable_transfer>
+        <variables>
+            <variable name="TEV(hier_mode_parasitic)" value="FLAT"/>
+            <variable name="TEV(noise_analysis)" value="1"/>
+            <variable name="TEV(power_analysis)" value="1"/>
+        </variables>
+    </gen_task>
+    <gen_task name="sta_model_finish">
+        <step>40_finish</step>
+        <script_file>$SEV(gscript_dir)/sta/generate_scenarios.tcl</script_file>
+        <src>120_export_data</src>
+        <dst>120_export_data</dst>
+        <analysis_task>1</analysis_task>
+        <metrics_enable_transfer>0</metrics_enable_transfer>
+        <variables>
+            <variable name="TEV(output_control)" value="ILM"/>
+        </variables>
+    </gen_task>
+    <gen_task name="sta_model_pnr">
+        <step>30_pnr</step>
+        <script_file>$SEV(gscript_dir)/sta/generate_scenarios.tcl</script_file>
+        <src>600_icc_export_data</src>
+        <dst>600_icc_export_data</dst>
+        <analysis_task>1</analysis_task>
+        <metrics_enable_transfer>0</metrics_enable_transfer>
+        <variables>
+            <variable name="TEV(output_control)" value="ILM"/>
+        </variables>
+    </gen_task>
+    <gen_task name="sta_model_syn">
+        <step>10_syn</step>
+        <script_file>$SEV(gscript_dir)/sta/generate_scenarios.tcl</script_file>
+        <src>030_dc_dft_baseline</src>
+        <dst>030_dc_dft_baseline</dst>
+        <metrics_enable_transfer>0</metrics_enable_transfer>
+        <variables>
+            <variable name="TEV(output_control)" value="ILM"/>
+            <variable name="TEV(si_mode)" value="SI_OFF"/>
+        </variables>
+    </gen_task>
+    <gen_task name="sta_pnr">
+        <step>30_pnr</step>
+        <script_file>$SEV(gscript_dir)/sta/generate_scenarios.tcl</script_file>
+        <src>800_outputs</src>
+        <dst>900_outputs_sta</dst>
+        <analysis_task>1</analysis_task>
+        <metrics_enable_transfer>0</metrics_enable_transfer>
+        <variables>
+            <variable name="TEV(noise_analysis)" value="1"/>
+            <variable name="TEV(power_analysis)" value="1"/>
+        </variables>
+    </gen_task>
+    <gen_task name="sta_syn">
+        <step>10_syn</step>
+        <script_file>$SEV(gscript_dir)/sta/generate_scenarios.tcl</script_file>
+        <src>800_outputs</src>
+        <dst>900_outputs_sta</dst>
+        <analysis_task>1</analysis_task>
+        <metrics_enable_transfer>0</metrics_enable_transfer>
+        <variables>
+            <variable name="TEV(si_mode)" value="SI_OFF"/>
+            <variable name="TEV(power_analysis)" value="1"/>
+        </variables>
+    </gen_task>
+    <edges>
+        <edge from="note-1" to="sta_syn"/>
+        <edge from="note-1-copy" to="sta_syn_scaling"/>
+        <edge from="note-2" to="sta_model_finish"/>
+        <edge from="note-2" to="sta_model_pnr"/>
+        <edge from="note-2" to="sta_model_syn"/>
+        <edge from="note-3" to="sta_finish_smva"/>
+        <edge from="note-3" to="sta_pnr_smva"/>
+        <edge from="sta_finish_begin" to="sta_finish" points="20,50"/>
+        <edge from="sta_finish_begin" to="sta_finish_aocvm" points="39,50"/>
+        <edge from="sta_finish_begin" to="sta_finish_ccs" points="32,50"/>
+        <edge from="sta_finish_begin" to="sta_finish_dmsa"/>
+        <edge from="sta_finish_begin" to="sta_finish_flat" points="25,50"/>
+        <edge from="sta_finish_begin" to="sta_finish_models" points="50,50"/>
+        <edge from="sta_finish_begin" to="sta_finish_smva" points="60,50"/>
+        <edge from="sta_finish_dmsa" to="sta_finish_end"/>
+        <edge from="sta_finish_models" to="finish_models_done"/>
+        <edge from="sta_pnr_begin" to="gca_pnr" points="51,29"/>
+        <edge from="sta_pnr_begin" to="sta_pnr" points="19,29"/>
+        <edge from="sta_pnr_begin" to="sta_pnr_dmsa"/>
+        <edge from="sta_pnr_begin" to="sta_pnr_models" points="37,29"/>
+        <edge from="sta_pnr_begin" to="sta_pnr_smva" points="64,29"/>
+        <edge from="sta_pnr_dmsa" to="sta_pnr_end"/>
+        <edge from="sta_pnr_models" to="pnr_models_done"/>
+        <edge from="sta_syn_begin" to="gca_syn" points="51,7"/>
+        <edge from="sta_syn_begin" to="sta_syn" points="19,7"/>
+        <edge from="sta_syn_begin" to="sta_syn_dmsa"/>
+        <edge from="sta_syn_begin" to="sta_syn_models" points="37,7"/>
+        <edge from="sta_syn_begin" to="sta_syn_scaling" points="64,7"/>
+        <edge from="sta_syn_dmsa" to="sta_syn_end"/>
+        <edge from="sta_syn_models" to="syn_models_done"/>
+    </edges>
+    <graph grid_width="940" grid_height="710">
+        <node name="note-1" x="240" y="110"/>
+        <node name="note-1-copy" x="670" y="50"/>
+        <node name="note-2" x="720" y="450"/>
+        <node name="note-2-copy" x="370" y="30"/>
+        <node name="note-3" x="570" y="400"/>
+        <node name="finish_models_done" x="500" y="630"/>
+        <node name="pnr_models_done" x="370" y="410"/>
+        <node name="sta_finish_begin" x="80" y="500"/>
+        <node name="sta_finish_end" x="80" y="640"/>
+        <node name="sta_pnr_begin" x="80" y="290"/>
+        <node name="sta_pnr_end" x="80" y="430"/>
+        <node name="sta_syn_begin" x="80" y="70"/>
+        <node name="sta_syn_end" x="80" y="210"/>
+        <node name="syn_models_done" x="370" y="180"/>
+        <node name="gca_pnr" x="510" y="330"/>
+        <node name="gca_syn" x="510" y="100"/>
+        <node name="sta_finish_dmsa" x="80" y="570"/>
+        <node name="sta_finish_models" x="500" y="580"/>
+        <node name="sta_finish_smva" x="600" y="540"/>
+        <node name="sta_pnr_dmsa" x="80" y="360"/>
+        <node name="sta_pnr_models" x="370" y="330"/>
+        <node name="sta_pnr_smva" x="640" y="330"/>
+        <node name="sta_syn_dmsa" x="80" y="140"/>
+        <node name="sta_syn_models" x="370" y="100"/>
+        <node name="sta_syn_scaling" x="640" y="100"/>
+        <node name="sta_finish" x="200" y="570"/>
+        <node name="sta_finish_aocvm" x="390" y="680"/>
+        <node name="sta_finish_ccs" x="320" y="650"/>
+        <node name="sta_finish_flat" x="250" y="610"/>
+        <node name="sta_model_finish" x="800" y="580"/>
+        <node name="sta_model_pnr" x="800" y="540"/>
+        <node name="sta_model_syn" x="800" y="500"/>
+        <node name="sta_pnr" x="190" y="360"/>
+        <node name="sta_syn" x="190" y="140"/>
+    </graph>
+</flow>

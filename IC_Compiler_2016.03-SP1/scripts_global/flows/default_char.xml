@@ -1,0 +1,45 @@
+
+<!--
+## HEADER $Id: //sps/flow/ds/scripts_global/flows/default_char.xml#38 $
+## HEADER_MSG    Lynx Design System: Production Flow
+## HEADER_MSG    Version 2015.06-SP1
+## HEADER_MSG    Copyright (c) 2015 Synopsys
+## HEADER_MSG    Perforce Label: lynx_flow_2015.06-SP1
+## HEADER_MSG 
+-->
+<flow name="tf_default_char">
+    <flow_inst name="sf_char-1" flow="sf_char" text=""/>
+    <flow_inst name="sf_dp" flow="sf_dp" text="sf_dp"/>
+    <flow_inst name="sf_finish" flow="sf_finish" text="sf_finish"/>
+    <flow_inst name="sf_pnr" flow="sf_pnr" text="sf_pnr"/>
+    <flow_inst name="sf_syn" flow="sf_syn" text="sf_syn"/>
+    <join_task name="analyze"/>
+    <join_task name="analyze_mv"/>
+    <join_task name="build"/>
+    <edges>
+        <edge from="sf_char-1/analyze_mv" to="analyze_mv"/>
+        <edge from="sf_char-1/build" to="sf_syn/begin"/>
+        <edge from="sf_dp/analyze" to="analyze"/>
+        <edge from="sf_dp/analyze_mv" to="analyze_mv"/>
+        <edge from="sf_dp/build" to="sf_pnr/begin"/>
+        <edge from="sf_finish/analyze" to="analyze"/>
+        <edge from="sf_finish/analyze_mv" to="analyze_mv"/>
+        <edge from="sf_finish/build" to="build"/>
+        <edge from="sf_pnr/analyze" to="analyze"/>
+        <edge from="sf_pnr/analyze_mv" to="analyze_mv"/>
+        <edge from="sf_pnr/build" to="sf_finish/begin"/>
+        <edge from="sf_syn/analyze" to="analyze"/>
+        <edge from="sf_syn/analyze_mv" to="analyze_mv"/>
+        <edge from="sf_syn/build" to="sf_dp/begin"/>
+    </edges>
+    <graph grid_width="440" grid_height="360">
+        <node name="sf_char-1" x="210" y="30"/>
+        <node name="sf_dp" x="210" y="150"/>
+        <node name="sf_finish" x="210" y="270"/>
+        <node name="sf_pnr" x="210" y="210"/>
+        <node name="sf_syn" x="210" y="90"/>
+        <node name="analyze" x="60" y="180"/>
+        <node name="analyze_mv" x="360" y="180"/>
+        <node name="build" x="210" y="330"/>
+    </graph>
+</flow>

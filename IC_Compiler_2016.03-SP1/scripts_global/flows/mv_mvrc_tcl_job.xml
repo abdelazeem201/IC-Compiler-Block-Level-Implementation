@@ -1,0 +1,209 @@
+
+<!--
+## HEADER $Id: //sps/flow/ds/scripts_global/flows/mv_mvrc_tcl_job.xml#34 $
+## HEADER_MSG    Lynx Design System: Production Flow
+## HEADER_MSG    Version 2015.06-SP1
+## HEADER_MSG    Copyright (c) 2015 Synopsys
+## HEADER_MSG    Perforce Label: lynx_flow_2015.06-SP1
+## HEADER_MSG 
+-->
+<flow name="sf_mv">
+    <note name="note-2" title="MVTools - MVRC(Multi-Step)" always_show_detail="0"/>
+    <note name="note-4" title="MVTools - NLP" always_show_detail="0"/>
+    <note name="object-1" always_show_detail="1">
+        <text>Add an edge from MVRC to MVSIM tasks
+in the same step was added to serialize
+to avoid execution collisions</text>
+    </note>
+    <join_task name="dp_ready">
+        <step>20_dp</step>
+    </join_task>
+    <join_task name="finish_ready">
+        <step>40_finish</step>
+    </join_task>
+    <join_task name="mv_dp">
+        <step>20_dp</step>
+    </join_task>
+    <join_task name="mv_finish">
+        <step>40_finish</step>
+    </join_task>
+    <join_task name="mv_netlist">
+        <step>10_syn</step>
+    </join_task>
+    <join_task name="mv_pnr">
+        <step>30_pnr</step>
+    </join_task>
+    <join_task name="mv_rtl">
+        <step>10_syn</step>
+    </join_task>
+    <join_task name="pnr_ready">
+        <step>30_pnr</step>
+    </join_task>
+    <join_task name="rtl_ready">
+        <step>10_syn</step>
+    </join_task>
+    <join_task name="syn_ready">
+        <step>10_syn</step>
+    </join_task>
+    <tool_task name="dp_mvrc_pgnetlist">
+        <step>20_dp</step>
+        <script_file>$SEV(gscript_dir)/formal/mvrc_tcljob.tcl</script_file>
+        <src>800_outputs</src>
+        <dst>900_outputs_mvrc_pgnetlist</dst>
+        <tool>tcl_job</tool>
+        <analysis_task>1</analysis_task>
+        <aux_tools>mvtools</aux_tools>
+        <variables>
+            <variable name="TEV(mvrc_mode)" value="PGNETLIST"/>
+            <variable name="TEV(mvrc_script)" value="$SEV(bscript_dir)/formal/mvrc_pgnetlist.tcl"/>
+        </variables>
+        <must_allow_list>
+            <must_allow regexp=".MVRC. ERROR 10061"/>
+        </must_allow_list>
+    </tool_task>
+    <tool_task name="finish_mvrc_pgnetlist">
+        <step>40_finish</step>
+        <script_file>$SEV(gscript_dir)/formal/mvrc_tcljob.tcl</script_file>
+        <src>800_outputs</src>
+        <dst>900_outputs_mvrc_pgnetlist</dst>
+        <tool>tcl_job</tool>
+        <analysis_task>1</analysis_task>
+        <aux_tools>mvtools</aux_tools>
+        <variables>
+            <variable name="TEV(mvrc_mode)" value="PGNETLIST"/>
+            <variable name="TEV(mvrc_script)" value="$SEV(bscript_dir)/formal/mvrc_pgnetlist.tcl"/>
+        </variables>
+        <must_allow_list>
+            <must_allow regexp=".MVRC. ERROR 10061"/>
+        </must_allow_list>
+    </tool_task>
+    <tool_task name="pgsim">
+        <step>40_finish</step>
+        <script_file>$SEV(bscript_dir)/formal/pgsim.tcl</script_file>
+        <src>800_outputs</src>
+        <dst>900_outputs_pgsim_netlist</dst>
+        <tool>tcl_job</tool>
+        <analysis_task>1</analysis_task>
+        <aux_tools>vcs</aux_tools>
+        <must_have_list>
+            <must_have regexp="SNPS_PASS" severity="error"/>
+        </must_have_list>
+    </tool_task>
+    <tool_task name="pnr_mvrc_pgnetlist">
+        <step>30_pnr</step>
+        <script_file>$SEV(gscript_dir)/formal/mvrc_tcljob.tcl</script_file>
+        <src>800_outputs</src>
+        <dst>900_outputs_mvrc_pgnetlist</dst>
+        <tool>tcl_job</tool>
+        <analysis_task>1</analysis_task>
+        <aux_tools>mvtools</aux_tools>
+        <variables>
+            <variable name="TEV(mvrc_mode)" value="PGNETLIST"/>
+            <variable name="TEV(mvrc_script)" value="$SEV(bscript_dir)/formal/mvrc_pgnetlist.tcl"/>
+        </variables>
+        <must_allow_list>
+            <must_allow regexp=".MVRC. ERROR 10061"/>
+        </must_allow_list>
+    </tool_task>
+    <tool_task name="sim_sdf_gen">
+        <step>40_finish</step>
+        <script_file>$SEV(gscript_dir)/sta/execute_scenario.tcl</script_file>
+        <src>800_outputs</src>
+        <dst>900_outputs_pgsim_netlist</dst>
+        <tool>pt</tool>
+        <variables>
+            <variable name="TEV(output_control)" value="SDF"/>
+        </variables>
+    </tool_task>
+    <tool_task name="syn_mvrc_netlist">
+        <step>10_syn</step>
+        <script_file>$SEV(gscript_dir)/formal/mvrc_tcljob.tcl</script_file>
+        <src>800_outputs</src>
+        <dst>900_outputs_mvrc_netlist</dst>
+        <tool>tcl_job</tool>
+        <analysis_task>1</analysis_task>
+        <aux_tools>mvtools</aux_tools>
+        <variables>
+            <variable name="TEV(mvrc_mode)" value="NETLIST"/>
+            <variable name="TEV(mvrc_script)" value="$SEV(bscript_dir)/formal/mvrc_netlist.tcl"/>
+        </variables>
+        <must_allow_list>
+            <must_allow regexp=".MVRC. ERROR 10061"/>
+            <must_allow regexp=".MVRC. ERROR 9503"/>
+        </must_allow_list>
+    </tool_task>
+    <tool_task name="syn_mvrc_rtl">
+        <step>10_syn</step>
+        <script_file>$SEV(gscript_dir)/formal/mvrc_tcljob.tcl</script_file>
+        <src>000_inputs</src>
+        <dst>900_outputs_mvrc_rtl</dst>
+        <tool>tcl_job</tool>
+        <aux_tools>dc mvtools</aux_tools>
+    </tool_task>
+    <tool_task name="syn_mvsim_netlist">
+        <step>10_syn</step>
+        <script_file>$SEV(bscript_dir)/formal/mvsim.tcl</script_file>
+        <src>800_outputs</src>
+        <dst>900_outputs_mvsim_netlist</dst>
+        <tool>tcl_job</tool>
+        <analysis_task>1</analysis_task>
+        <aux_tools>mvtools vcs</aux_tools>
+        <must_have_list>
+            <must_have regexp="SNPS_PASS" severity="error"/>
+        </must_have_list>
+    </tool_task>
+    <tool_task name="syn_mvsim_rtl">
+        <step>10_syn</step>
+        <script_file>$SEV(bscript_dir)/formal/mvsim.tcl</script_file>
+        <src>000_inputs</src>
+        <dst>900_outputs_mvsim_rtl</dst>
+        <tool>tcl_job</tool>
+        <aux_tools>mvtools vcs</aux_tools>
+        <must_have_list>
+            <must_have regexp="SNPS_PASS" severity="error"/>
+        </must_have_list>
+    </tool_task>
+    <edges>
+        <edge from="dp_mvrc_pgnetlist" to="mv_dp"/>
+        <edge from="dp_ready" to="dp_mvrc_pgnetlist"/>
+        <edge from="finish_mvrc_pgnetlist" to="mv_finish"/>
+        <edge from="finish_ready" to="finish_mvrc_pgnetlist"/>
+        <edge from="finish_ready" to="pgsim"/>
+        <edge from="finish_ready" to="sim_sdf_gen"/>
+        <edge from="mv_rtl" to="syn_ready"/>
+        <edge from="pgsim" to="mv_finish"/>
+        <edge from="pnr_mvrc_pgnetlist" to="mv_pnr"/>
+        <edge from="pnr_ready" to="pnr_mvrc_pgnetlist"/>
+        <edge from="rtl_ready" to="syn_mvrc_rtl"/>
+        <edge from="sim_sdf_gen" to="pgsim"/>
+        <edge from="syn_mvrc_netlist" to="syn_mvsim_netlist"/>
+        <edge from="syn_mvrc_rtl" to="syn_mvsim_rtl"/>
+        <edge from="syn_mvsim_netlist" to="mv_netlist"/>
+        <edge from="syn_mvsim_rtl" to="mv_rtl"/>
+        <edge from="syn_ready" to="syn_mvrc_netlist"/>
+    </edges>
+    <graph grid_width="760" grid_height="450">
+        <node name="note-2" x="120" y="20"/>
+        <node name="note-4" x="440" y="20"/>
+        <node name="object-1" x="570" y="150"/>
+        <node name="dp_ready" x="90" y="320"/>
+        <node name="finish_ready" x="500" y="320"/>
+        <node name="mv_dp" x="90" y="420"/>
+        <node name="mv_finish" x="500" y="420"/>
+        <node name="mv_netlist" x="290" y="270"/>
+        <node name="mv_pnr" x="290" y="420"/>
+        <node name="mv_rtl" x="290" y="120"/>
+        <node name="pnr_ready" x="290" y="320"/>
+        <node name="rtl_ready" x="290" y="20"/>
+        <node name="syn_ready" x="290" y="170"/>
+        <node name="dp_mvrc_pgnetlist" x="90" y="370"/>
+        <node name="finish_mvrc_pgnetlist" x="500" y="370"/>
+        <node name="pgsim" x="670" y="370"/>
+        <node name="pnr_mvrc_pgnetlist" x="290" y="370"/>
+        <node name="sim_sdf_gen" x="670" y="320"/>
+        <node name="syn_mvrc_netlist" x="290" y="220"/>
+        <node name="syn_mvrc_rtl" x="290" y="70"/>
+        <node name="syn_mvsim_netlist" x="460" y="220"/>
+        <node name="syn_mvsim_rtl" x="450" y="70"/>
+    </graph>
+</flow>

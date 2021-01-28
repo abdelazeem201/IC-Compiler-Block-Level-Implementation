@@ -1,0 +1,75 @@
+
+<!--
+## HEADER $Id: //sps/flow/ds/scripts_global/flows/vc.xml#19 $
+## HEADER_MSG    Lynx Design System: Production Flow
+## HEADER_MSG    Version 2015.06-SP1
+## HEADER_MSG    Copyright (c) 2015 Synopsys
+## HEADER_MSG    Perforce Label: lynx_flow_2015.06-SP1
+## HEADER_MSG 
+-->
+<flow name="sf_vc">
+    <note name="note-1" title="Extra Utilities and Optional Tasks" always_show_detail="0"/>
+    <note name="note-2" title="Verification Compiler Checks">
+        <text>These tasks build upon Verification Compiler checks that benefit 
+implementation flow, like Clock Domain Crossing Checks (CDC),</text>
+    </note>
+    <note name="note-3" title="Functional Simulation">
+        <text>This task provides a simplistic example of capturing a functional simulation within Lynx.
+
+This example can be used to show switching information annotation for the implementation flow.</text>
+    </note>
+    <tool_task name="functional_sim">
+        <step>10_syn</step>
+        <script_file>$SEV(gscript_dir)/syn/functional_sim.tcl</script_file>
+        <dst>900_outputs_sim_rtl</dst>
+        <tool>tcl_job</tool>
+        <aux_tools>dct vcs verdi</aux_tools>
+    </tool_task>
+    <tool_task name="leda">
+        <step>10_syn</step>
+        <script_file>$SEV(gscript_dir)/syn/leda.tcl</script_file>
+        <src>000_inputs</src>
+        <dst>900_outputs_leda</dst>
+        <tool>leda</tool>
+    </tool_task>
+    <tool_task name="syn_cdc_netlist">
+        <step>10_syn</step>
+        <script_file>$SEV(gscript_dir)/formal/vc_cdc.tcl</script_file>
+        <src>800_outputs</src>
+        <dst>900_outputs_cdc_netlist</dst>
+        <tool>vc_static</tool>
+        <variables>
+            <variable name="TEV(constraints_design)" value="$SEV(bscript_dir)/conf/constraints_design.tcl"/>
+            <variable name="TEV(mode)" value="NETLIST"/>
+        </variables>
+    </tool_task>
+    <tool_task name="syn_cdc_rtl">
+        <step>10_syn</step>
+        <script_file>$SEV(gscript_dir)/formal/vc_cdc.tcl</script_file>
+        <src>000_inputs</src>
+        <dst>900_outputs_cdc_rtl</dst>
+        <tool>vc_static</tool>
+        <variables>
+            <variable name="TEV(constraints_design)" value=""/>
+        </variables>
+    </tool_task>
+    <tool_task name="verdi_rtl">
+        <step>10_syn</step>
+        <script_file>$SEV(gscript_dir)/syn/verdi_rtl.tcl</script_file>
+        <src>000_inputs</src>
+        <dst>001_verdi</dst>
+        <tool>tcl_job</tool>
+        <gui>1</gui>
+        <aux_tools>verdi</aux_tools>
+    </tool_task>
+    <graph grid_width="510" grid_height="330">
+        <node name="note-1" x="220" y="30"/>
+        <node name="note-2" x="370" y="90"/>
+        <node name="note-3" x="120" y="260"/>
+        <node name="functional_sim" x="80" y="300"/>
+        <node name="leda" x="40" y="180"/>
+        <node name="syn_cdc_netlist" x="320" y="180"/>
+        <node name="syn_cdc_rtl" x="310" y="140"/>
+        <node name="verdi_rtl" x="60" y="140"/>
+    </graph>
+</flow>

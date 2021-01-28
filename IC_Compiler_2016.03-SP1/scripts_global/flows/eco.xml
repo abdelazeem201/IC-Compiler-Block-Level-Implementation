@@ -1,0 +1,312 @@
+
+<!--
+## HEADER $Id: //sps/flow/ds/scripts_global/flows/eco.xml#104 $
+## HEADER_MSG    Lynx Design System: Production Flow
+## HEADER_MSG    Version 2015.06-SP1
+## HEADER_MSG    Copyright (c) 2015 Synopsys
+## HEADER_MSG    Perforce Label: lynx_flow_2015.06-SP1
+## HEADER_MSG 
+-->
+<flow name="sf_eco">
+    <note name="note-1" title="Incremental FILL &amp; DRC" always_show_detail="0">
+        <text>The intent of this example is to demonstrate the In-design incremental FILL &amp; DRC capabilities.  
+We first implement a freeze silicon ECO, and then run the finishing tasks to complete the design.</text>
+    </note>
+    <note name="note-2" title="Formality Function ECO Example" always_show_detail="0"/>
+    <note name="note-3" title="svf reuse - line number changes" always_show_detail="0">
+        <text>Use this task to help leverage SVF from original SYN. This
+task uses a Formality utility fm_eco_to_svf to help automate
+changes in line numbers in the RTL files.
+
+Note that users must setup a directory with the old and new
+RTL files as inputs to this task.</text>
+    </note>
+    <note name="note-4" title="svf reuse - operator ID remapping" always_show_detail="0">
+        <text>Use this task to help leverage SVF from original SYN. This
+task uses a Formality utility generate_eco_map_file to help automate
+changes in the naming FM users to track operators in the RTL.
+
+Note:
+This task is only semi-automated. It creates a map file which needs
+to be inspected and changed to select the correct mapping.
+
+This task also uses two RTL containers as inputs - the original and the
+new. The flow does not provide a standard location for managing the 
+original RTL container so users will need to adjust the TEV pointer.</text>
+    </note>
+    <note name="note-5" title="Run new vs original to FAIL" always_show_detail="0">
+        <text>The failed verification of the initial RTL to existing netlist is useful
+for developing the list of verify_points to limit iterative ECO verification
+to a smaller list of effected endpoints.</text>
+    </note>
+    <note name="note-6" title="develop and verify edits to original netlist" always_show_detail="0">
+        <text>Use this task to interact with Formality to identify areas of change in the 
+current netlist. Using the smaller list of verify_points will speed up the 
+iterative process of making edits and re-validating.
+
+Once a clean set of edits is developed, FM will write them out for
+DC/ICC implementation.
+
+Users should reverify the full netlist after the DC/ICC edits are completed.</text>
+    </note>
+    <note name="note-7" title="implement final eco changes in ICC" always_show_detail="0">
+        <text>Implement the edits on the database. 
+
+Users should run a full Formality verification of the final
+database produced after the ECO.</text>
+    </note>
+    <note name="object-2" title="Interactive ECO" always_show_detail="0">
+        <text>Example tcl eco commands implementing an ECO in a non-frozen manner.</text>
+    </note>
+    <note name="object-3" title="Freeze Silicon ECO" always_show_detail="0">
+        <text>Example freeze silicon ECO.</text>
+    </note>
+    <note name="object-4" title="PSC ECO" always_show_detail="0">
+        <text>Example Programmable Spare Cell (PSC) ECO.</text>
+    </note>
+    <tool_task name="create_eco_change_svf">
+        <step>30_pnr</step>
+        <script_file>$SEV(gscript_dir)/formal/create_eco_change.tcl</script_file>
+        <dst>000_eco</dst>
+        <tool>fm</tool>
+        <variables>
+            <variable name="TEV(new_rtl_dir)" value="$SEV(bscript_dir)/formal/sample_eco_45/new"/>
+            <variable name="TEV(orig_rtl_dir)" value="$SEV(bscript_dir)/formal/sample_eco_45/orig"/>
+        </variables>
+    </tool_task>
+    <tool_task name="create_eco_map_svf">
+        <step>30_pnr</step>
+        <script_file>$SEV(gscript_dir)/formal/create_eco_map.tcl</script_file>
+        <src>000_eco</src>
+        <dst>000_eco</dst>
+        <tool>fm</tool>
+        <variables>
+            <variable name="TEV(orig_rtl_container)" value="$SEV(dst_dir)/../../../10_syn/work/900_outputs_formal/dhm.imp.fsc"/>
+        </variables>
+        <must_allow_list>
+            <must_allow regexp="Error:  No guide_eco_change commands found in SVF file."/>
+        </must_allow_list>
+    </tool_task>
+    <tool_task name="formal_eco">
+        <step>30_pnr</step>
+        <script_file>$SEV(gscript_dir)/formal/formal.tcl</script_file>
+        <src>800_outputs</src>
+        <dst>900_outputs_formal_eco</dst>
+        <tool>fm</tool>
+        <variables>
+            <variable name="TEV(eco_change_svf)" value="$SEV(bscript_dir)/formal/sample_eco_45/eco_change.svf"/>
+            <variable name="TEV(eco_map_svf)" value="$SEV(bscript_dir)/formal/sample_eco_45/eco_map.svf"/>
+            <variable name="TEV(eco_edits)" value="$SEV(bscript_dir)/formal/sample_eco_45/eco_edits.tcl"/>
+            <variable name="TEV(eco_verify_point_file)" value="$SEV(dst_dir)/report_failing_points.list"/>
+            <variable name="TEV(enable_adv_fm)" value="1"/>
+        </variables>
+    </tool_task>
+    <tool_task name="formal_eco_initial">
+        <step>30_pnr</step>
+        <script_file>$SEV(gscript_dir)/formal/formal.tcl</script_file>
+        <src>800_outputs</src>
+        <dst>900_outputs_formal_eco</dst>
+        <tool>fm</tool>
+        <variables>
+            <variable name="TEV(eco_change_svf)" value="$SEV(bscript_dir)/formal/sample_eco_45/eco_change.svf"/>
+            <variable name="TEV(eco_map_svf)" value="$SEV(bscript_dir)/formal/sample_eco_45/eco_map.svf"/>
+            <variable name="TEV(enable_adv_fm)" value="1"/>
+        </variables>
+    </tool_task>
+    <tool_task name="icc_eco_example_10">
+        <step>30_pnr</step>
+        <script_file>$SEV(bscript_dir)/pnr/icc_eco_example.tcl</script_file>
+        <src>600_icc_export_data</src>
+        <dst>310_icc_eco_example</dst>
+        <tool>icc</tool>
+        <variables>
+            <variable name="TEV(eco_type)" value="10"/>
+            <variable name="TEV(intask_export_mode)" value="VERILOG"/>
+            <variable name="TEV(scenario_management_file)" value="$SEV(bscript_dir)/conf/example.icc_traditional_scenario_management.tcl"/>
+        </variables>
+    </tool_task>
+    <tool_task name="icc_eco_example_11">
+        <step>30_pnr</step>
+        <script_file>$SEV(bscript_dir)/pnr/icc_eco_example.tcl</script_file>
+        <src>600_icc_export_data</src>
+        <dst>311_icc_eco_example</dst>
+        <tool>icc</tool>
+        <variables>
+            <variable name="TEV(eco_type)" value="11"/>
+            <variable name="TEV(scenario_management_file)" value="$SEV(bscript_dir)/conf/example.icc_traditional_scenario_management.tcl"/>
+        </variables>
+    </tool_task>
+    <tool_task name="icc_eco_example_20">
+        <step>30_pnr</step>
+        <script_file>$SEV(bscript_dir)/pnr/icc_eco_example.tcl</script_file>
+        <src>600_icc_export_data</src>
+        <dst>320_icc_eco_example</dst>
+        <tool>icc</tool>
+        <variables>
+            <variable name="TEV(eco_type)" value="20"/>
+            <variable name="TEV(intask_export_mode)" value="VERILOG"/>
+            <variable name="TEV(scenario_management_file)" value="$SEV(bscript_dir)/conf/example.icc_traditional_scenario_management.tcl"/>
+        </variables>
+    </tool_task>
+    <tool_task name="icc_eco_example_20_inc">
+        <step>40_finish</step>
+        <script_file>$SEV(bscript_dir)/pnr/icc_eco_example.tcl</script_file>
+        <src>130_icc_lvs_drc</src>
+        <dst>320_icc_eco_example_inc</dst>
+        <tool>icc</tool>
+        <variables>
+            <variable name="TEV(eco_type)" value="20"/>
+            <variable name="TEV(intask_export_mode)" value="VERILOG"/>
+            <variable name="TEV(scenario_management_file)" value="$SEV(bscript_dir)/conf/example.icc_traditional_scenario_management.tcl"/>
+        </variables>
+    </tool_task>
+    <tool_task name="icc_eco_example_21">
+        <step>30_pnr</step>
+        <script_file>$SEV(bscript_dir)/pnr/icc_eco_example.tcl</script_file>
+        <src>600_icc_export_data</src>
+        <dst>321_icc_eco_example</dst>
+        <tool>icc</tool>
+        <variables>
+            <variable name="TEV(eco_type)" value="21"/>
+            <variable name="TEV(scenario_management_file)" value="$SEV(bscript_dir)/conf/example.icc_traditional_scenario_management.tcl"/>
+        </variables>
+    </tool_task>
+    <tool_task name="icc_eco_example_21_inc">
+        <step>40_finish</step>
+        <script_file>$SEV(bscript_dir)/pnr/icc_eco_example.tcl</script_file>
+        <src>130_icc_lvs_drc</src>
+        <dst>321_icc_eco_example_inc</dst>
+        <tool>icc</tool>
+        <variables>
+            <variable name="TEV(eco_type)" value="21"/>
+            <variable name="TEV(eco_file)" value="$SEV(src_dir)/../320_icc_eco_example_inc/dhm.v"/>
+            <variable name="TEV(scenario_management_file)" value="$SEV(bscript_dir)/conf/example.icc_traditional_scenario_management.tcl"/>
+        </variables>
+    </tool_task>
+    <tool_task name="icc_eco_example_30">
+        <step>30_pnr</step>
+        <script_file>$SEV(bscript_dir)/pnr/icc_eco_example.tcl</script_file>
+        <src>600_icc_export_data</src>
+        <dst>330_icc_eco_example</dst>
+        <tool>icc</tool>
+        <variables>
+            <variable name="TEV(eco_type)" value="30"/>
+            <variable name="TEV(intask_export_mode)" value="VERILOG"/>
+            <variable name="TEV(scenario_management_file)" value="$SEV(bscript_dir)/conf/example.icc_traditional_scenario_management.tcl"/>
+        </variables>
+    </tool_task>
+    <tool_task name="icc_eco_example_31">
+        <step>30_pnr</step>
+        <script_file>$SEV(bscript_dir)/pnr/icc_eco_example.tcl</script_file>
+        <src>600_icc_export_data</src>
+        <dst>331_icc_eco_example</dst>
+        <tool>icc</tool>
+        <variables>
+            <variable name="TEV(eco_type)" value="31"/>
+            <variable name="TEV(scenario_management_file)" value="$SEV(bscript_dir)/conf/example.icc_traditional_scenario_management.tcl"/>
+        </variables>
+    </tool_task>
+    <tool_task name="icc_eco_example_fmfix">
+        <step>30_pnr</step>
+        <script_file>$SEV(bscript_dir)/pnr/icc_eco_example.tcl</script_file>
+        <src>800_outputs</src>
+        <dst>345_icc_eco_fix</dst>
+        <tool>icc</tool>
+        <variables>
+            <variable name="TEV(eco_type)" value="40"/>
+            <variable name="TEV(eco_file)" value="$SEV(bscript_dir)/../30_pnr/work/900_outputs_formal_eco/fm_to_galaxy_eco_edits.tcl"/>
+        </variables>
+    </tool_task>
+    <tool_task name="icc_insert_filler_cells_inc">
+        <step>40_finish</step>
+        <script_file>$SEV(tscript_dir)/icc_insert_filler_cells.tcl</script_file>
+        <src>321_icc_eco_example_inc</src>
+        <dst>330_icc_insert_filler_cells_inc</dst>
+        <tool>icc</tool>
+        <variables>
+            <variable name="TEV(fill_type)" value="FILLER_ONLY"/>
+            <variable name="TEV(scenario_management_file)" value="$SEV(bscript_dir)/conf/example.icc_traditional_scenario_management.tcl"/>
+        </variables>
+        <must_allow_list>
+            <must_allow regexp="ERROR: in mapping coordinate to tile index"/>
+        </must_allow_list>
+    </tool_task>
+    <tool_task name="icc_insert_metal_fill_inc">
+        <step>40_finish</step>
+        <script_file>$SEV(gscript_dir)/finish/icc_insert_fill_icv.tcl</script_file>
+        <src>330_icc_insert_filler_cells_inc</src>
+        <dst>340_icc_insert_metal_fill_inc</dst>
+        <tool>icc</tool>
+        <variables>
+            <variable name="TEV(fill_mode)" value="AUTO_ECO_METAL_FILL"/>
+            <variable name="TEV(timing_preserve_effort_level)" value="OFF"/>
+            <variable name="TEV(scenario_management_file)" value="$SEV(bscript_dir)/conf/example.icc_traditional_scenario_management.tcl"/>
+        </variables>
+    </tool_task>
+    <tool_task name="icc_run_drc_inc">
+        <step>40_finish</step>
+        <script_file>$SEV(gscript_dir)/finish/icc_run_drc.tcl</script_file>
+        <src>350_insert_baselayer_fill_inc</src>
+        <dst>360_icc_run_drc_inc</dst>
+        <tool>icc</tool>
+        <variables>
+            <variable name="TEV(drc_mode)" value="ECO_SIGNOFF_DRC"/>
+        </variables>
+    </tool_task>
+    <tool_task name="insert_baselayer_fill_inc">
+        <step>40_finish</step>
+        <script_file>$SEV(gscript_dir)/finish/icv_insert_fill.tcl</script_file>
+        <src>340_icc_insert_metal_fill_inc</src>
+        <dst>350_insert_baselayer_fill_inc</dst>
+        <tool>tcl_job</tool>
+        <aux_tools>hercules icv</aux_tools>
+    </tool_task>
+    <edges>
+        <edge from="create_eco_change_svf" to="create_eco_map_svf"/>
+        <edge from="create_eco_map_svf" to="formal_eco_initial"/>
+        <edge from="formal_eco" to="icc_eco_example_fmfix"/>
+        <edge from="formal_eco_initial" to="formal_eco"/>
+        <edge from="icc_eco_example_10" to="icc_eco_example_11"/>
+        <edge from="icc_eco_example_20" to="icc_eco_example_21"/>
+        <edge from="icc_eco_example_20_inc" to="icc_eco_example_21_inc"/>
+        <edge from="icc_eco_example_21_inc" to="icc_insert_filler_cells_inc"/>
+        <edge from="icc_eco_example_30" to="icc_eco_example_31"/>
+        <edge from="icc_insert_filler_cells_inc" to="icc_insert_metal_fill_inc"/>
+        <edge from="icc_insert_metal_fill_inc" to="insert_baselayer_fill_inc"/>
+        <edge from="insert_baselayer_fill_inc" to="icc_run_drc_inc"/>
+        <edge from="note-3" to="create_eco_change_svf"/>
+        <edge from="note-4" to="create_eco_map_svf"/>
+        <edge from="note-5" to="formal_eco_initial"/>
+        <edge from="note-6" to="formal_eco"/>
+        <edge from="note-7" to="icc_eco_example_fmfix"/>
+    </edges>
+    <graph grid_width="840" grid_height="440">
+        <node name="note-1" x="730" y="30"/>
+        <node name="note-2" x="140" y="220"/>
+        <node name="note-3" x="360" y="260"/>
+        <node name="note-4" x="360" y="290"/>
+        <node name="note-5" x="340" y="320"/>
+        <node name="note-6" x="390" y="370"/>
+        <node name="note-7" x="370" y="420"/>
+        <node name="object-2" x="100" y="30"/>
+        <node name="object-3" x="290" y="30"/>
+        <node name="object-4" x="470" y="30"/>
+        <node name="create_eco_change_svf" x="130" y="260"/>
+        <node name="create_eco_map_svf" x="130" y="290"/>
+        <node name="formal_eco" x="130" y="370"/>
+        <node name="formal_eco_initial" x="130" y="320"/>
+        <node name="icc_eco_example_10" x="100" y="100"/>
+        <node name="icc_eco_example_11" x="100" y="150"/>
+        <node name="icc_eco_example_20" x="310" y="100"/>
+        <node name="icc_eco_example_20_inc" x="730" y="100"/>
+        <node name="icc_eco_example_21" x="310" y="150"/>
+        <node name="icc_eco_example_21_inc" x="730" y="150"/>
+        <node name="icc_eco_example_30" x="520" y="100"/>
+        <node name="icc_eco_example_31" x="520" y="150"/>
+        <node name="icc_eco_example_fmfix" x="130" y="420"/>
+        <node name="icc_insert_filler_cells_inc" x="730" y="200"/>
+        <node name="icc_insert_metal_fill_inc" x="730" y="250"/>
+        <node name="icc_run_drc_inc" x="730" y="350"/>
+        <node name="insert_baselayer_fill_inc" x="730" y="300"/>
+    </graph>
+</flow>

@@ -1,0 +1,528 @@
+
+<!--
+## HEADER $Id: //sps/flow/ds/scripts_global/flows/pnr.xml#208 $
+## HEADER_MSG    Lynx Design System: Production Flow
+## HEADER_MSG    Version 2015.06-SP1
+## HEADER_MSG    Copyright (c) 2015 Synopsys
+## HEADER_MSG    Perforce Label: lynx_flow_2015.06-SP1
+## HEADER_MSG 
+-->
+<flow name="sf_pnr">
+    <note name="note-1" title="PNR Overview" always_show_detail="0">
+        <text>The PNR sub flow offers multiple implementation options.
+The current offerring includes 
+  - Feasibility Flow
+  - QOR Centric Flow
+
+See each flows comments for more details.</text>
+    </note>
+    <note name="note-2" title="Feasibility Flow" always_show_detail="0">
+        <text>The &quot;Feasibility Flow&quot; is intended for usage early in a designs life cycle.
+The flow achieves TAT by sacraficing some accuracy and QOR.   
+
+Some notable configurations:
+- The flow is abbreviated
+- Feasibility engines for placement and post-CTS optimization
+- Elmore for delay calculation.  
+- Design checking remains enabled (i.e. TEV(supress_checks)=0) consistent with early stage life cycle 
+
+The flow should be closely reviewed prior to usage and tuned if necessary.</text>
+    </note>
+    <note name="note-3" title="QOR Flow" always_show_detail="0">
+        <text>The &quot;QOR Flow&quot; is intended for usage late in a designs life cycle.
+The flow attempts to achieves QOR through accuracy and by sacraficing TAT.  
+
+Some notable configurations:
+- The flow is complete  
+- Normal placement and post CTS optimization engines 
+- AWE and Arnoldi for delay calculation
+- Design checking is disabled (i.e. TEV(supress_checks)=1) consistent with late stage life cycle
+  
+The flow should be closely reviewed prior to usage and tuned if necessary.</text>
+    </note>
+    <note name="note-4" title="PNR Bonus Content" always_show_detail="0">
+        <text>The following sub flow contains additional PNR related collateral.  The content ranges from items
+such as reconfigured tasks, specialized flows for testing, etc.</text>
+    </note>
+    <note name="note-5" title="DES-OO2 and PARA-078 must_allow" always_show_detail="0">
+        <text>Note optimize_clock_tree is producing a large number of fairly spurious
+DES-002 and PARA-078 Error messages in the icc_initial_route tasks.  As 
+such we have must_allow on these tasks.  This is being tracked in STAR 
+9*700086.</text>
+    </note>
+    <note name="note-6" title="Baseline Flow" always_show_detail="0">
+        <text>The &quot;Baseline Flow&quot; is intended for usage once clean data has been established.
+The flow strikes a balance between TAT by sacraficing some accuracy and QOR.   
+If more QOR is needed move upto the QOR flow.</text>
+    </note>
+    <flow_inst name="sf_formal-1" flow="sf_formal" text=""/>
+    <flow_inst name="sf_mv-1" flow="sf_mv" text=""/>
+    <flow_inst name="sf_pnr_extras-1" flow="sf_pnr_extras" text=""/>
+    <flow_inst name="sf_power_eco-1" flow="sf_power_eco" text=""/>
+    <flow_inst name="sf_sta-1" flow="sf_sta" text=""/>
+    <flow_inst name="sf_tc_eco-1" flow="sf_tc_eco" text=""/>
+    <join_task name="analyze">
+        <step>30_pnr</step>
+    </join_task>
+    <join_task name="analyze_mv">
+        <step>30_pnr</step>
+    </join_task>
+    <join_task name="begin">
+        <step>30_pnr</step>
+    </join_task>
+    <join_task name="build">
+        <step>30_pnr</step>
+    </join_task>
+    <tool_task name="icc_clock_opt_cts_baseline">
+        <step>30_pnr</step>
+        <script_file>$SEV(gscript_dir)/pnr/icc_clock_opt_cts.tcl</script_file>
+        <src>020_icc_place_opt_baseline</src>
+        <dst>030_icc_clock_opt_cts_baseline</dst>
+        <tool>icc</tool>
+        <variables>
+            <variable name="TEV(scenario_management_file)" value="$SEV(bscript_dir)/conf/example.icc_traditional_scenario_management.tcl"/>
+            <variable name="TEV(suppress_checks)" value="1"/>
+        </variables>
+    </tool_task>
+    <tool_task name="icc_clock_opt_cts_feasibility">
+        <step>30_pnr</step>
+        <script_file>$SEV(gscript_dir)/pnr/icc_clock_opt_cts.tcl</script_file>
+        <src>020_icc_place_opt_feasibility</src>
+        <dst>030_icc_clock_opt_cts_feasibility</dst>
+        <tool>icc</tool>
+        <variables>
+            <variable name="TEV(scenario_management_file)" value="$SEV(bscript_dir)/conf/example.icc_feasibility_scenario_management.tcl"/>
+        </variables>
+    </tool_task>
+    <tool_task name="icc_clock_opt_cts_qor">
+        <step>30_pnr</step>
+        <script_file>$SEV(gscript_dir)/pnr/icc_clock_opt_cts.tcl</script_file>
+        <src>020_icc_place_opt_qor</src>
+        <dst>030_icc_clock_opt_cts_qor</dst>
+        <tool>icc</tool>
+        <variables>
+            <variable name="TEV(clock_opt_options)" value="-only_cts -no_clock_route -concurrent_clock_and_data -power -area_recovery -update_clock_latency"/>
+            <variable name="TEV(scenario_management_file)" value="$SEV(bscript_dir)/conf/example.icc_traditional_scenario_management.tcl"/>
+            <variable name="TEV(suppress_checks)" value="1"/>
+        </variables>
+    </tool_task>
+    <tool_task name="icc_clock_opt_incr_qor">
+        <step>30_pnr</step>
+        <script_file>$SEV(gscript_dir)/pnr/icc_clock_opt_psyn.tcl</script_file>
+        <src>040_icc_clock_opt_psyn_qor</src>
+        <dst>050_icc_clock_opt_incr_qor</dst>
+        <tool>icc</tool>
+        <variables>
+            <variable name="TEV(post_clock_opt_options)" value="-incremental_concurrent_clock_and_data -area_recovery"/>
+            <variable name="TEV(scenario_management_file)" value="$SEV(bscript_dir)/conf/example.icc_traditional_scenario_management.tcl"/>
+        </variables>
+        <must_not_have_list>
+            <must_not_have regexp="PSYN-1028" severity="error"/>
+        </must_not_have_list>
+    </tool_task>
+    <tool_task name="icc_clock_opt_psyn_baseline">
+        <step>30_pnr</step>
+        <script_file>$SEV(gscript_dir)/pnr/icc_clock_opt_psyn.tcl</script_file>
+        <src>030_icc_clock_opt_cts_baseline</src>
+        <dst>040_icc_clock_opt_psyn_baseline</dst>
+        <tool>icc</tool>
+        <variables>
+            <variable name="TEV(scenario_management_file)" value="$SEV(bscript_dir)/conf/example.icc_traditional_scenario_management.tcl"/>
+        </variables>
+        <must_not_have_list>
+            <must_not_have regexp="PSYN-1028" severity="error"/>
+        </must_not_have_list>
+    </tool_task>
+    <tool_task name="icc_clock_opt_psyn_feasibility">
+        <step>30_pnr</step>
+        <script_file>$SEV(gscript_dir)/pnr/icc_clock_opt_psyn.tcl</script_file>
+        <src>030_icc_clock_opt_cts_feasibility</src>
+        <dst>040_icc_clock_opt_psyn_feasibility</dst>
+        <tool>icc</tool>
+        <variables>
+            <variable name="TEV(post_clock_opt_options)" value="-only_psyn"/>
+            <variable name="TEV(feasibility)" value="1"/>
+            <variable name="TEV(scenario_management_file)" value="$SEV(bscript_dir)/conf/example.icc_feasibility_scenario_management.tcl"/>
+        </variables>
+    </tool_task>
+    <tool_task name="icc_clock_opt_psyn_qor">
+        <step>30_pnr</step>
+        <script_file>$SEV(gscript_dir)/pnr/icc_clock_opt_psyn.tcl</script_file>
+        <src>030_icc_clock_opt_cts_qor</src>
+        <dst>040_icc_clock_opt_psyn_qor</dst>
+        <tool>icc</tool>
+        <variables>
+            <variable name="TEV(post_clock_opt_options)" value="-only_psyn -power -no_clock_route -concurrent_clock_and_data -power -area_recovery"/>
+            <variable name="TEV(scenario_management_file)" value="$SEV(bscript_dir)/conf/example.icc_traditional_scenario_management.tcl"/>
+        </variables>
+        <must_not_have_list>
+            <must_not_have regexp="PSYN-1028" severity="error"/>
+        </must_not_have_list>
+    </tool_task>
+    <tool_task name="icc_export_script_qor">
+        <step>30_pnr</step>
+        <script_file>$SEV(gscript_dir)/pnr/icc_export_script.tcl</script_file>
+        <src>499_sf_power_end</src>
+        <dst>600_icc_export_script_qor</dst>
+        <tool>icc</tool>
+        <auto_src>1</auto_src>
+        <variables>
+            <variable name="TEV(intask_export_mode)" value="MODEL VERILOG SDC DEF"/>
+        </variables>
+    </tool_task>
+    <tool_task name="icc_fix_signal_em_qor">
+        <step>30_pnr</step>
+        <script_file>$SEV(gscript_dir)/pnr/icc_fix_signal_em.tcl</script_file>
+        <src>080_icc_post_route_qor</src>
+        <dst>090_icc_signal_em_qor</dst>
+        <tool>icc</tool>
+        <variables>
+            <variable name="TEV(scenario_management_file)" value="$SEV(bscript_dir)/conf/example.icc_traditional_scenario_management.tcl"/>
+        </variables>
+    </tool_task>
+    <tool_task name="icc_initial_route_baseline">
+        <step>30_pnr</step>
+        <script_file>$SEV(gscript_dir)/pnr/icc_initial_route.tcl</script_file>
+        <src>040_icc_clock_opt_psyn_baseline</src>
+        <dst>060_icc_initial_route_baseline</dst>
+        <tool>icc</tool>
+        <variables>
+            <variable name="TEV(route_mode)" value="CTS_AND_INITIAL_RT"/>
+            <variable name="TEV(scenario_management_file)" value="$SEV(bscript_dir)/conf/example.icc_traditional_scenario_management.tcl"/>
+            <variable name="TEV(suppress_checks)" value="1"/>
+        </variables>
+        <must_allow_list>
+            <must_allow regexp="DES-002"/>
+            <must_allow regexp="PARA-078"/>
+        </must_allow_list>
+    </tool_task>
+    <tool_task name="icc_initial_route_feasibility">
+        <step>30_pnr</step>
+        <script_file>$SEV(gscript_dir)/pnr/icc_initial_route.tcl</script_file>
+        <src>040_icc_clock_opt_psyn_feasibility</src>
+        <dst>060_icc_initial_route_feasibility</dst>
+        <tool>icc</tool>
+        <variables>
+            <variable name="TEV(post_route_cto_enable)" value="0"/>
+            <variable name="TEV(set_delay_calculation_options)" value="-preroute elmore -routed_clock awe -postroute awe"/>
+            <variable name="TEV(scenario_management_file)" value="$SEV(bscript_dir)/conf/example.icc_feasibility_scenario_management.tcl"/>
+            <variable name="TEV(intask_export_mode)" value="MODEL VERILOG SDC DEF"/>
+            <variable name="TEV(suppress_checks)" value="1"/>
+            <variable name="TEV(suppress_early_complete)" value="1"/>
+        </variables>
+        <must_allow_list>
+            <must_allow regexp="DES-002"/>
+            <must_allow regexp="PARA-078"/>
+        </must_allow_list>
+    </tool_task>
+    <tool_task name="icc_initial_route_qor">
+        <step>30_pnr</step>
+        <script_file>$SEV(gscript_dir)/pnr/icc_initial_route.tcl</script_file>
+        <src>050_icc_clock_opt_incr_qor</src>
+        <dst>060_icc_initial_route_qor</dst>
+        <tool>icc</tool>
+        <variables>
+            <variable name="TEV(route_mode)" value="CTS_AND_INITIAL_RT"/>
+            <variable name="TEV(post_route_cto_enable)" value="0"/>
+            <variable name="TEV(set_delay_calculation_options)" value="-preroute awe -routed_clock arnoldi -postroute arnoldi -arnoldi_effort hybrid"/>
+            <variable name="TEV(scenario_management_file)" value="$SEV(bscript_dir)/conf/example.icc_traditional_scenario_management.tcl"/>
+            <variable name="TEV(suppress_checks)" value="1"/>
+        </variables>
+        <must_allow_list>
+            <must_allow regexp="DES-002"/>
+            <must_allow regexp="PARA-078"/>
+        </must_allow_list>
+    </tool_task>
+    <tool_task name="icc_place_opt_baseline">
+        <step>30_pnr</step>
+        <script_file>$SEV(gscript_dir)/pnr/icc_place_opt.tcl</script_file>
+        <src>010_icc_setup_design_baseline</src>
+        <dst>020_icc_place_opt_baseline</dst>
+        <tool>icc</tool>
+        <variables>
+            <variable name="TEV(set_place_opt_strategy_options)" value="-layer_optimization true"/>
+            <variable name="TEV(scenario_management_file)" value="$SEV(bscript_dir)/conf/example.icc_traditional_scenario_management.tcl"/>
+            <variable name="TEV(suppress_checks)" value="1"/>
+        </variables>
+        <must_not_have_list>
+            <must_not_have regexp="PSYN-1028" severity="error"/>
+        </must_not_have_list>
+    </tool_task>
+    <tool_task name="icc_place_opt_feasibility">
+        <step>30_pnr</step>
+        <script_file>$SEV(gscript_dir)/pnr/icc_place_opt.tcl</script_file>
+        <src>010_icc_setup_design_feasibility</src>
+        <dst>020_icc_place_opt_feasibility</dst>
+        <tool>icc</tool>
+        <variables>
+            <variable name="TEV(place_opt_options)" value="-optimize_dft"/>
+            <variable name="TEV(set_place_opt_strategy_options)" value="-layer_optimization false"/>
+            <variable name="TEV(port_buffer)" value="0"/>
+            <variable name="TEV(set_delay_calculation_options)" value="-preroute elmore -routed_clock awe -postroute awe"/>
+            <variable name="TEV(scenario_management_file)" value="$SEV(bscript_dir)/conf/example.icc_feasibility_scenario_management.tcl"/>
+        </variables>
+    </tool_task>
+    <tool_task name="icc_place_opt_qor">
+        <step>30_pnr</step>
+        <script_file>$SEV(gscript_dir)/pnr/icc_place_opt.tcl</script_file>
+        <src>010_icc_setup_design_qor</src>
+        <dst>020_icc_place_opt_qor</dst>
+        <tool>icc</tool>
+        <variables>
+            <variable name="TEV(place_opt_options)" value="-area_recovery -optimize_dft -optimize_icgs -power -spg"/>
+            <variable name="TEV(set_place_opt_strategy_options)" value="-layer_optimization true -layer_optimization_effort high -consider_routing true"/>
+            <variable name="TEV(set_delay_calculation_options)" value="-preroute awe -routed_clock arnoldi -postroute arnoldi -arnoldi_effort hybrid"/>
+            <variable name="TEV(scenario_management_file)" value="$SEV(bscript_dir)/conf/example.icc_traditional_scenario_management.tcl"/>
+            <variable name="TEV(suppress_checks)" value="1"/>
+        </variables>
+        <must_not_have_list>
+            <must_not_have regexp="PSYN-1028" severity="error"/>
+        </must_not_have_list>
+    </tool_task>
+    <tool_task name="icc_post_route_baseline">
+        <step>30_pnr</step>
+        <script_file>$SEV(gscript_dir)/pnr/icc_post_route.tcl</script_file>
+        <src>070_icc_route_opt_baseline</src>
+        <dst>080_icc_post_route_baseline</dst>
+        <tool>icc</tool>
+        <variables>
+            <variable name="TEV(insert_diodes)" value="1"/>
+            <variable name="TEV(scenario_management_file)" value="$SEV(bscript_dir)/conf/example.icc_traditional_scenario_management.tcl"/>
+            <variable name="TEV(intask_export_mode)" value="MODEL VERILOG SDC DEF"/>
+            <variable name="TEV(suppress_early_complete)" value="1"/>
+        </variables>
+    </tool_task>
+    <tool_task name="icc_post_route_qor">
+        <step>30_pnr</step>
+        <script_file>$SEV(gscript_dir)/pnr/icc_post_route.tcl</script_file>
+        <src>070_icc_route_opt_qor</src>
+        <dst>080_icc_post_route_qor</dst>
+        <tool>icc</tool>
+        <variables>
+            <variable name="TEV(insert_diodes)" value="1"/>
+            <variable name="TEV(scenario_management_file)" value="$SEV(bscript_dir)/conf/example.icc_traditional_scenario_management.tcl"/>
+        </variables>
+    </tool_task>
+    <tool_task name="icc_route_opt_baseline">
+        <step>30_pnr</step>
+        <script_file>$SEV(gscript_dir)/pnr/icc_route_opt.tcl</script_file>
+        <src>060_icc_initial_route_baseline</src>
+        <dst>070_icc_route_opt_baseline</dst>
+        <tool>icc</tool>
+        <variables>
+            <variable name="TEV(scenario_management_file)" value="$SEV(bscript_dir)/conf/example.icc_traditional_scenario_management.tcl"/>
+        </variables>
+    </tool_task>
+    <tool_task name="icc_route_opt_qor">
+        <step>30_pnr</step>
+        <script_file>$SEV(gscript_dir)/pnr/icc_route_opt.tcl</script_file>
+        <src>060_icc_initial_route_qor</src>
+        <dst>070_icc_route_opt_qor</dst>
+        <tool>icc</tool>
+        <variables>
+            <variable name="TEV(scenario_management_file)" value="$SEV(bscript_dir)/conf/example.icc_traditional_scenario_management.tcl"/>
+            <variable name="TEV(route_opt_options)" value="-skip_initial_route -xtalk_reduction -concurrent_clock_and_data"/>
+        </variables>
+    </tool_task>
+    <tool_task name="icc_run_drc">
+        <step>30_pnr</step>
+        <script_file>$SEV(gscript_dir)/finish/icc_run_drc.tcl</script_file>
+        <src>600_icc_export_data</src>
+        <dst>600_icc_export_data</dst>
+        <tool>icc</tool>
+        <analysis_task>1</analysis_task>
+        <variables>
+            <variable name="TEV(drc_operation)" value="PNR"/>
+        </variables>
+    </tool_task>
+    <tool_task name="icc_run_lvs">
+        <step>30_pnr</step>
+        <script_file>$SEV(gscript_dir)/finish/icc_run_lvs.tcl</script_file>
+        <src>600_icc_export_data</src>
+        <dst>600_icc_export_data</dst>
+        <tool>icc</tool>
+        <analysis_task>1</analysis_task>
+        <must_have_list>
+            <must_have regexp="Total Floating Nets are 0" severity="error"/>
+            <must_have regexp="Total SHORT Nets are 0" severity="error"/>
+            <must_have regexp="Total OPEN Nets are 0" severity="error"/>
+        </must_have_list>
+    </tool_task>
+    <tool_task name="icc_setup_design_baseline">
+        <step>30_pnr</step>
+        <script_file>$SEV(gscript_dir)/pnr/icc_setup_design.tcl</script_file>
+        <src>000_inputs</src>
+        <dst>010_icc_setup_design_baseline</dst>
+        <tool>icc</tool>
+        <variables>
+            <variable name="TEV(scenario_management_file)" value="$SEV(bscript_dir)/conf/example.icc_traditional_scenario_management.tcl"/>
+        </variables>
+    </tool_task>
+    <tool_task name="icc_setup_design_feasibility">
+        <step>30_pnr</step>
+        <script_file>$SEV(gscript_dir)/pnr/icc_setup_design.tcl</script_file>
+        <src>000_inputs</src>
+        <dst>010_icc_setup_design_feasibility</dst>
+        <tool>icc</tool>
+        <variables>
+            <variable name="TEV(scenario_management_file)" value="$SEV(bscript_dir)/conf/example.icc_feasibility_scenario_management.tcl"/>
+        </variables>
+    </tool_task>
+    <tool_task name="icc_setup_design_qor">
+        <step>30_pnr</step>
+        <script_file>$SEV(gscript_dir)/pnr/icc_setup_design.tcl</script_file>
+        <src>000_inputs</src>
+        <dst>010_icc_setup_design_qor</dst>
+        <tool>icc</tool>
+        <variables>
+            <variable name="TEV(scenario_management_file)" value="$SEV(bscript_dir)/conf/example.icc_traditional_scenario_management.tcl"/>
+        </variables>
+    </tool_task>
+    <tool_task name="promote">
+        <step>30_pnr</step>
+        <script_file>$SEV(gscript_dir)/pnr/promote.tcl</script_file>
+        <src>600_icc_export_data</src>
+        <dst>800_outputs</dst>
+        <tool>tcl</tool>
+        <metrics_enable_transfer>0</metrics_enable_transfer>
+    </tool_task>
+    <tool_task name="promote_models">
+        <step>30_pnr</step>
+        <script_file>$SEV(gscript_dir)/syn/promote_models.tcl</script_file>
+        <src>900_outputs_sta_models</src>
+        <dst>800_outputs_models</dst>
+        <tool>tcl</tool>
+    </tool_task>
+    <tool_task name="setup">
+        <step>30_pnr</step>
+        <script_file>$SEV(gscript_dir)/pnr/setup.tcl</script_file>
+        <dst>000_inputs</dst>
+        <tool>tcl</tool>
+        <metrics_enable_transfer>0</metrics_enable_transfer>
+    </tool_task>
+    <gen_task name="extract_final">
+        <step>30_pnr</step>
+        <script_file>$SEV(tscript_dir)/generate_starrc_tasks.tcl</script_file>
+        <src>600_icc_export_data</src>
+        <dst>600_icc_export_data</dst>
+        <metrics_enable_transfer>0</metrics_enable_transfer>
+        <must_allow_list>
+            <must_allow regexp="Errors: 0"/>
+        </must_allow_list>
+    </gen_task>
+    <gen_task name="gen_mesh_model">
+        <step>30_pnr</step>
+        <script_file>$SEV(gscript_dir)/sta/generate_scenarios.tcl</script_file>
+        <src>600_icc_export_data</src>
+        <dst>600_icc_export_data</dst>
+        <metrics_enable_transfer>0</metrics_enable_transfer>
+        <variables>
+            <variable name="TEV(si_mode)" value="SI_OFF"/>
+            <variable name="TEV(power_analysis)" value="0"/>
+            <variable name="TEV(gen_clock_mesh_model)" value="1"/>
+        </variables>
+    </gen_task>
+    <mux_task name="select_results">
+        <step>30_pnr</step>
+        <script_file>$SEV(gscript_dir)/conf/mux_task.tcl</script_file>
+        <src>600_icc_export_script</src>
+        <dst>600_icc_export_data</dst>
+        <tool>tcl</tool>
+        <port_count>3</port_count>
+        <ports>0100000000000000</ports>
+    </mux_task>
+    <edges>
+        <edge from="analyze" to="analyze_mv"/>
+        <edge from="begin" to="setup"/>
+        <edge from="build" to="sf_formal-1/formal_pnr"/>
+        <edge from="build" to="sf_mv-1/pnr_ready"/>
+        <edge from="build" to="sf_sta-1/sta_pnr_begin"/>
+        <edge from="extract_final" to="gen_mesh_model"/>
+        <edge from="extract_final" to="promote"/>
+        <edge from="icc_clock_opt_cts_baseline" to="icc_clock_opt_psyn_baseline"/>
+        <edge from="icc_clock_opt_cts_feasibility" to="icc_clock_opt_psyn_feasibility"/>
+        <edge from="icc_clock_opt_cts_qor" to="icc_clock_opt_psyn_qor"/>
+        <edge from="icc_clock_opt_incr_qor" to="icc_initial_route_qor"/>
+        <edge from="icc_clock_opt_psyn_baseline" to="icc_initial_route_baseline"/>
+        <edge from="icc_clock_opt_psyn_feasibility" to="icc_initial_route_feasibility"/>
+        <edge from="icc_clock_opt_psyn_qor" to="icc_clock_opt_incr_qor"/>
+        <edge from="icc_export_script_qor" to="select_results/2" points="64,81;49,81;49,71;38,71"/>
+        <edge from="icc_fix_signal_em_qor" to="sf_tc_eco-1/sf_tc_eco_begin"/>
+        <edge from="icc_initial_route_baseline" to="icc_route_opt_baseline"/>
+        <edge from="icc_initial_route_feasibility" to="select_results/0" points="14,57;34,71"/>
+        <edge from="icc_initial_route_qor" to="icc_route_opt_qor"/>
+        <edge from="icc_place_opt_baseline" to="icc_clock_opt_cts_baseline"/>
+        <edge from="icc_place_opt_feasibility" to="icc_clock_opt_cts_feasibility"/>
+        <edge from="icc_place_opt_qor" to="icc_clock_opt_cts_qor"/>
+        <edge from="icc_post_route_baseline" to="select_results/1" points="40,65;36,71"/>
+        <edge from="icc_post_route_qor" to="icc_fix_signal_em_qor"/>
+        <edge from="icc_route_opt_baseline" to="icc_post_route_baseline"/>
+        <edge from="icc_route_opt_qor" to="icc_post_route_qor"/>
+        <edge from="icc_run_drc" to="extract_final"/>
+        <edge from="icc_run_lvs" to="icc_run_drc"/>
+        <edge from="icc_setup_design_baseline" to="icc_place_opt_baseline"/>
+        <edge from="icc_setup_design_feasibility" to="icc_place_opt_feasibility"/>
+        <edge from="icc_setup_design_qor" to="icc_place_opt_qor"/>
+        <edge from="promote" to="build"/>
+        <edge from="select_results" to="icc_run_lvs"/>
+        <edge from="setup" to="icc_setup_design_baseline"/>
+        <edge from="setup" to="icc_setup_design_feasibility" points="14,29"/>
+        <edge from="setup" to="icc_setup_design_qor" points="64,29"/>
+        <edge from="sf_formal-1/formal_pnr" to="analyze"/>
+        <edge from="sf_formal-1/formal_pnr" to="promote_models"/>
+        <edge from="sf_mv-1/mv_pnr" to="analyze_mv"/>
+        <edge from="sf_power_eco-1/sf_power_end" to="icc_export_script_qor"/>
+        <edge from="sf_sta-1/pnr_models_done" to="promote_models"/>
+        <edge from="sf_sta-1/sta_pnr_end" to="analyze"/>
+        <edge from="sf_sta-1/sta_pnr_smva" to="analyze_mv"/>
+        <edge from="sf_tc_eco-1/sf_tc_eco_end" to="sf_power_eco-1/sf_power_begin"/>
+    </edges>
+    <graph grid_width="760" grid_height="1110">
+        <node name="note-1" x="240" y="250"/>
+        <node name="note-2" x="230" y="310"/>
+        <node name="note-3" x="690" y="310"/>
+        <node name="note-4" x="90" y="780"/>
+        <node name="note-5" x="610" y="220"/>
+        <node name="note-6" x="470" y="310"/>
+        <node name="sf_formal-1" x="280" y="1010"/>
+        <node name="sf_mv-1" x="430" y="1010"/>
+        <node name="sf_pnr_extras-1" x="70" y="820"/>
+        <node name="sf_power_eco-1" x="640" y="740"/>
+        <node name="sf_sta-1" x="360" y="1010"/>
+        <node name="sf_tc_eco-1" x="640" y="700"/>
+        <node name="analyze" x="360" y="1070"/>
+        <node name="analyze_mv" x="450" y="1070"/>
+        <node name="begin" x="400" y="220"/>
+        <node name="build" x="360" y="970"/>
+        <node name="icc_clock_opt_cts_baseline" x="400" y="420"/>
+        <node name="icc_clock_opt_cts_feasibility" x="140" y="420"/>
+        <node name="icc_clock_opt_cts_qor" x="640" y="420"/>
+        <node name="icc_clock_opt_incr_qor" x="640" y="500"/>
+        <node name="icc_clock_opt_psyn_baseline" x="400" y="460"/>
+        <node name="icc_clock_opt_psyn_feasibility" x="140" y="460"/>
+        <node name="icc_clock_opt_psyn_qor" x="640" y="460"/>
+        <node name="icc_export_script_qor" x="640" y="780"/>
+        <node name="icc_fix_signal_em_qor" x="640" y="660"/>
+        <node name="icc_initial_route_baseline" x="400" y="540"/>
+        <node name="icc_initial_route_feasibility" x="140" y="540"/>
+        <node name="icc_initial_route_qor" x="640" y="540"/>
+        <node name="icc_place_opt_baseline" x="400" y="380"/>
+        <node name="icc_place_opt_feasibility" x="140" y="380"/>
+        <node name="icc_place_opt_qor" x="640" y="380"/>
+        <node name="icc_post_route_baseline" x="400" y="620"/>
+        <node name="icc_post_route_qor" x="640" y="620"/>
+        <node name="icc_route_opt_baseline" x="400" y="580"/>
+        <node name="icc_route_opt_qor" x="640" y="580"/>
+        <node name="icc_run_drc" x="360" y="840"/>
+        <node name="icc_run_lvs" x="360" y="800"/>
+        <node name="icc_setup_design_baseline" x="400" y="340"/>
+        <node name="icc_setup_design_feasibility" x="140" y="340"/>
+        <node name="icc_setup_design_qor" x="640" y="340"/>
+        <node name="promote" x="360" y="930"/>
+        <node name="promote_models" x="230" y="1070"/>
+        <node name="setup" x="400" y="260"/>
+        <node name="extract_final" x="360" y="880"/>
+        <node name="gen_mesh_model" x="190" y="930"/>
+        <node name="select_results" x="360" y="760"/>
+    </graph>
+</flow>

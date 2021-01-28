@@ -1,0 +1,49 @@
+
+<!--
+## HEADER $Id: //sps/flow/ds/scripts_global/flows/xtor.xml#60 $
+## HEADER_MSG    Lynx Design System: Production Flow
+## HEADER_MSG    Version 2015.06-SP1
+## HEADER_MSG    Copyright (c) 2015 Synopsys
+## HEADER_MSG    Perforce Label: lynx_flow_2015.06-SP1
+## HEADER_MSG 
+-->
+<flow name="sf_xtor">
+    <note name="note-1" title="Overview" always_show_detail="0">
+        <text>This flow provides an example of writing an hspice netlist from PT and simulating the netlist with HSPICE.</text>
+    </note>
+    <tool_task name="gen_spice_deck">
+        <step>40_finish</step>
+        <script_file>$SEV(gscript_dir)/sta/execute_scenario.tcl</script_file>
+        <src>800_outputs</src>
+        <dst>900_outputs_xtor</dst>
+        <tool>pt</tool>
+        <analysis_task>1</analysis_task>
+        <variables>
+            <variable name="TEV(report_level)" value="NONE"/>
+            <variable name="TEV(gen_spice_deck)" value="1"/>
+        </variables>
+        <must_allow_list>
+            <must_allow regexp="DES-002"/>
+        </must_allow_list>
+    </tool_task>
+    <tool_task name="hspice">
+        <step>40_finish</step>
+        <script_file>$SEV(tscript_dir)/hspice.tcl</script_file>
+        <src>900_outputs_xtor</src>
+        <dst>900_outputs_xtor</dst>
+        <tool>tcl_job</tool>
+        <analysis_task>1</analysis_task>
+        <aux_tools>hspice</aux_tools>
+        <must_not_have_list>
+            <must_not_have regexp="\*\*error\*\*" severity="error"/>
+        </must_not_have_list>
+    </tool_task>
+    <edges>
+        <edge from="gen_spice_deck" to="hspice"/>
+    </edges>
+    <graph grid_width="180" grid_height="120">
+        <node name="note-1" x="90" y="20"/>
+        <node name="gen_spice_deck" x="90" y="50"/>
+        <node name="hspice" x="90" y="90"/>
+    </graph>
+</flow>

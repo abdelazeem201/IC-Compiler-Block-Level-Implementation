@@ -1,0 +1,458 @@
+
+<!--
+## HEADER $Id: //sps/flow/ds/scripts_global/flows/dp.xml#154 $
+## HEADER_MSG    Lynx Design System: Production Flow
+## HEADER_MSG    Version 2015.06-SP1
+## HEADER_MSG    Copyright (c) 2015 Synopsys
+## HEADER_MSG    Perforce Label: lynx_flow_2015.06-SP1
+## HEADER_MSG 
+-->
+<flow name="sf_dp">
+    <note name="note-1" title="DP Overview" always_show_detail="0">
+        <text>1) The DP sub flow offers several implementation paths.  The current offerings include:
+- DP Exploration Flow
+- Baseline Flow (default)
+- QOR Flow
+- Soft Macro Flow
+
+See comments in each of the flow paths for additional details.  
+
+2) There are several advanced Galaxy design planning capabilites that can be run, such as:
+
+- Black box flow
+- Mulitply instantiated modules (MIM)
+- On-Demand Loading (ODL)
+
+When combining any advanced capabilities, we recommend that you contact your local AC to verify the
+robustness of the combined flow.
+
+3) In addition, there are several Galaxy based design exploration capabilites contained in the 
+&quot;sf_dp_explore&quot; subflow.  See Lynx training docs for additional details.</text>
+    </note>
+    <note name="note-2" title="Baseline Flow" always_show_detail="0">
+        <text>This path implements the normal VF Galaxy design planning flow.
+It is intended for both flat and hierarchical designs.</text>
+    </note>
+    <note name="note-3" title="DP Exploration Flow" always_show_detail="0">
+        <text>This path allows for quicker turn through the DP step.
+It is intended to allow users to quickly identify the feasibility of a given design floorplan.
+Amongst other TAT centered edits, it enables the &quot;exploration&quot; mode of several key
+design planning features.</text>
+    </note>
+    <note name="note-4" title="Soft Macro Flow" always_show_detail="0">
+        <text>This path can be used for soft macros to implement incremental edits to the floorplan
+that was pushed down from the parent design.  It also performs additional processing for
+the soft macros, in the icc_macro_processign_sm task.
+
+NOTE: Once you have executed this flow once and performed the processing in the
+icc_macro_processing task, you can run the QOR Flow path for subsequent runs.</text>
+    </note>
+    <note name="note-5" title="Exploration Capabilities" always_show_detail="0">
+        <text>The DP Explore sub flow contains a collection of independent Galaxy based design 
+exploration capabilities.  The following offerings are available:  
+
+Floorplan Exploration
+- RM based floorplan exploration collateral
+
+Data Flow Analysis
+- Provides the initial setup to get the design ready for interactive DFA analysis
+
+Minchip 
+- Executes the ICC estimate_fp_area feature
+
+Powerplan Exploration
+- Emerging ICC capability that simultaneously runs multiple power implementations</text>
+    </note>
+    <note name="note-6" title="QOR Flow" always_show_detail="0">
+        <text>This path can be used in an SPG flow to implement incremental edits to a previously
+floorplanned design.  Custom floorplan updates can be performed in the
+icc_custom_processing_qor task.</text>
+    </note>
+    <flow_inst name="sf_dp_explore-1" flow="sf_dp_explore" text=""/>
+    <flow_inst name="sf_formal-1" flow="sf_formal" text=""/>
+    <flow_inst name="sf_mv-1" flow="sf_mv" text=""/>
+    <join_task name="analyze">
+        <step>20_dp</step>
+    </join_task>
+    <join_task name="analyze_mv">
+        <step>20_dp</step>
+    </join_task>
+    <join_task name="begin">
+        <step>20_dp</step>
+    </join_task>
+    <join_task name="build">
+        <step>20_dp</step>
+    </join_task>
+    <tool_task name="create_qtm">
+        <step>20_dp</step>
+        <script_file>$SEV(bscript_dir)/dp/create_qtm.tcl</script_file>
+        <src>000_inputs</src>
+        <dst>001_create_qtm</dst>
+        <tool>pt</tool>
+    </tool_task>
+    <tool_task name="icc_commit_baseline">
+        <step>20_dp</step>
+        <script_file>$SEV(gscript_dir)/dp/icc_commit.tcl</script_file>
+        <src>030_icc_power_insertion_baseline</src>
+        <dst>040_icc_commit_baseline</dst>
+        <tool>icc</tool>
+        <variables>
+            <variable name="TEV(on_demand_mcmm_data)" value="../work/010_icc_setup_design_baseline"/>
+            <variable name="TEV(scenario_management_file)" value="$SEV(bscript_dir)/conf/example.icc_traditional_scenario_management.tcl"/>
+        </variables>
+        <must_not_have_list>
+            <must_not_have regexp="PSYN-1028" severity="error"/>
+        </must_not_have_list>
+        <must_allow_list>
+            <must_allow regexp="LINK-5"/>
+        </must_allow_list>
+    </tool_task>
+    <tool_task name="icc_commit_exploration">
+        <step>20_dp</step>
+        <script_file>$SEV(gscript_dir)/dp/icc_commit.tcl</script_file>
+        <src>030_icc_power_insertion_exploration</src>
+        <dst>040_icc_commit_exploration</dst>
+        <tool>icc</tool>
+        <variables>
+            <variable name="TEV(on_demand_mcmm_data)" value="../work/010_icc_setup_design_exploration"/>
+            <variable name="TEV(allocate_fp_budgets_options)" value="-file_format_spec $SEV(dst_dir)/sdc/m.sdc -exploration"/>
+            <variable name="TEV(scenario_management_file)" value="$SEV(bscript_dir)/conf/example.icc_traditional_scenario_management.tcl"/>
+            <variable name="TEV(report_level)" value="METRICS"/>
+        </variables>
+        <must_not_have_list>
+            <must_not_have regexp="PSYN-1028" severity="error"/>
+        </must_not_have_list>
+        <must_allow_list>
+            <must_allow regexp="LINK-5"/>
+        </must_allow_list>
+    </tool_task>
+    <tool_task name="icc_create_floorplan_baseline">
+        <step>20_dp</step>
+        <script_file>$SEV(gscript_dir)/dp/icc_create_floorplan.tcl</script_file>
+        <src>010_icc_setup_design_baseline</src>
+        <dst>020_icc_create_floorplan_baseline</dst>
+        <tool>icc</tool>
+        <variables>
+            <variable name="TEV(scenario_management_file)" value="$SEV(bscript_dir)/conf/example.icc_traditional_scenario_management.tcl"/>
+        </variables>
+    </tool_task>
+    <tool_task name="icc_create_floorplan_exploration">
+        <step>20_dp</step>
+        <script_file>$SEV(gscript_dir)/dp/icc_create_floorplan.tcl</script_file>
+        <src>010_icc_setup_design_exploration</src>
+        <dst>020_icc_create_floorplan_exploration</dst>
+        <tool>icc</tool>
+        <variables>
+            <variable name="TEV(create_fp_placement_options)" value="-exploration"/>
+            <variable name="TEV(spare_cell_insertion_file)" value=""/>
+            <variable name="TEV(dcap_insertion_file)" value=""/>
+            <variable name="TEV(scenario_management_file)" value="$SEV(bscript_dir)/conf/example.icc_traditional_scenario_management.tcl"/>
+            <variable name="TEV(report_level)" value="METRICS"/>
+        </variables>
+    </tool_task>
+    <tool_task name="icc_custom_processing_qor">
+        <step>20_dp</step>
+        <script_file>$SEV(gscript_dir)/dp/icc_custom_processing.tcl</script_file>
+        <src>010_icc_setup_design_qor</src>
+        <dst>020_icc_custom_processing_qor</dst>
+        <tool>icc</tool>
+        <variables>
+            <variable name="TEV(scenario_management_file)" value="$SEV(bscript_dir)/conf/example.icc_traditional_scenario_management.tcl"/>
+            <variable name="TEV(intask_export_mode)" value="MODEL VERILOG SDC DP"/>
+        </variables>
+    </tool_task>
+    <tool_task name="icc_custom_processing_sm">
+        <step>20_dp</step>
+        <script_file>$SEV(gscript_dir)/dp/icc_custom_processing.tcl</script_file>
+        <src>010_icc_setup_design_sm</src>
+        <dst>020_icc_custom_processing_sm</dst>
+        <tool>icc</tool>
+        <variables>
+            <variable name="TEV(scenario_management_file)" value="$SEV(bscript_dir)/conf/example.icc_traditional_scenario_management.tcl"/>
+        </variables>
+    </tool_task>
+    <tool_task name="icc_export_baseline">
+        <step>20_dp</step>
+        <script_file>$SEV(gscript_dir)/pnr/icc_export_script.tcl</script_file>
+        <src>040_icc_commit_baseline</src>
+        <dst>060_icc_export_baseline</dst>
+        <tool>icc</tool>
+        <variables>
+            <variable name="TEV(intask_export_mode)" value="MODEL VERILOG SDC DP"/>
+        </variables>
+    </tool_task>
+    <tool_task name="icc_export_exploration">
+        <step>20_dp</step>
+        <script_file>$SEV(gscript_dir)/pnr/icc_export_script.tcl</script_file>
+        <src>040_icc_commit_exploration</src>
+        <dst>060_icc_export_exploration</dst>
+        <tool>icc</tool>
+        <variables>
+            <variable name="TEV(intask_export_mode)" value="MODEL VERILOG SDC DP"/>
+        </variables>
+    </tool_task>
+    <tool_task name="icc_insert_filler_cells">
+        <step>20_dp</step>
+        <script_file>$SEV(tscript_dir)/icc_insert_filler_cells.tcl</script_file>
+        <src>800_outputs</src>
+        <dst>900_icc_insert_filler_cells</dst>
+        <tool>icc</tool>
+        <analysis_task>1</analysis_task>
+        <variables>
+            <variable name="TEV(fill_type)" value="FILLER_ONLY"/>
+            <variable name="TEV(scenario_management_file)" value="$SEV(bscript_dir)/conf/example.icc_traditional_scenario_management.tcl"/>
+        </variables>
+    </tool_task>
+    <tool_task name="icc_macro_processing_sm">
+        <step>20_dp</step>
+        <script_file>$SEV(gscript_dir)/dp/icc_macro_processing.tcl</script_file>
+        <src>020_icc_custom_processing_sm</src>
+        <dst>050_icc_macro_processing_sm</dst>
+        <tool>icc</tool>
+        <variables>
+            <variable name="TEV(scenario_management_file)" value="$SEV(bscript_dir)/conf/example.icc_traditional_scenario_management.tcl"/>
+            <variable name="TEV(intask_export_mode)" value="MODEL VERILOG SDC DP"/>
+        </variables>
+    </tool_task>
+    <tool_task name="icc_power_analysis">
+        <step>20_dp</step>
+        <script_file>$SEV(gscript_dir)/dp/icc_power_analysis.tcl</script_file>
+        <src>800_outputs</src>
+        <dst>900_power_analysis</dst>
+        <tool>icc</tool>
+        <analysis_task>1</analysis_task>
+    </tool_task>
+    <tool_task name="icc_power_insertion_baseline">
+        <step>20_dp</step>
+        <script_file>$SEV(gscript_dir)/dp/icc_power_insertion.tcl</script_file>
+        <src>020_icc_create_floorplan_baseline</src>
+        <dst>030_icc_power_insertion_baseline</dst>
+        <tool>icc</tool>
+        <variables>
+            <variable name="TEV(scenario_management_file)" value="$SEV(bscript_dir)/conf/example.icc_traditional_scenario_management.tcl"/>
+        </variables>
+        <must_not_have_list>
+            <must_not_have regexp="FPHSM-1532" severity="error"/>
+        </must_not_have_list>
+    </tool_task>
+    <tool_task name="icc_power_insertion_exploration">
+        <step>20_dp</step>
+        <script_file>$SEV(gscript_dir)/dp/icc_power_insertion.tcl</script_file>
+        <src>020_icc_create_floorplan_exploration</src>
+        <dst>030_icc_power_insertion_exploration</dst>
+        <tool>icc</tool>
+        <variables>
+            <variable name="TEV(exclude_ippd)" value="*"/>
+            <variable name="TEV(scenario_management_file)" value="$SEV(bscript_dir)/conf/example.icc_traditional_scenario_management.tcl"/>
+            <variable name="TEV(report_level)" value="METRICS"/>
+        </variables>
+    </tool_task>
+    <tool_task name="icc_rail_vf_static">
+        <step>20_dp</step>
+        <script_file>$SEV(gscript_dir)/power/icc_rail_analysis.tcl</script_file>
+        <src>800_outputs</src>
+        <dst>900_power_analysis_pr</dst>
+        <tool>icc</tool>
+        <analysis_task>1</analysis_task>
+        <must_allow_list>
+            <must_allow regexp="Errors: 0"/>
+        </must_allow_list>
+    </tool_task>
+    <tool_task name="icc_run_dfm">
+        <step>20_dp</step>
+        <script_file>$SEV(gscript_dir)/finish/icc_run_drc.tcl</script_file>
+        <src>900_icc_insert_filler_cells</src>
+        <dst>900_icc_run_dfm</dst>
+        <tool>icc</tool>
+        <analysis_task>1</analysis_task>
+        <variables>
+            <variable name="TEV(drc_operation)" value="DFM"/>
+        </variables>
+    </tool_task>
+    <tool_task name="icc_run_drc">
+        <step>20_dp</step>
+        <script_file>$SEV(gscript_dir)/finish/icc_run_drc.tcl</script_file>
+        <src>900_icc_insert_filler_cells</src>
+        <dst>900_icc_run_drc</dst>
+        <tool>icc</tool>
+        <analysis_task>1</analysis_task>
+        <variables>
+            <variable name="TEV(drc_operation)" value="DP"/>
+        </variables>
+    </tool_task>
+    <tool_task name="icc_setup_design_baseline">
+        <step>20_dp</step>
+        <script_file>$SEV(gscript_dir)/pnr/icc_setup_design.tcl</script_file>
+        <src>000_inputs</src>
+        <dst>010_icc_setup_design_baseline</dst>
+        <tool>icc</tool>
+        <variables>
+            <variable name="TEV(netlist_format)" value="DDC"/>
+            <variable name="TEV(scenario_management_file)" value="$SEV(bscript_dir)/conf/example.icc_traditional_scenario_management.tcl"/>
+            <variable name="TEV(report_content)" value="BASIC SETTINGS"/>
+        </variables>
+        <must_allow_list>
+            <must_allow regexp="LINK-5"/>
+            <must_allow regexp="TL-104"/>
+        </must_allow_list>
+    </tool_task>
+    <tool_task name="icc_setup_design_exploration">
+        <step>20_dp</step>
+        <script_file>$SEV(gscript_dir)/pnr/icc_setup_design.tcl</script_file>
+        <src>000_inputs</src>
+        <dst>010_icc_setup_design_exploration</dst>
+        <tool>icc</tool>
+        <variables>
+            <variable name="TEV(netlist_format)" value="DDC"/>
+            <variable name="TEV(scenario_management_file)" value="$SEV(bscript_dir)/conf/example.icc_traditional_scenario_management.tcl"/>
+            <variable name="TEV(report_level)" value="METRICS"/>
+            <variable name="TEV(report_content)" value="BASIC SETTINGS"/>
+        </variables>
+        <must_allow_list>
+            <must_allow regexp="LINK-5"/>
+            <must_allow regexp="TL-104"/>
+        </must_allow_list>
+    </tool_task>
+    <tool_task name="icc_setup_design_qor">
+        <step>20_dp</step>
+        <script_file>$SEV(gscript_dir)/pnr/icc_setup_design.tcl</script_file>
+        <src>000_inputs</src>
+        <dst>010_icc_setup_design_qor</dst>
+        <tool>icc</tool>
+        <variables>
+            <variable name="TEV(netlist_format)" value="DDC"/>
+            <variable name="TEV(physical_file)" value="you_must_specify_a_def"/>
+            <variable name="TEV(physical_format)" value="DEF"/>
+            <variable name="TEV(scenario_management_file)" value="$SEV(bscript_dir)/conf/example.icc_traditional_scenario_management.tcl"/>
+            <variable name="TEV(report_content)" value="BASIC SETTINGS"/>
+        </variables>
+        <must_allow_list>
+            <must_allow regexp="LINK-5"/>
+            <must_allow regexp="TL-104"/>
+        </must_allow_list>
+    </tool_task>
+    <tool_task name="icc_setup_design_sm">
+        <step>20_dp</step>
+        <script_file>$SEV(gscript_dir)/pnr/icc_setup_design.tcl</script_file>
+        <src>000_inputs</src>
+        <dst>010_icc_setup_design_sm</dst>
+        <tool>icc</tool>
+        <variables>
+            <variable name="TEV(scenario_management_file)" value="$SEV(bscript_dir)/conf/example.icc_traditional_scenario_management.tcl"/>
+            <variable name="TEV(report_content)" value="BASIC SETTINGS"/>
+        </variables>
+        <must_allow_list>
+            <must_allow regexp="LINK-5"/>
+            <must_allow regexp="TL-104"/>
+        </must_allow_list>
+    </tool_task>
+    <tool_task name="promote">
+        <step>20_dp</step>
+        <script_file>$SEV(gscript_dir)/dp/promote.tcl</script_file>
+        <src>700_results</src>
+        <dst>800_outputs</dst>
+        <tool>tcl</tool>
+        <metrics_enable_transfer>0</metrics_enable_transfer>
+    </tool_task>
+    <tool_task name="promote_models">
+        <step>20_dp</step>
+        <script_file>$SEV(gscript_dir)/syn/promote_models.tcl</script_file>
+        <src>900_outputs_sta_models</src>
+        <dst>800_outputs_models</dst>
+        <tool>tcl</tool>
+    </tool_task>
+    <tool_task name="setup">
+        <step>20_dp</step>
+        <script_file>$SEV(gscript_dir)/dp/setup.tcl</script_file>
+        <dst>000_inputs</dst>
+        <tool>tcl</tool>
+        <metrics_enable_transfer>0</metrics_enable_transfer>
+    </tool_task>
+    <mux_task name="select_results">
+        <step>20_dp</step>
+        <script_file>$SEV(gscript_dir)/conf/mux_task.tcl</script_file>
+        <src>050_icc_macro_processing_sm</src>
+        <dst>700_results</dst>
+        <tool>tcl</tool>
+        <port_count>4</port_count>
+        <ports>0100000000000000</ports>
+    </mux_task>
+    <edges>
+        <edge from="analyze" to="analyze_mv"/>
+        <edge from="begin" to="setup"/>
+        <edge from="build" to="icc_insert_filler_cells" points="34,59"/>
+        <edge from="build" to="icc_power_analysis" points="71,58"/>
+        <edge from="build" to="icc_rail_vf_static" points="88,58"/>
+        <edge from="build" to="sf_formal-1/formal_dp"/>
+        <edge from="build" to="sf_mv-1/dp_ready"/>
+        <edge from="create_qtm" to="icc_setup_design_baseline" points="41,15"/>
+        <edge from="create_qtm" to="icc_setup_design_exploration" points="15,15"/>
+        <edge from="create_qtm" to="icc_setup_design_qor" points="64,15"/>
+        <edge from="create_qtm" to="icc_setup_design_sm" points="85,15"/>
+        <edge from="icc_commit_baseline" to="icc_export_baseline"/>
+        <edge from="icc_commit_exploration" to="icc_export_exploration"/>
+        <edge from="icc_create_floorplan_baseline" to="icc_power_insertion_baseline"/>
+        <edge from="icc_create_floorplan_exploration" to="icc_power_insertion_exploration"/>
+        <edge from="icc_custom_processing_qor" to="select_results/2" points="64,40;51,43"/>
+        <edge from="icc_custom_processing_sm" to="icc_macro_processing_sm"/>
+        <edge from="icc_export_baseline" to="select_results/1" points="41,40;49,43"/>
+        <edge from="icc_export_exploration" to="select_results/0" points="15,40;47,43"/>
+        <edge from="icc_insert_filler_cells" to="icc_run_dfm" points="28,65"/>
+        <edge from="icc_insert_filler_cells" to="icc_run_drc" points="39,65"/>
+        <edge from="icc_macro_processing_sm" to="select_results/3" points="85,40;53,43"/>
+        <edge from="icc_power_analysis" to="analyze" points="71,66"/>
+        <edge from="icc_power_insertion_baseline" to="icc_commit_baseline"/>
+        <edge from="icc_power_insertion_exploration" to="icc_commit_exploration"/>
+        <edge from="icc_run_drc" to="analyze"/>
+        <edge from="icc_setup_design_baseline" to="icc_create_floorplan_baseline"/>
+        <edge from="icc_setup_design_exploration" to="icc_create_floorplan_exploration"/>
+        <edge from="icc_setup_design_qor" to="icc_custom_processing_qor"/>
+        <edge from="icc_setup_design_sm" to="icc_custom_processing_sm"/>
+        <edge from="promote" to="build"/>
+        <edge from="select_results" to="promote"/>
+        <edge from="setup" to="create_qtm"/>
+        <edge from="sf_formal-1/formal_dp" to="analyze"/>
+        <edge from="sf_formal-1/formal_dp" to="promote_models" points="60,62"/>
+        <edge from="sf_mv-1/mv_dp" to="analyze_mv"/>
+    </edges>
+    <graph grid_width="1040" grid_height="710">
+        <node name="note-1" x="350" y="30"/>
+        <node name="note-2" x="480" y="170"/>
+        <node name="note-3" x="250" y="170"/>
+        <node name="note-4" x="930" y="170"/>
+        <node name="note-5" x="190" y="480"/>
+        <node name="note-6" x="690" y="170"/>
+        <node name="sf_dp_explore-1" x="190" y="520"/>
+        <node name="sf_formal-1" x="500" y="620"/>
+        <node name="sf_mv-1" x="970" y="560"/>
+        <node name="analyze" x="500" y="680"/>
+        <node name="analyze_mv" x="970" y="680"/>
+        <node name="begin" x="500" y="30"/>
+        <node name="build" x="500" y="570"/>
+        <node name="create_qtm" x="500" y="110"/>
+        <node name="icc_commit_baseline" x="410" y="330"/>
+        <node name="icc_commit_exploration" x="150" y="330"/>
+        <node name="icc_create_floorplan_baseline" x="410" y="250"/>
+        <node name="icc_create_floorplan_exploration" x="150" y="250"/>
+        <node name="icc_custom_processing_qor" x="640" y="250"/>
+        <node name="icc_custom_processing_sm" x="850" y="250"/>
+        <node name="icc_export_baseline" x="410" y="370"/>
+        <node name="icc_export_exploration" x="150" y="370"/>
+        <node name="icc_insert_filler_cells" x="340" y="630"/>
+        <node name="icc_macro_processing_sm" x="850" y="290"/>
+        <node name="icc_power_analysis" x="710" y="610"/>
+        <node name="icc_power_insertion_baseline" x="410" y="290"/>
+        <node name="icc_power_insertion_exploration" x="150" y="290"/>
+        <node name="icc_rail_vf_static" x="880" y="610"/>
+        <node name="icc_run_dfm" x="280" y="680"/>
+        <node name="icc_run_drc" x="390" y="680"/>
+        <node name="icc_setup_design_baseline" x="410" y="210"/>
+        <node name="icc_setup_design_exploration" x="150" y="210"/>
+        <node name="icc_setup_design_qor" x="640" y="210"/>
+        <node name="icc_setup_design_sm" x="850" y="210"/>
+        <node name="promote" x="500" y="530"/>
+        <node name="promote_models" x="600" y="650"/>
+        <node name="setup" x="500" y="70"/>
+        <node name="select_results" x="500" y="480"/>
+    </graph>
+</flow>

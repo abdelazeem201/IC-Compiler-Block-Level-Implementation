@@ -1,0 +1,437 @@
+
+<!--
+## HEADER $Id: //sps/flow/ds/scripts_global/flows/formal_alt.xml#12 $
+## HEADER_MSG    Lynx Design System: Production Flow
+## HEADER_MSG    Version 2015.06-SP1
+## HEADER_MSG    Copyright (c) 2015 Synopsys
+## HEADER_MSG    Perforce Label: lynx_flow_2015.06-SP1
+## HEADER_MSG 
+-->
+<flow name="sf_formal">
+    <note name="note-1" title="UPF Extra Checks" always_show_detail="0">
+        <text>The upf_extras joiner provides early 
+access to checks included by formal_syn.
+
+The formal_syn_check task builds
+the reference container which provides
+early validation of the RTL, upf, and libraries. 
+The formal_syn_upf_debug task performs
+verification with all power supplies forced on
+which runs faster and helps identify
+issues unrelated to MV cells.</text>
+    </note>
+    <note name="note-3" title="FM Alt Strategies">
+        <text>For most blocks, the default formal_syn will be optimal. For some block specific corner cases, FM provides access to additional solvers that can be run in parallel to discover a breakthrough in verification success or runtime. There is also an example of running 3 solvers in series with a time limit to show ideas for building a design specific verification that works with several alternate strategies working one after the other.</text>
+    </note>
+    <join_task name="fm_syn_begin">
+        <step>10_syn</step>
+    </join_task>
+    <join_task name="fm_syn_end">
+        <step>10_syn</step>
+    </join_task>
+    <join_task name="upf_extras">
+        <step>10_syn</step>
+    </join_task>
+    <tool_task name="formal_dp">
+        <step>20_dp</step>
+        <script_file>$SEV(gscript_dir)/formal/formal.tcl</script_file>
+        <src>800_outputs</src>
+        <dst>900_outputs_formal</dst>
+        <tool>fm</tool>
+        <analysis_task>1</analysis_task>
+        <variables>
+            <variable name="TEV(ref)" value="000_inputs"/>
+            <variable name="TEV(setup_reference)" value="$SEV(gscript_dir)/formal/setup_netlist.tcl"/>
+        </variables>
+        <must_have_list>
+            <must_have regexp="Verification SUCCEEDED" severity="error"/>
+        </must_have_list>
+    </tool_task>
+    <tool_task name="formal_finish">
+        <step>40_finish</step>
+        <script_file>$SEV(gscript_dir)/formal/formal.tcl</script_file>
+        <src>800_outputs</src>
+        <dst>900_outputs_formal</dst>
+        <tool>fm</tool>
+        <analysis_task>1</analysis_task>
+        <variables>
+            <variable name="TEV(ref)" value="000_inputs"/>
+            <variable name="TEV(setup_reference)" value="$SEV(gscript_dir)/formal/setup_netlist.tcl"/>
+        </variables>
+        <must_have_list>
+            <must_have regexp="Verification SUCCEEDED" severity="error"/>
+        </must_have_list>
+    </tool_task>
+    <tool_task name="formal_pnr">
+        <step>30_pnr</step>
+        <script_file>$SEV(gscript_dir)/formal/formal.tcl</script_file>
+        <src>800_outputs</src>
+        <dst>900_outputs_formal</dst>
+        <tool>fm</tool>
+        <analysis_task>1</analysis_task>
+        <variables>
+            <variable name="TEV(ref)" value="000_inputs"/>
+            <variable name="TEV(setup_reference)" value="$SEV(gscript_dir)/formal/setup_netlist.tcl"/>
+        </variables>
+        <must_have_list>
+            <must_have regexp="Verification SUCCEEDED" severity="error"/>
+        </must_have_list>
+    </tool_task>
+    <tool_task name="formal_syn">
+        <step>10_syn</step>
+        <script_file>$SEV(gscript_dir)/formal/formal.tcl</script_file>
+        <src>800_outputs</src>
+        <dst>900_outputs_formal</dst>
+        <tool>fm</tool>
+        <analysis_task>1</analysis_task>
+        <variables>
+            <variable name="TEV(ref)" value="000_inputs"/>
+        </variables>
+        <must_have_list>
+            <must_have regexp="Verification SUCCEEDED" severity="error"/>
+        </must_have_list>
+        <must_allow_list>
+            <must_allow regexp="FMR_ELAB-1552"/>
+            <must_allow regexp="FM-036"/>
+        </must_allow_list>
+    </tool_task>
+    <tool_task name="formal_syn_check">
+        <step>10_syn</step>
+        <script_file>$SEV(gscript_dir)/formal/formal.tcl</script_file>
+        <src>800_outputs</src>
+        <dst>900_outputs_formal</dst>
+        <tool>fm</tool>
+        <analysis_task>1</analysis_task>
+        <variables>
+            <variable name="TEV(ref)" value="000_inputs"/>
+            <variable name="TEV(ref_check_only)" value="1"/>
+            <variable name="TEV(num_cores)" value="1"/>
+        </variables>
+        <must_allow_list>
+            <must_allow regexp="FMR_ELAB-1552"/>
+        </must_allow_list>
+    </tool_task>
+    <tool_task name="formal_syn_s_1">
+        <step>10_syn</step>
+        <script_file>$SEV(gscript_dir)/formal/formal_alt_strategies.tcl</script_file>
+        <src>900_outputs_formal</src>
+        <dst>900_outputs_formal_1</dst>
+        <tool>fm</tool>
+        <analysis_task>1</analysis_task>
+        <variables>
+            <variable name="TEV(verification_alternate_strategy)" value="s1"/>
+        </variables>
+        <must_have_list>
+            <must_have regexp="Verification SUCCEEDED" severity="error"/>
+        </must_have_list>
+        <must_allow_list>
+            <must_allow regexp="FMR_ELAB-1552"/>
+            <must_allow regexp="FM-036"/>
+        </must_allow_list>
+    </tool_task>
+    <tool_task name="formal_syn_s_10">
+        <step>10_syn</step>
+        <script_file>$SEV(gscript_dir)/formal/formal_alt_strategies.tcl</script_file>
+        <src>900_outputs_formal</src>
+        <dst>900_outputs_formal_10</dst>
+        <tool>fm</tool>
+        <analysis_task>1</analysis_task>
+        <variables>
+            <variable name="TEV(verification_alternate_strategy)" value="s10"/>
+        </variables>
+        <must_have_list>
+            <must_have regexp="Verification SUCCEEDED" severity="error"/>
+        </must_have_list>
+        <must_allow_list>
+            <must_allow regexp="FMR_ELAB-1552"/>
+            <must_allow regexp="FM-036"/>
+        </must_allow_list>
+    </tool_task>
+    <tool_task name="formal_syn_s_2">
+        <step>10_syn</step>
+        <script_file>$SEV(gscript_dir)/formal/formal_alt_strategies.tcl</script_file>
+        <src>900_outputs_formal</src>
+        <dst>900_outputs_formal_2</dst>
+        <tool>fm</tool>
+        <analysis_task>1</analysis_task>
+        <variables>
+            <variable name="TEV(verification_alternate_strategy)" value="s2"/>
+        </variables>
+        <must_have_list>
+            <must_have regexp="Verification SUCCEEDED" severity="error"/>
+        </must_have_list>
+        <must_allow_list>
+            <must_allow regexp="FMR_ELAB-1552"/>
+            <must_allow regexp="FM-036"/>
+        </must_allow_list>
+    </tool_task>
+    <tool_task name="formal_syn_s_3">
+        <step>10_syn</step>
+        <script_file>$SEV(gscript_dir)/formal/formal_alt_strategies.tcl</script_file>
+        <src>900_outputs_formal</src>
+        <dst>900_outputs_formal_3</dst>
+        <tool>fm</tool>
+        <analysis_task>1</analysis_task>
+        <variables>
+            <variable name="TEV(verification_alternate_strategy)" value="s3"/>
+        </variables>
+        <must_have_list>
+            <must_have regexp="Verification SUCCEEDED" severity="error"/>
+        </must_have_list>
+        <must_allow_list>
+            <must_allow regexp="FMR_ELAB-1552"/>
+            <must_allow regexp="FM-036"/>
+        </must_allow_list>
+    </tool_task>
+    <tool_task name="formal_syn_s_4">
+        <step>10_syn</step>
+        <script_file>$SEV(gscript_dir)/formal/formal_alt_strategies.tcl</script_file>
+        <src>900_outputs_formal</src>
+        <dst>900_outputs_formal_4</dst>
+        <tool>fm</tool>
+        <analysis_task>1</analysis_task>
+        <variables>
+            <variable name="TEV(verification_alternate_strategy)" value="s4"/>
+        </variables>
+        <must_have_list>
+            <must_have regexp="Verification SUCCEEDED" severity="error"/>
+        </must_have_list>
+        <must_allow_list>
+            <must_allow regexp="FMR_ELAB-1552"/>
+            <must_allow regexp="FM-036"/>
+        </must_allow_list>
+    </tool_task>
+    <tool_task name="formal_syn_s_5">
+        <step>10_syn</step>
+        <script_file>$SEV(gscript_dir)/formal/formal_alt_strategies.tcl</script_file>
+        <src>900_outputs_formal</src>
+        <dst>900_outputs_formal_5</dst>
+        <tool>fm</tool>
+        <analysis_task>1</analysis_task>
+        <variables>
+            <variable name="TEV(verification_alternate_strategy)" value="s5"/>
+        </variables>
+        <must_have_list>
+            <must_have regexp="Verification SUCCEEDED" severity="error"/>
+        </must_have_list>
+        <must_allow_list>
+            <must_allow regexp="FMR_ELAB-1552"/>
+            <must_allow regexp="FM-036"/>
+        </must_allow_list>
+    </tool_task>
+    <tool_task name="formal_syn_s_6">
+        <step>10_syn</step>
+        <script_file>$SEV(gscript_dir)/formal/formal_alt_strategies.tcl</script_file>
+        <src>900_outputs_formal</src>
+        <dst>900_outputs_formal_6</dst>
+        <tool>fm</tool>
+        <analysis_task>1</analysis_task>
+        <variables>
+            <variable name="TEV(verification_alternate_strategy)" value="s6"/>
+        </variables>
+        <must_have_list>
+            <must_have regexp="Verification SUCCEEDED" severity="error"/>
+        </must_have_list>
+        <must_allow_list>
+            <must_allow regexp="FMR_ELAB-1552"/>
+            <must_allow regexp="FM-036"/>
+        </must_allow_list>
+    </tool_task>
+    <tool_task name="formal_syn_s_7">
+        <step>10_syn</step>
+        <script_file>$SEV(gscript_dir)/formal/formal_alt_strategies.tcl</script_file>
+        <src>900_outputs_formal</src>
+        <dst>900_outputs_formal_7</dst>
+        <tool>fm</tool>
+        <analysis_task>1</analysis_task>
+        <variables>
+            <variable name="TEV(verification_alternate_strategy)" value="s7"/>
+        </variables>
+        <must_have_list>
+            <must_have regexp="Verification SUCCEEDED" severity="error"/>
+        </must_have_list>
+        <must_allow_list>
+            <must_allow regexp="FMR_ELAB-1552"/>
+            <must_allow regexp="FM-036"/>
+        </must_allow_list>
+    </tool_task>
+    <tool_task name="formal_syn_s_8">
+        <step>10_syn</step>
+        <script_file>$SEV(gscript_dir)/formal/formal_alt_strategies.tcl</script_file>
+        <src>900_outputs_formal</src>
+        <dst>900_outputs_formal_8</dst>
+        <tool>fm</tool>
+        <analysis_task>1</analysis_task>
+        <variables>
+            <variable name="TEV(verification_alternate_strategy)" value="s8"/>
+        </variables>
+        <must_have_list>
+            <must_have regexp="Verification SUCCEEDED" severity="error"/>
+        </must_have_list>
+        <must_allow_list>
+            <must_allow regexp="FMR_ELAB-1552"/>
+            <must_allow regexp="FM-036"/>
+        </must_allow_list>
+    </tool_task>
+    <tool_task name="formal_syn_s_9">
+        <step>10_syn</step>
+        <script_file>$SEV(gscript_dir)/formal/formal_alt_strategies.tcl</script_file>
+        <src>900_outputs_formal</src>
+        <dst>900_outputs_formal_9</dst>
+        <tool>fm</tool>
+        <analysis_task>1</analysis_task>
+        <variables>
+            <variable name="TEV(verification_alternate_strategy)" value="s9"/>
+        </variables>
+        <must_have_list>
+            <must_have regexp="Verification SUCCEEDED" severity="error"/>
+        </must_have_list>
+        <must_allow_list>
+            <must_allow regexp="FMR_ELAB-1552"/>
+            <must_allow regexp="FM-036"/>
+        </must_allow_list>
+    </tool_task>
+    <tool_task name="formal_syn_serial_a">
+        <step>10_syn</step>
+        <script_file>$SEV(gscript_dir)/formal/formal_alt_strategies.tcl</script_file>
+        <src>900_outputs_formal</src>
+        <dst>900_outputs_formal_serial_a</dst>
+        <tool>fm</tool>
+        <analysis_task>1</analysis_task>
+        <variables>
+            <variable name="TEV(verification_alternate_strategy)" value="s3"/>
+            <variable name="TEV(verification_timeout_limit)" value="1:00:00"/>
+        </variables>
+        <must_have_list>
+            <must_have regexp="Verification SUCCEEDED" severity="error"/>
+        </must_have_list>
+        <must_allow_list>
+            <must_allow regexp="FMR_ELAB-1552"/>
+            <must_allow regexp="FM-036"/>
+        </must_allow_list>
+    </tool_task>
+    <tool_task name="formal_syn_serial_b">
+        <step>10_syn</step>
+        <script_file>$SEV(gscript_dir)/formal/formal_alt_strategies.tcl</script_file>
+        <src>900_outputs_formal_serial_a</src>
+        <dst>900_outputs_formal_serial_b</dst>
+        <tool>fm</tool>
+        <analysis_task>1</analysis_task>
+        <variables>
+            <variable name="TEV(verification_alternate_strategy)" value="s6"/>
+            <variable name="TEV(verification_timeout_limit)" value="1:00:00"/>
+        </variables>
+        <must_have_list>
+            <must_have regexp="Verification SUCCEEDED" severity="error"/>
+        </must_have_list>
+        <must_allow_list>
+            <must_allow regexp="FMR_ELAB-1552"/>
+            <must_allow regexp="FM-036"/>
+        </must_allow_list>
+    </tool_task>
+    <tool_task name="formal_syn_serial_c">
+        <step>10_syn</step>
+        <script_file>$SEV(gscript_dir)/formal/formal_alt_strategies.tcl</script_file>
+        <src>900_outputs_formal_serial_b</src>
+        <dst>900_outputs_formal_serial_c</dst>
+        <tool>fm</tool>
+        <analysis_task>1</analysis_task>
+        <variables>
+            <variable name="TEV(verification_alternate_strategy)" value="s7"/>
+            <variable name="TEV(verification_timeout_limit)" value="1:00:00"/>
+        </variables>
+        <must_have_list>
+            <must_have regexp="Verification SUCCEEDED" severity="error"/>
+        </must_have_list>
+        <must_allow_list>
+            <must_allow regexp="FMR_ELAB-1552"/>
+            <must_allow regexp="FM-036"/>
+        </must_allow_list>
+    </tool_task>
+    <tool_task name="formal_syn_upf_debug">
+        <step>10_syn</step>
+        <script_file>$SEV(gscript_dir)/formal/formal.tcl</script_file>
+        <src>800_outputs</src>
+        <dst>900_outputs_formal</dst>
+        <tool>fm</tool>
+        <analysis_task>1</analysis_task>
+        <variables>
+            <variable name="TEV(ref)" value="000_inputs"/>
+            <variable name="TEV(verification_force_upf_supplies_on)" value="1"/>
+        </variables>
+        <must_have_list>
+            <must_have regexp="Verification SUCCEEDED" severity="error"/>
+        </must_have_list>
+        <must_allow_list>
+            <must_allow regexp="FMR_ELAB-1552"/>
+            <must_allow regexp="should be disabled for final verification"/>
+            <must_allow regexp="FM-036"/>
+        </must_allow_list>
+    </tool_task>
+    <mux_task name="fm_mux">
+        <step>10_syn</step>
+        <script_file>$SEV(gscript_dir)/conf/mux_task.tcl</script_file>
+        <src>900_outputs_formal</src>
+        <tool>tcl</tool>
+        <port_count>12</port_count>
+        <ports>1000000000000000</ports>
+    </mux_task>
+    <edges>
+        <edge from="fm_mux" to="fm_syn_end"/>
+        <edge from="fm_syn_begin" to="formal_syn"/>
+        <edge from="formal_syn" to="fm_mux/0" points="16,47;21,47"/>
+        <edge from="formal_syn" to="formal_syn_s_1" points="16,16"/>
+        <edge from="formal_syn" to="formal_syn_s_10" points="16,43"/>
+        <edge from="formal_syn" to="formal_syn_s_2" points="16,19"/>
+        <edge from="formal_syn" to="formal_syn_s_3" points="16,22"/>
+        <edge from="formal_syn" to="formal_syn_s_4" points="16,25"/>
+        <edge from="formal_syn" to="formal_syn_s_5" points="16,28"/>
+        <edge from="formal_syn" to="formal_syn_s_6" points="16,31"/>
+        <edge from="formal_syn" to="formal_syn_s_7" points="16,34"/>
+        <edge from="formal_syn" to="formal_syn_s_8" points="16,37"/>
+        <edge from="formal_syn" to="formal_syn_s_9" points="16,40"/>
+        <edge from="formal_syn" to="formal_syn_serial_a" points="16,13"/>
+        <edge from="formal_syn_check" to="upf_extras"/>
+        <edge from="formal_syn_s_1" to="fm_mux/1"/>
+        <edge from="formal_syn_s_10" to="fm_mux/A"/>
+        <edge from="formal_syn_s_2" to="fm_mux/2"/>
+        <edge from="formal_syn_s_3" to="fm_mux/3"/>
+        <edge from="formal_syn_s_4" to="fm_mux/4"/>
+        <edge from="formal_syn_s_5" to="fm_mux/5"/>
+        <edge from="formal_syn_s_6" to="fm_mux/6"/>
+        <edge from="formal_syn_s_7" to="fm_mux/7"/>
+        <edge from="formal_syn_s_8" to="fm_mux/8"/>
+        <edge from="formal_syn_s_9" to="fm_mux/9"/>
+        <edge from="formal_syn_serial_a" to="formal_syn_serial_b"/>
+        <edge from="formal_syn_serial_b" to="formal_syn_serial_c"/>
+        <edge from="formal_syn_serial_c" to="fm_mux/B"/>
+        <edge from="formal_syn_upf_debug" to="upf_extras"/>
+    </edges>
+    <graph grid_width="1030" grid_height="610">
+        <node name="note-1" x="780" y="20"/>
+        <node name="note-3" x="310" y="100"/>
+        <node name="fm_syn_begin" x="160" y="40"/>
+        <node name="fm_syn_end" x="320" y="580"/>
+        <node name="upf_extras" x="970" y="90"/>
+        <node name="formal_dp" x="660" y="70"/>
+        <node name="formal_finish" x="670" y="170"/>
+        <node name="formal_pnr" x="660" y="120"/>
+        <node name="formal_syn" x="160" y="100"/>
+        <node name="formal_syn_check" x="840" y="70"/>
+        <node name="formal_syn_s_1" x="230" y="160"/>
+        <node name="formal_syn_s_10" x="410" y="430"/>
+        <node name="formal_syn_s_2" x="250" y="190"/>
+        <node name="formal_syn_s_3" x="270" y="220"/>
+        <node name="formal_syn_s_4" x="290" y="250"/>
+        <node name="formal_syn_s_5" x="310" y="280"/>
+        <node name="formal_syn_s_6" x="330" y="310"/>
+        <node name="formal_syn_s_7" x="350" y="340"/>
+        <node name="formal_syn_s_8" x="370" y="370"/>
+        <node name="formal_syn_s_9" x="390" y="400"/>
+        <node name="formal_syn_serial_a" x="430" y="130"/>
+        <node name="formal_syn_serial_b" x="430" y="170"/>
+        <node name="formal_syn_serial_c" x="430" y="210"/>
+        <node name="formal_syn_upf_debug" x="850" y="130"/>
+        <node name="fm_mux" x="320" y="520"/>
+    </graph>
+</flow>

@@ -1,0 +1,577 @@
+
+<!--
+## HEADER $Id: //sps/flow/ds/scripts_global/flows/tc_eco.xml#120 $
+## HEADER_MSG    Lynx Design System: Production Flow
+## HEADER_MSG    Version 2015.06-SP1
+## HEADER_MSG    Copyright (c) 2015 Synopsys
+## HEADER_MSG    Perforce Label: lynx_flow_2015.06-SP1
+## HEADER_MSG 
+-->
+<flow name="sf_tc_eco">
+    <note name="note-1" title="LEF for PT" always_show_detail="0">
+        <text>Physical PT ECO option requires LEF for each cel. The TEV(pt_phy_eco_mode) variable is used to enable the use of physical data in PT.</text>
+    </note>
+    <note name="note-2" title="LCA">
+        <text>This flow to merge scenarios for PT eco loops is in development and not robust.</text>
+    </note>
+    <note name="note-3" title="Path 4" always_show_detail="0">
+        <text>PT fix_eco (physical option on) w/ ECO in ICC 
+DRC / Setup / Hold</text>
+    </note>
+    <note name="note-3-copy" title="Path 5" always_show_detail="0">
+        <text>PT fix_eco (physical option on) w/ faster incremental ECO extraction in ICC 
+DRC / Setup / Hold</text>
+    </note>
+    <note name="note-4" title="Path 6" always_show_detail="0">
+        <text>route_opt -incremental TIO</text>
+    </note>
+    <note name="note-5" title="Path 7" always_show_detail="0">
+        <text>focal_opt TIO
+
+note this branch is for development purposes and is not hooked together as 
+intended.  we are waiting until we switch to fulltime abstract models, etc. before
+putting the final polish on this solution</text>
+    </note>
+    <note name="note-6" title="Caveats and Disclaimers" always_show_detail="0">
+        <text>The tc_eco sf represents some emerging and forward looking technology and as such it is likely to 
+continue to evolve over the next several releases.  A few caveats to note :  
+
+- Path 6 &amp; 7, The user will need to determine a strategy for integrating the ECOs back into the blocks.</text>
+    </note>
+    <note name="note-7" title="Overview" always_show_detail="0">
+        <text>These are some example timing closure ECO recipes.  Each has it's own strengths and weaknesses.  It
+is not uncommon that multiple of these recipes get daisy chained together to achieve final timing closure.
+These should get assessed and adjusted per your specific needs.</text>
+    </note>
+    <note name="note-8" title="Path 2">
+        <text>focal opt w/ CCD</text>
+    </note>
+    <note name="object-2" title="Path 0" always_show_detail="0">
+        <text>Skip</text>
+    </note>
+    <note name="object-3" title="Path 1" always_show_detail="0">
+        <text>route_opt -incremental</text>
+    </note>
+    <note name="object-4" title="Path 3" always_show_detail="0">
+        <text>focal_opt DRC / Setup / Hold</text>
+    </note>
+    <join_task name="sf_tc_eco_begin">
+        <step>30_pnr</step>
+    </join_task>
+    <join_task name="sf_tc_eco_end">
+        <step>30_pnr</step>
+    </join_task>
+    <tool_task name="icc_export_script_fixeco_drc">
+        <step>30_pnr</step>
+        <script_file>$SEV(gscript_dir)/pnr/icc_export_script.tcl</script_file>
+        <src>300_sf_tc_eco_begin</src>
+        <dst>330_fixeco</dst>
+        <tool>icc</tool>
+        <auto_src>1</auto_src>
+        <variables>
+            <variable name="TEV(intask_export_mode)" value="VERILOG SDC DEF"/>
+        </variables>
+    </tool_task>
+    <tool_task name="icc_export_script_inc_eco_drc">
+        <step>30_pnr</step>
+        <script_file>$SEV(gscript_dir)/pnr/icc_export_script.tcl</script_file>
+        <src>300_sf_tc_eco_begin</src>
+        <dst>350_fixeco</dst>
+        <tool>icc</tool>
+        <auto_src>1</auto_src>
+        <variables>
+            <variable name="TEV(intask_export_mode)" value="VERILOG SDC DEF"/>
+        </variables>
+    </tool_task>
+    <tool_task name="icc_fixeco_drc">
+        <step>30_pnr</step>
+        <script_file>$SEV(bscript_dir)/pnr/icc_eco_example.tcl</script_file>
+        <src>330_fixeco</src>
+        <dst>331_fixeco_drc</dst>
+        <tool>icc</tool>
+        <variables>
+            <variable name="TEV(eco_type)" value="40"/>
+            <variable name="TEV(scenario_management_file)" value="$SEV(bscript_dir)/conf/example.icc_traditional_scenario_management.tcl"/>
+            <variable name="TEV(intask_export_mode)" value="VERILOG SDC DEF"/>
+        </variables>
+    </tool_task>
+    <tool_task name="icc_fixeco_hold">
+        <step>30_pnr</step>
+        <script_file>$SEV(bscript_dir)/pnr/icc_eco_example.tcl</script_file>
+        <src>332_fixeco_setup</src>
+        <dst>333_fixeco_hold</dst>
+        <tool>icc</tool>
+        <variables>
+            <variable name="TEV(eco_type)" value="40"/>
+            <variable name="TEV(scenario_management_file)" value="$SEV(bscript_dir)/conf/example.icc_traditional_scenario_management.tcl"/>
+            <variable name="TEV(intask_export_mode)" value="VERILOG SDC"/>
+        </variables>
+    </tool_task>
+    <tool_task name="icc_fixeco_setup">
+        <step>30_pnr</step>
+        <script_file>$SEV(bscript_dir)/pnr/icc_eco_example.tcl</script_file>
+        <src>331_fixeco_drc</src>
+        <dst>332_fixeco_setup</dst>
+        <tool>icc</tool>
+        <variables>
+            <variable name="TEV(eco_type)" value="40"/>
+            <variable name="TEV(scenario_management_file)" value="$SEV(bscript_dir)/conf/example.icc_traditional_scenario_management.tcl"/>
+            <variable name="TEV(intask_export_mode)" value="VERILOG SDC DEF"/>
+        </variables>
+    </tool_task>
+    <tool_task name="icc_focal_opt_ccd">
+        <step>30_pnr</step>
+        <script_file>$SEV(gscript_dir)/pnr/icc_focal_opt.tcl</script_file>
+        <src>300_sf_tc_eco_begin</src>
+        <dst>320_icc_focal_opt_ccd</dst>
+        <tool>icc</tool>
+        <auto_src>1</auto_src>
+        <variables>
+            <variable name="TEV(focal_opt_options)" value="-setup_endpoints all -concurrent_clock_and_data"/>
+            <variable name="TEV(scenario_management_file)" value="$SEV(bscript_dir)/conf/example.icc_traditional_scenario_management.tcl"/>
+        </variables>
+    </tool_task>
+    <tool_task name="icc_focal_opt_drc">
+        <step>30_pnr</step>
+        <script_file>$SEV(gscript_dir)/pnr/icc_focal_opt.tcl</script_file>
+        <src>300_sf_tc_eco_begin</src>
+        <dst>320_icc_focal_opt_drc</dst>
+        <tool>icc</tool>
+        <auto_src>1</auto_src>
+        <variables>
+            <variable name="TEV(focal_opt_options)" value="-drc_nets all"/>
+            <variable name="TEV(scenario_management_file)" value="$SEV(bscript_dir)/conf/example.icc_traditional_scenario_management.tcl"/>
+        </variables>
+    </tool_task>
+    <tool_task name="icc_focal_opt_hold">
+        <step>30_pnr</step>
+        <script_file>$SEV(gscript_dir)/pnr/icc_focal_opt.tcl</script_file>
+        <src>321_icc_focal_opt_setup</src>
+        <dst>322_icc_focal_opt_hold</dst>
+        <tool>icc</tool>
+        <variables>
+            <variable name="TEV(focal_opt_options)" value="-hold_endpoints all"/>
+            <variable name="TEV(scenario_management_file)" value="$SEV(bscript_dir)/conf/example.icc_traditional_scenario_management.tcl"/>
+        </variables>
+    </tool_task>
+    <tool_task name="icc_focal_opt_setup">
+        <step>30_pnr</step>
+        <script_file>$SEV(gscript_dir)/pnr/icc_focal_opt.tcl</script_file>
+        <src>320_icc_focal_opt_drc</src>
+        <dst>321_icc_focal_opt_setup</dst>
+        <tool>icc</tool>
+        <variables>
+            <variable name="TEV(scenario_management_file)" value="$SEV(bscript_dir)/conf/example.icc_traditional_scenario_management.tcl"/>
+        </variables>
+    </tool_task>
+    <tool_task name="icc_focal_opt_tio">
+        <step>30_pnr</step>
+        <script_file>$SEV(gscript_dir)/pnr/icc_tio.tcl</script_file>
+        <src>370_icc_tio_prep</src>
+        <dst>371_icc_tio</dst>
+        <tool>icc</tool>
+        <variables>
+            <variable name="TEV(tio_mode)" value="FOCAL_OPT"/>
+            <variable name="TEV(scenario_management_file)" value="$SEV(bscript_dir)/conf/example.icc_traditional_scenario_management.tcl"/>
+        </variables>
+    </tool_task>
+    <tool_task name="icc_inc_eco_drc">
+        <step>30_pnr</step>
+        <script_file>$SEV(bscript_dir)/pnr/icc_eco_example.tcl</script_file>
+        <src>350_fixeco</src>
+        <dst>351_fixeco_drc</dst>
+        <tool>icc</tool>
+        <variables>
+            <variable name="TEV(eco_type)" value="40"/>
+            <variable name="TEV(scenario_management_file)" value="$SEV(bscript_dir)/conf/example.icc_traditional_scenario_management.tcl"/>
+            <variable name="TEV(intask_export_mode)" value="VERILOG SDC DEF"/>
+        </variables>
+    </tool_task>
+    <tool_task name="icc_inc_eco_hold">
+        <step>30_pnr</step>
+        <script_file>$SEV(bscript_dir)/pnr/icc_eco_example.tcl</script_file>
+        <src>352_fixeco_setup</src>
+        <dst>353_fixeco_hold</dst>
+        <tool>icc</tool>
+        <variables>
+            <variable name="TEV(eco_type)" value="40"/>
+            <variable name="TEV(scenario_management_file)" value="$SEV(bscript_dir)/conf/example.icc_traditional_scenario_management.tcl"/>
+            <variable name="TEV(intask_export_mode)" value="VERILOG SDC"/>
+        </variables>
+    </tool_task>
+    <tool_task name="icc_inc_eco_setup">
+        <step>30_pnr</step>
+        <script_file>$SEV(bscript_dir)/pnr/icc_eco_example.tcl</script_file>
+        <src>351_fixeco_drc</src>
+        <dst>352_fixeco_setup</dst>
+        <tool>icc</tool>
+        <variables>
+            <variable name="TEV(eco_type)" value="40"/>
+            <variable name="TEV(scenario_management_file)" value="$SEV(bscript_dir)/conf/example.icc_traditional_scenario_management.tcl"/>
+            <variable name="TEV(intask_export_mode)" value="VERILOG SDC DEF"/>
+        </variables>
+    </tool_task>
+    <tool_task name="icc_route_opt">
+        <step>30_pnr</step>
+        <script_file>$SEV(gscript_dir)/pnr/icc_route_opt.tcl</script_file>
+        <src>300_sf_tc_eco_begin</src>
+        <dst>310_icc_route_opt</dst>
+        <tool>icc</tool>
+        <auto_src>1</auto_src>
+        <variables>
+            <variable name="TEV(route_opt_options)" value="-incremental"/>
+            <variable name="TEV(scenario_management_file)" value="$SEV(bscript_dir)/conf/example.icc_traditional_scenario_management.tcl"/>
+        </variables>
+    </tool_task>
+    <tool_task name="icc_route_opt_tio">
+        <step>30_pnr</step>
+        <script_file>$SEV(gscript_dir)/pnr/icc_tio.tcl</script_file>
+        <src>360_icc_tio_prep</src>
+        <dst>361_icc_tio</dst>
+        <tool>icc</tool>
+        <variables>
+            <variable name="TEV(scenario_management_file)" value="$SEV(bscript_dir)/conf/example.icc_traditional_scenario_management.tcl"/>
+        </variables>
+    </tool_task>
+    <tool_task name="icc_tio_prep_fopt">
+        <step>30_pnr</step>
+        <script_file>$SEV(gscript_dir)/pnr/icc_tio_prep.tcl</script_file>
+        <src>300_sf_tc_eco_begin</src>
+        <dst>370_icc_tio_prep</dst>
+        <tool>icc</tool>
+        <auto_src>1</auto_src>
+        <variables>
+            <variable name="TEV(scenario_management_file)" value="$SEV(bscript_dir)/conf/example.icc_traditional_scenario_management.tcl"/>
+        </variables>
+    </tool_task>
+    <tool_task name="icc_tio_prep_ropt">
+        <step>30_pnr</step>
+        <script_file>$SEV(gscript_dir)/pnr/icc_tio_prep.tcl</script_file>
+        <src>300_sf_tc_eco_begin</src>
+        <dst>360_icc_tio_prep</dst>
+        <tool>icc</tool>
+        <auto_src>1</auto_src>
+        <variables>
+            <variable name="TEV(scenario_management_file)" value="$SEV(bscript_dir)/conf/example.icc_traditional_scenario_management.tcl"/>
+        </variables>
+    </tool_task>
+    <tool_task name="mw_lef_export">
+        <step>30_pnr</step>
+        <script_file>$SEV(gscript_dir)/pnr/mw_export.tcl</script_file>
+        <dst>300_pt_phy_data</dst>
+        <tool>mw</tool>
+        <auto_src>1</auto_src>
+        <variables>
+            <variable name="TEV(intask_export_mode)" value="LEF"/>
+        </variables>
+    </tool_task>
+    <tool_task name="pt_dmsa_fixeco_drc">
+        <step>30_pnr</step>
+        <script_file>$SEV(gscript_dir)/sta/generate_scenarios.tcl</script_file>
+        <src>330_fixeco</src>
+        <dst>330_fixeco</dst>
+        <tool>pt_dmsa</tool>
+        <analysis_task>0</analysis_task>
+        <variables>
+            <variable name="TEV(scenarios)" value=""/>
+            <variable name="TEV(pt_reports_script)" value="$SEV(gscript_dir)/sta/reports_dmsa.tcl"/>
+            <variable name="TEV(dmsa)" value="1"/>
+            <variable name="TEV(eco_mode)" value="DRC_MAX_CAP"/>
+        </variables>
+        <must_allow_list>
+            <must_allow regexp="Error: no path is selected for slack fixing."/>
+        </must_allow_list>
+    </tool_task>
+    <tool_task name="pt_dmsa_fixeco_hold">
+        <step>30_pnr</step>
+        <script_file>$SEV(gscript_dir)/sta/generate_scenarios.tcl</script_file>
+        <src>332_fixeco_setup</src>
+        <dst>332_fixeco_setup</dst>
+        <tool>pt_dmsa</tool>
+        <analysis_task>0</analysis_task>
+        <variables>
+            <variable name="TEV(scenarios)" value=""/>
+            <variable name="TEV(pt_reports_script)" value="$SEV(gscript_dir)/sta/reports_dmsa.tcl"/>
+            <variable name="TEV(dmsa)" value="1"/>
+            <variable name="TEV(eco_mode)" value="TIMING_HOLD"/>
+        </variables>
+        <must_allow_list>
+            <must_allow regexp="Error: no path is selected for slack fixing."/>
+        </must_allow_list>
+    </tool_task>
+    <tool_task name="pt_dmsa_fixeco_setup">
+        <step>30_pnr</step>
+        <script_file>$SEV(gscript_dir)/sta/generate_scenarios.tcl</script_file>
+        <src>331_fixeco_drc</src>
+        <dst>331_fixeco_drc</dst>
+        <tool>pt_dmsa</tool>
+        <analysis_task>0</analysis_task>
+        <variables>
+            <variable name="TEV(scenarios)" value=""/>
+            <variable name="TEV(pt_reports_script)" value="$SEV(gscript_dir)/sta/reports_dmsa.tcl"/>
+            <variable name="TEV(dmsa)" value="1"/>
+            <variable name="TEV(eco_mode)" value="TIMING_SETUP"/>
+            <variable name="TEV(eco_script)" value="$SEV(bscript_dir)/pnr/pt_eco_script.tcl"/>
+        </variables>
+        <must_allow_list>
+            <must_allow regexp="Error: no path is selected for slack fixing."/>
+        </must_allow_list>
+    </tool_task>
+    <tool_task name="pt_inc_eco_drc">
+        <step>30_pnr</step>
+        <script_file>$SEV(gscript_dir)/sta/generate_scenarios.tcl</script_file>
+        <src>350_fixeco</src>
+        <dst>350_fixeco</dst>
+        <tool>pt_dmsa</tool>
+        <analysis_task>0</analysis_task>
+        <variables>
+            <variable name="TEV(scenarios)" value=""/>
+            <variable name="TEV(pt_reports_script)" value="$SEV(gscript_dir)/sta/reports_dmsa.tcl"/>
+            <variable name="TEV(dmsa)" value="1"/>
+            <variable name="TEV(para_format)" value="SPEF"/>
+            <variable name="TEV(inc_parasitics)" value="1"/>
+            <variable name="TEV(eco_mode)" value="DRC_MAX_CAP"/>
+        </variables>
+        <must_allow_list>
+            <must_allow regexp="Error: no path is selected for slack fixing."/>
+        </must_allow_list>
+    </tool_task>
+    <tool_task name="pt_inc_eco_hold">
+        <step>30_pnr</step>
+        <script_file>$SEV(gscript_dir)/sta/generate_scenarios.tcl</script_file>
+        <src>352_fixeco_setup</src>
+        <dst>352_fixeco_setup</dst>
+        <tool>pt_dmsa</tool>
+        <analysis_task>0</analysis_task>
+        <variables>
+            <variable name="TEV(scenarios)" value=""/>
+            <variable name="TEV(pt_reports_script)" value="$SEV(gscript_dir)/sta/reports_dmsa.tcl"/>
+            <variable name="TEV(dmsa)" value="1"/>
+            <variable name="TEV(para_format)" value="SPEF"/>
+            <variable name="TEV(inc_parasitics)" value="1"/>
+            <variable name="TEV(eco_mode)" value="TIMING_HOLD"/>
+        </variables>
+        <must_allow_list>
+            <must_allow regexp="Error: no path is selected for slack fixing."/>
+        </must_allow_list>
+    </tool_task>
+    <tool_task name="pt_inc_eco_setup">
+        <step>30_pnr</step>
+        <script_file>$SEV(gscript_dir)/sta/generate_scenarios.tcl</script_file>
+        <src>351_fixeco_drc</src>
+        <dst>351_fixeco_drc</dst>
+        <tool>pt_dmsa</tool>
+        <analysis_task>0</analysis_task>
+        <variables>
+            <variable name="TEV(scenarios)" value=""/>
+            <variable name="TEV(pt_reports_script)" value="$SEV(gscript_dir)/sta/reports_dmsa.tcl"/>
+            <variable name="TEV(dmsa)" value="1"/>
+            <variable name="TEV(para_format)" value="SPEF"/>
+            <variable name="TEV(inc_parasitics)" value="1"/>
+            <variable name="TEV(eco_mode)" value="TIMING_SETUP"/>
+        </variables>
+        <must_allow_list>
+            <must_allow regexp="Error: no path is selected for slack fixing."/>
+        </must_allow_list>
+    </tool_task>
+    <tool_task name="pt_mode_merge">
+        <step>30_pnr</step>
+        <script_file>$SEV(gscript_dir)/sta/generate_scenarios.tcl</script_file>
+        <src>350_fixeco</src>
+        <dst>350_fixeco</dst>
+        <tool>pt_dmsa</tool>
+        <analysis_task>0</analysis_task>
+        <variables>
+            <variable name="TEV(scenarios)" value=""/>
+            <variable name="TEV(pt_reports_script)" value="$SEV(gscript_dir)/sta/reports_dmsa.tcl"/>
+            <variable name="TEV(dmsa)" value="1"/>
+            <variable name="TEV(para_format)" value="SPEF"/>
+            <variable name="TEV(inc_parasitics)" value="1"/>
+            <variable name="TEV(eco_mode)" value="NONE"/>
+            <variable name="TEV(mode_merging_enabled)" value="1"/>
+        </variables>
+        <must_allow_list>
+            <must_allow regexp="Error: no path is selected for slack fixing."/>
+        </must_allow_list>
+    </tool_task>
+    <gen_task name="extract_final_fixeco_drc">
+        <step>30_pnr</step>
+        <script_file>$SEV(tscript_dir)/generate_starrc_tasks.tcl</script_file>
+        <src>330_fixeco</src>
+        <dst>330_fixeco</dst>
+        <metrics_enable_transfer>0</metrics_enable_transfer>
+        <must_allow_list>
+            <must_allow regexp="Errors: 0"/>
+        </must_allow_list>
+    </gen_task>
+    <gen_task name="extract_final_fixeco_hold">
+        <step>30_pnr</step>
+        <script_file>$SEV(tscript_dir)/generate_starrc_tasks.tcl</script_file>
+        <src>332_fixeco_setup</src>
+        <dst>332_fixeco_setup</dst>
+        <metrics_enable_transfer>0</metrics_enable_transfer>
+        <must_allow_list>
+            <must_allow regexp="Errors: 0"/>
+        </must_allow_list>
+    </gen_task>
+    <gen_task name="extract_final_fixeco_setup">
+        <step>30_pnr</step>
+        <script_file>$SEV(tscript_dir)/generate_starrc_tasks.tcl</script_file>
+        <src>331_fixeco_drc</src>
+        <dst>331_fixeco_drc</dst>
+        <metrics_enable_transfer>0</metrics_enable_transfer>
+        <must_allow_list>
+            <must_allow regexp="Errors: 0"/>
+        </must_allow_list>
+    </gen_task>
+    <gen_task name="extract_inc_eco_drc">
+        <step>30_pnr</step>
+        <script_file>$SEV(tscript_dir)/generate_starrc_tasks.tcl</script_file>
+        <src>350_fixeco</src>
+        <dst>350_fixeco</dst>
+        <metrics_enable_transfer>0</metrics_enable_transfer>
+        <variables>
+            <variable name="TEV(eco_mode)" value="YES"/>
+            <variable name="TEV(eco_loop_iteration)" value="0"/>
+            <variable name="TEV(para_format)" value="SPEF"/>
+            <variable name="TEV(delete_workdir)" value="NEVER"/>
+        </variables>
+        <must_allow_list>
+            <must_allow regexp="Errors: 0"/>
+        </must_allow_list>
+    </gen_task>
+    <gen_task name="extract_inc_eco_hold">
+        <step>30_pnr</step>
+        <script_file>$SEV(tscript_dir)/generate_starrc_tasks.tcl</script_file>
+        <src>352_fixeco_setup</src>
+        <dst>352_fixeco_setup</dst>
+        <metrics_enable_transfer>0</metrics_enable_transfer>
+        <variables>
+            <variable name="TEV(eco_mode)" value="YES"/>
+            <variable name="TEV(eco_loop_iteration)" value="2"/>
+            <variable name="TEV(para_format)" value="SPEF"/>
+            <variable name="TEV(delete_workdir)" value="NEVER"/>
+        </variables>
+        <must_allow_list>
+            <must_allow regexp="Errors: 0"/>
+        </must_allow_list>
+    </gen_task>
+    <gen_task name="extract_inc_eco_setup">
+        <step>30_pnr</step>
+        <script_file>$SEV(tscript_dir)/generate_starrc_tasks.tcl</script_file>
+        <src>351_fixeco_drc</src>
+        <dst>351_fixeco_drc</dst>
+        <metrics_enable_transfer>0</metrics_enable_transfer>
+        <variables>
+            <variable name="TEV(eco_mode)" value="YES"/>
+            <variable name="TEV(eco_loop_iteration)" value="1"/>
+            <variable name="TEV(para_format)" value="SPEF"/>
+            <variable name="TEV(delete_workdir)" value="NEVER"/>
+        </variables>
+        <must_allow_list>
+            <must_allow regexp="Errors: 0"/>
+        </must_allow_list>
+    </gen_task>
+    <mux_task name="select_results">
+        <step>30_pnr</step>
+        <script_file>$SEV(gscript_dir)/conf/mux_task.tcl</script_file>
+        <src>320_icc_focal_opt_ccd</src>
+        <dst>399_sf_tc_eco_end</dst>
+        <tool>tcl</tool>
+        <port_count>8</port_count>
+        <ports>0001000000000000</ports>
+    </mux_task>
+    <edges>
+        <edge from="extract_final_fixeco_drc" to="pt_dmsa_fixeco_drc"/>
+        <edge from="extract_final_fixeco_hold" to="pt_dmsa_fixeco_hold"/>
+        <edge from="extract_final_fixeco_setup" to="pt_dmsa_fixeco_setup"/>
+        <edge from="extract_inc_eco_drc" to="pt_inc_eco_drc"/>
+        <edge from="extract_inc_eco_hold" to="pt_inc_eco_hold"/>
+        <edge from="extract_inc_eco_setup" to="pt_inc_eco_setup"/>
+        <edge from="icc_export_script_fixeco_drc" to="extract_final_fixeco_drc"/>
+        <edge from="icc_export_script_inc_eco_drc" to="extract_inc_eco_drc"/>
+        <edge from="icc_export_script_inc_eco_drc" to="pt_mode_merge"/>
+        <edge from="icc_fixeco_drc" to="extract_final_fixeco_setup"/>
+        <edge from="icc_fixeco_hold" to="select_results/4" points="79,65"/>
+        <edge from="icc_fixeco_setup" to="extract_final_fixeco_hold"/>
+        <edge from="icc_focal_opt_ccd" to="select_results/2" points="29,58;75,67"/>
+        <edge from="icc_focal_opt_drc" to="icc_focal_opt_setup"/>
+        <edge from="icc_focal_opt_hold" to="select_results/3" points="45,59;77,66"/>
+        <edge from="icc_focal_opt_setup" to="icc_focal_opt_hold"/>
+        <edge from="icc_focal_opt_tio" to="select_results/7" points="145,61;85,69"/>
+        <edge from="icc_inc_eco_drc" to="extract_inc_eco_setup"/>
+        <edge from="icc_inc_eco_hold" to="select_results/5" points="81,66"/>
+        <edge from="icc_inc_eco_setup" to="extract_inc_eco_hold"/>
+        <edge from="icc_route_opt" to="select_results/1" points="15,58;73,68"/>
+        <edge from="icc_route_opt_tio" to="select_results/6" points="129,61;83,68"/>
+        <edge from="icc_tio_prep_fopt" to="icc_focal_opt_tio"/>
+        <edge from="icc_tio_prep_ropt" to="icc_route_opt_tio"/>
+        <edge from="mw_lef_export" to="pt_dmsa_fixeco_drc" points="85,22"/>
+        <edge from="mw_lef_export" to="pt_inc_eco_drc" points="85,22"/>
+        <edge from="note-1" to="mw_lef_export"/>
+        <edge from="pt_dmsa_fixeco_drc" to="icc_fixeco_drc"/>
+        <edge from="pt_dmsa_fixeco_hold" to="icc_fixeco_hold"/>
+        <edge from="pt_dmsa_fixeco_setup" to="icc_fixeco_setup"/>
+        <edge from="pt_inc_eco_drc" to="icc_inc_eco_drc"/>
+        <edge from="pt_inc_eco_hold" to="icc_inc_eco_hold"/>
+        <edge from="pt_inc_eco_setup" to="icc_inc_eco_setup"/>
+        <edge from="select_results" to="sf_tc_eco_end"/>
+        <edge from="sf_tc_eco_begin" to="icc_export_script_fixeco_drc" points="69,9"/>
+        <edge from="sf_tc_eco_begin" to="icc_export_script_inc_eco_drc" points="105,9"/>
+        <edge from="sf_tc_eco_begin" to="icc_focal_opt_ccd" points="29,9"/>
+        <edge from="sf_tc_eco_begin" to="icc_focal_opt_drc" points="45,9"/>
+        <edge from="sf_tc_eco_begin" to="icc_route_opt" points="15,9"/>
+        <edge from="sf_tc_eco_begin" to="icc_tio_prep_fopt" points="145,9"/>
+        <edge from="sf_tc_eco_begin" to="icc_tio_prep_ropt" points="129,9"/>
+        <edge from="sf_tc_eco_begin" to="mw_lef_export" points="85,9"/>
+        <edge from="sf_tc_eco_begin" to="select_results/0" points="2,8;2,59;71,69"/>
+    </edges>
+    <graph grid_width="1560" grid_height="830">
+        <node name="note-1" x="910" y="190"/>
+        <node name="note-2" x="1210" y="180"/>
+        <node name="note-3" x="740" y="160"/>
+        <node name="note-3-copy" x="1100" y="160"/>
+        <node name="note-4" x="1340" y="160"/>
+        <node name="note-5" x="1500" y="160"/>
+        <node name="note-6" x="290" y="30"/>
+        <node name="note-7" x="470" y="30"/>
+        <node name="note-8" x="340" y="160"/>
+        <node name="object-2" x="70" y="180"/>
+        <node name="object-3" x="200" y="160"/>
+        <node name="object-4" x="500" y="160"/>
+        <node name="sf_tc_eco_begin" x="750" y="40"/>
+        <node name="sf_tc_eco_end" x="780" y="800"/>
+        <node name="icc_export_script_fixeco_drc" x="690" y="130"/>
+        <node name="icc_export_script_inc_eco_drc" x="1050" y="130"/>
+        <node name="icc_fixeco_drc" x="690" y="310"/>
+        <node name="icc_fixeco_hold" x="690" y="600"/>
+        <node name="icc_fixeco_setup" x="690" y="460"/>
+        <node name="icc_focal_opt_ccd" x="290" y="130"/>
+        <node name="icc_focal_opt_drc" x="450" y="130"/>
+        <node name="icc_focal_opt_hold" x="450" y="560"/>
+        <node name="icc_focal_opt_setup" x="450" y="260"/>
+        <node name="icc_focal_opt_tio" x="1450" y="600"/>
+        <node name="icc_inc_eco_drc" x="1050" y="310"/>
+        <node name="icc_inc_eco_hold" x="1050" y="600"/>
+        <node name="icc_inc_eco_setup" x="1050" y="460"/>
+        <node name="icc_route_opt" x="150" y="130"/>
+        <node name="icc_route_opt_tio" x="1290" y="600"/>
+        <node name="icc_tio_prep_fopt" x="1450" y="130"/>
+        <node name="icc_tio_prep_ropt" x="1290" y="130"/>
+        <node name="mw_lef_export" x="850" y="160"/>
+        <node name="pt_dmsa_fixeco_drc" x="690" y="260"/>
+        <node name="pt_dmsa_fixeco_hold" x="690" y="550"/>
+        <node name="pt_dmsa_fixeco_setup" x="690" y="410"/>
+        <node name="pt_inc_eco_drc" x="1050" y="260"/>
+        <node name="pt_inc_eco_hold" x="1050" y="550"/>
+        <node name="pt_inc_eco_setup" x="1050" y="410"/>
+        <node name="pt_mode_merge" x="1210" y="210"/>
+        <node name="extract_final_fixeco_drc" x="690" y="210"/>
+        <node name="extract_final_fixeco_hold" x="690" y="510"/>
+        <node name="extract_final_fixeco_setup" x="690" y="360"/>
+        <node name="extract_inc_eco_drc" x="1050" y="210"/>
+        <node name="extract_inc_eco_hold" x="1050" y="510"/>
+        <node name="extract_inc_eco_setup" x="1050" y="360"/>
+        <node name="select_results" x="780" y="740"/>
+    </graph>
+</flow>

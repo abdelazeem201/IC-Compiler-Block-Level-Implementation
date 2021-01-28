@@ -1,0 +1,201 @@
+
+<!--
+## HEADER $Id: //sps/flow/ds/scripts_global/flows/power_eco.xml#17 $
+## HEADER_MSG    Lynx Design System: Production Flow
+## HEADER_MSG    Version 2015.06-SP1
+## HEADER_MSG    Copyright (c) 2015 Synopsys
+## HEADER_MSG    Perforce Label: lynx_flow_2015.06-SP1
+## HEADER_MSG 
+-->
+<flow name="sf_power_eco">
+    <note name="note-1" title="Path 3" always_show_detail="0">
+        <text>FLSR followed by PT Leakage ECO
+
+This is not necessarily a recommened configuration and sequencing.
+A series of PT ECO loops to fix timing would likely be found after FSLR.</text>
+    </note>
+    <note name="note-7" title="Overview" always_show_detail="0">
+        <text>These are some example power recover recipes.  Each has it's own strengths and weaknesses.  It
+is not uncommon that multiple of these recipes get daisy chained together to achieve desired power results.  These should get assessed and adjusted per your specific needs.</text>
+    </note>
+    <note name="note-8" title="Path 2" always_show_detail="0">
+        <text>PT fix_eco (power) w/ ECO in ICC</text>
+    </note>
+    <note name="object-2" title="Path 0" always_show_detail="0">
+        <text>Skip</text>
+    </note>
+    <note name="object-3" title="Path 1" always_show_detail="0">
+        <text>focal_opt -power</text>
+    </note>
+    <join_task name="sf_power_begin">
+        <step>30_pnr</step>
+    </join_task>
+    <join_task name="sf_power_end">
+        <step>30_pnr</step>
+    </join_task>
+    <tool_task name="icc_export_script_fix_eco_power">
+        <step>30_pnr</step>
+        <script_file>$SEV(gscript_dir)/pnr/icc_export_script.tcl</script_file>
+        <src>400_sf_power_begin</src>
+        <dst>430_fix_eco_power</dst>
+        <tool>icc</tool>
+        <auto_src>1</auto_src>
+        <variables>
+            <variable name="TEV(intask_export_mode)" value="VERILOG SDC"/>
+        </variables>
+    </tool_task>
+    <tool_task name="icc_fix_eco_power">
+        <step>30_pnr</step>
+        <script_file>$SEV(bscript_dir)/pnr/icc_eco_example.tcl</script_file>
+        <src>430_fix_eco_power</src>
+        <dst>431_fix_eco_power</dst>
+        <tool>icc</tool>
+        <variables>
+            <variable name="TEV(eco_type)" value="40"/>
+            <variable name="TEV(eco_route)" value="0"/>
+            <variable name="TEV(scenario_management_file)" value="$SEV(bscript_dir)/conf/example.icc_traditional_scenario_management.tcl"/>
+            <variable name="TEV(intask_export_mode)" value="VERILOG SDC"/>
+        </variables>
+    </tool_task>
+    <tool_task name="icc_fix_eco_power_combined">
+        <step>30_pnr</step>
+        <script_file>$SEV(bscript_dir)/pnr/icc_eco_example.tcl</script_file>
+        <src>440_icc_focal_opt_fslr</src>
+        <dst>441_fix_eco_power</dst>
+        <tool>icc</tool>
+        <variables>
+            <variable name="TEV(eco_type)" value="40"/>
+            <variable name="TEV(eco_route)" value="0"/>
+            <variable name="TEV(scenario_management_file)" value="$SEV(bscript_dir)/conf/example.icc_traditional_scenario_management.tcl"/>
+            <variable name="TEV(intask_export_mode)" value="VERILOG SDC"/>
+        </variables>
+    </tool_task>
+    <tool_task name="icc_focal_opt_fslr">
+        <step>30_pnr</step>
+        <script_file>$SEV(gscript_dir)/pnr/icc_focal_opt.tcl</script_file>
+        <src>431_fix_eco_power</src>
+        <dst>420_icc_focal_opt_fslr</dst>
+        <tool>icc</tool>
+        <auto_src>1</auto_src>
+        <variables>
+            <variable name="TEV(focal_opt_options)" value="-power"/>
+            <variable name="TEV(scenario_management_file)" value="$SEV(bscript_dir)/conf/example.icc_traditional_scenario_management.tcl"/>
+            <variable name="TEV(post_script)" value="$SEV(bscript_dir)/pnr/icc_fslr_eco_rt.tcl"/>
+        </variables>
+    </tool_task>
+    <tool_task name="icc_focal_opt_fslr_combined">
+        <step>30_pnr</step>
+        <script_file>$SEV(gscript_dir)/pnr/icc_focal_opt.tcl</script_file>
+        <src>431_fix_eco_power</src>
+        <dst>440_icc_focal_opt_fslr</dst>
+        <tool>icc</tool>
+        <auto_src>1</auto_src>
+        <variables>
+            <variable name="TEV(focal_opt_options)" value="-power"/>
+            <variable name="TEV(scenario_management_file)" value="$SEV(bscript_dir)/conf/example.icc_traditional_scenario_management.tcl"/>
+            <variable name="TEV(post_script)" value="$SEV(bscript_dir)/pnr/icc_fslr_eco_rt.tcl"/>
+            <variable name="TEV(intask_export_mode)" value="VERILOG SDC"/>
+        </variables>
+    </tool_task>
+    <tool_task name="pt_dmsa_fix_eco_power">
+        <step>30_pnr</step>
+        <script_file>$SEV(gscript_dir)/sta/generate_scenarios.tcl</script_file>
+        <src>430_fix_eco_power</src>
+        <dst>430_fix_eco_power</dst>
+        <tool>pt_dmsa</tool>
+        <analysis_task>0</analysis_task>
+        <variables>
+            <variable name="TEV(scenarios)" value=""/>
+            <variable name="TEV(pt_reports_script)" value="$SEV(gscript_dir)/sta/reports_dmsa.tcl"/>
+            <variable name="TEV(power_analysis)" value="1"/>
+            <variable name="TEV(dmsa)" value="1"/>
+            <variable name="TEV(eco_mode)" value="TOTAL_POWER"/>
+            <variable name="TEV(eco_enable_physical)" value="0"/>
+        </variables>
+        <must_allow_list>
+            <must_allow regexp="Error: no path is selected for slack fixing."/>
+        </must_allow_list>
+    </tool_task>
+    <tool_task name="pt_dmsa_fix_eco_power_combined">
+        <step>30_pnr</step>
+        <script_file>$SEV(gscript_dir)/sta/generate_scenarios.tcl</script_file>
+        <src>440_icc_focal_opt_fslr</src>
+        <dst>440_icc_focal_opt_fslr</dst>
+        <tool>pt_dmsa</tool>
+        <analysis_task>0</analysis_task>
+        <variables>
+            <variable name="TEV(scenarios)" value=""/>
+            <variable name="TEV(pt_reports_script)" value="$SEV(gscript_dir)/sta/reports_dmsa.tcl"/>
+            <variable name="TEV(power_analysis)" value="1"/>
+            <variable name="TEV(dmsa)" value="1"/>
+            <variable name="TEV(eco_mode)" value="TOTAL_POWER"/>
+            <variable name="TEV(eco_enable_physical)" value="0"/>
+        </variables>
+        <must_allow_list>
+            <must_allow regexp="Error: no path is selected for slack fixing."/>
+        </must_allow_list>
+    </tool_task>
+    <gen_task name="extract_final_fix_eco_power">
+        <step>30_pnr</step>
+        <script_file>$SEV(tscript_dir)/generate_starrc_tasks.tcl</script_file>
+        <src>430_fix_eco_power</src>
+        <dst>430_fix_eco_power</dst>
+        <metrics_enable_transfer>0</metrics_enable_transfer>
+        <must_allow_list>
+            <must_allow regexp="Errors: 0"/>
+        </must_allow_list>
+    </gen_task>
+    <gen_task name="extract_final_fix_eco_power_combined">
+        <step>30_pnr</step>
+        <script_file>$SEV(tscript_dir)/generate_starrc_tasks.tcl</script_file>
+        <src>440_icc_focal_opt_fslr</src>
+        <dst>440_icc_focal_opt_fslr</dst>
+        <must_allow_list>
+            <must_allow regexp="Errors: 0"/>
+        </must_allow_list>
+    </gen_task>
+    <mux_task name="select_results">
+        <step>30_pnr</step>
+        <script_file>$SEV(gscript_dir)/conf/mux_task.tcl</script_file>
+        <src>431_fix_eco_power</src>
+        <dst>499_sf_power_end</dst>
+        <tool>tcl</tool>
+        <port_count>4</port_count>
+        <ports>0100000000000000</ports>
+    </mux_task>
+    <edges>
+        <edge from="extract_final_fix_eco_power" to="pt_dmsa_fix_eco_power"/>
+        <edge from="extract_final_fix_eco_power_combined" to="pt_dmsa_fix_eco_power_combined"/>
+        <edge from="icc_export_script_fix_eco_power" to="extract_final_fix_eco_power"/>
+        <edge from="icc_fix_eco_power" to="select_results/2"/>
+        <edge from="icc_fix_eco_power_combined" to="select_results/3"/>
+        <edge from="icc_focal_opt_fslr" to="select_results/1" points="22,29"/>
+        <edge from="icc_focal_opt_fslr_combined" to="extract_final_fix_eco_power_combined"/>
+        <edge from="pt_dmsa_fix_eco_power" to="icc_fix_eco_power"/>
+        <edge from="pt_dmsa_fix_eco_power_combined" to="icc_fix_eco_power_combined"/>
+        <edge from="select_results" to="sf_power_end"/>
+        <edge from="sf_power_begin" to="icc_export_script_fix_eco_power" points="37,12"/>
+        <edge from="sf_power_begin" to="icc_focal_opt_fslr"/>
+        <edge from="sf_power_begin" to="icc_focal_opt_fslr_combined" points="67,9"/>
+        <edge from="sf_power_begin" to="select_results/0" points="11,29"/>
+    </edges>
+    <graph grid_width="940" grid_height="490">
+        <node name="note-1" x="700" y="190"/>
+        <node name="note-7" x="420" y="30"/>
+        <node name="note-8" x="380" y="190"/>
+        <node name="object-2" x="60" y="190"/>
+        <node name="object-3" x="170" y="190"/>
+        <node name="sf_power_begin" x="110" y="90"/>
+        <node name="sf_power_end" x="460" y="460"/>
+        <node name="icc_export_script_fix_eco_power" x="470" y="160"/>
+        <node name="icc_fix_eco_power" x="470" y="320"/>
+        <node name="icc_fix_eco_power_combined" x="770" y="330"/>
+        <node name="icc_focal_opt_fslr" x="220" y="160"/>
+        <node name="icc_focal_opt_fslr_combined" x="770" y="160"/>
+        <node name="pt_dmsa_fix_eco_power" x="470" y="270"/>
+        <node name="pt_dmsa_fix_eco_power_combined" x="770" y="270"/>
+        <node name="extract_final_fix_eco_power" x="470" y="230"/>
+        <node name="extract_final_fix_eco_power_combined" x="770" y="230"/>
+        <node name="select_results" x="460" y="420"/>
+    </graph>
+</flow>

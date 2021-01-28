@@ -1,0 +1,388 @@
+
+<!--
+## HEADER $Id: //sps/flow/ds/scripts_global/flows/power.xml#108 $
+## HEADER_MSG    Lynx Design System: Production Flow
+## HEADER_MSG    Version 2015.06-SP1
+## HEADER_MSG    Copyright (c) 2015 Synopsys
+## HEADER_MSG    Perforce Label: lynx_flow_2015.06-SP1
+## HEADER_MSG 
+-->
+<flow name="sf_power">
+    <note name="note-1" title="Scenario Notes" always_show_detail="0">
+        <text>Note that these tasks all require specification of a
+single scenario for analysis. Scenario requirements
+may differ for individual designs and/or technologies.</text>
+    </note>
+    <note name="note-3" title="Misc Notes" always_show_detail="0">
+        <text>The power_* tasks create information
+needed by other power &amp; rail analysis tasks.
+Some tasks are named to indicate which switching activity format is used:
+&quot;saif&quot; : Switching activity from SAIF file
+&quot;vcd&quot; : Switching activity from VCD file
+&quot;tcl&quot; : Switching activity from Tcl file
+&quot;vf&quot; : Switching activity is &quot;vector free</text>
+    </note>
+    <note name="note-3-copy" title="Gate Sim Switching Option">
+        <text>This example shows an optional method for using gate simulation (if
+supported by the design testbench) to produce a SAIF, VCD, or other 
+formats of switching activity to improve accuracy of PTPX power analysis.
+
+Change the MUX select to enable the edge to tie this into the flow. Enabling the gate level simulation is not enough. Users must also look at the TEV(switching_file) used in the power_syn_dmsa to make sure it uses the desired switching file output from this gate sim.
+
+If gate simulation is done outside of the scope of this flow, the TEV(switching_file) can be used to bring it into the power_syn_dmsa task.</text>
+    </note>
+    <note name="note-3-copy-copy" title="Gate Sim Switching Option">
+        <text>This example shows an optional method for using gate simulation (if
+supported by the design testbench) to produce a SAIF, VCD, or other 
+formats of switching activity to improve accuracy of PTPX power analysis.
+
+Change the MUX select to enable the edge to tie this into the flow. Enabling the gate level simulation is not enough. Users must also look at the TEV(switching_file) used in the power_syn_dmsa to make sure it uses the desired switching file output from this gate sim.
+
+If gate simulation is done outside of the scope of this flow, the TEV(switching_file) can be used to bring it into the power_syn_dmsa task.</text>
+    </note>
+    <join_task name="icc_rail_all_w_sims">
+        <step>40_finish</step>
+    </join_task>
+    <join_task name="icc_rail_all_wo_sims">
+        <step>40_finish</step>
+    </join_task>
+    <join_task name="power_finish_begin">
+        <step>40_finish</step>
+    </join_task>
+    <join_task name="power_finish_end">
+        <step>40_finish</step>
+    </join_task>
+    <join_task name="power_syn_begin">
+        <step>10_syn</step>
+    </join_task>
+    <join_task name="power_syn_end">
+        <step>10_syn</step>
+    </join_task>
+    <join_task name="ptpx_all_w_sims">
+        <step>40_finish</step>
+    </join_task>
+    <join_task name="ptpx_all_wo_sims">
+        <step>40_finish</step>
+    </join_task>
+    <tool_task name="icc_rail_saif_static">
+        <step>40_finish</step>
+        <script_file>$SEV(gscript_dir)/power/icc_rail_analysis.tcl</script_file>
+        <src>900_outputs_power_examples</src>
+        <dst>900_outputs_power_examples_icc_rail_saif_static</dst>
+        <tool>icc</tool>
+        <analysis_task>1</analysis_task>
+        <variables>
+            <variable name="TEV(switching_format)" value="SAIF"/>
+        </variables>
+        <must_allow_list>
+            <must_allow regexp="Errors: 0"/>
+            <must_allow regexp="LINK-5"/>
+        </must_allow_list>
+    </tool_task>
+    <tool_task name="icc_rail_vcd_dynamic">
+        <step>40_finish</step>
+        <script_file>$SEV(gscript_dir)/power/icc_rail_analysis.tcl</script_file>
+        <src>900_outputs_power_examples</src>
+        <dst>900_outputs_power_examples_icc_rail_vcd_dynamic</dst>
+        <tool>icc</tool>
+        <analysis_task>1</analysis_task>
+        <variables>
+            <variable name="TEV(analysis_mode)" value="DYNAMIC"/>
+            <variable name="TEV(switching_format)" value="VCD"/>
+        </variables>
+        <must_allow_list>
+            <must_allow regexp="Errors: 0"/>
+            <must_allow regexp="LINK-5"/>
+        </must_allow_list>
+    </tool_task>
+    <tool_task name="icc_rail_vcd_static">
+        <step>40_finish</step>
+        <script_file>$SEV(gscript_dir)/power/icc_rail_analysis.tcl</script_file>
+        <src>900_outputs_power_examples</src>
+        <dst>900_outputs_power_examples_icc_rail_vcd_static</dst>
+        <tool>icc</tool>
+        <analysis_task>1</analysis_task>
+        <variables>
+            <variable name="TEV(switching_format)" value="VCD"/>
+        </variables>
+        <must_allow_list>
+            <must_allow regexp="Errors: 0"/>
+            <must_allow regexp="LINK-5"/>
+        </must_allow_list>
+    </tool_task>
+    <tool_task name="icc_rail_vf_dynamic">
+        <step>40_finish</step>
+        <script_file>$SEV(gscript_dir)/power/icc_rail_analysis.tcl</script_file>
+        <src>900_outputs_power_examples</src>
+        <dst>900_outputs_power_examples_icc_rail_vf_dynamic</dst>
+        <tool>icc</tool>
+        <analysis_task>1</analysis_task>
+        <variables>
+            <variable name="TEV(analysis_mode)" value="DYNAMIC_VECTORFREE"/>
+        </variables>
+        <must_allow_list>
+            <must_allow regexp="Errors: 0"/>
+            <must_allow regexp="LINK-5"/>
+        </must_allow_list>
+    </tool_task>
+    <tool_task name="icc_rail_vf_static">
+        <step>40_finish</step>
+        <script_file>$SEV(gscript_dir)/power/icc_rail_analysis.tcl</script_file>
+        <src>900_outputs_power_examples</src>
+        <dst>900_outputs_power_examples_icc_rail_vf_static</dst>
+        <tool>icc</tool>
+        <analysis_task>1</analysis_task>
+        <must_allow_list>
+            <must_allow regexp="Errors: 0"/>
+            <must_allow regexp="LINK-5"/>
+        </must_allow_list>
+    </tool_task>
+    <tool_task name="power_sdf">
+        <step>40_finish</step>
+        <script_file>$SEV(gscript_dir)/sta/execute_scenario.tcl</script_file>
+        <src>900_outputs_power_examples</src>
+        <dst>900_outputs_power_examples</dst>
+        <tool>pt</tool>
+        <analysis_task>1</analysis_task>
+        <variables>
+            <variable name="TEV(hier_mode_parasitic)" value="FLAT"/>
+            <variable name="TEV(output_control)" value="SDF"/>
+        </variables>
+        <must_allow_list>
+            <must_allow regexp="PARA-075"/>
+            <must_allow regexp="DES-002"/>
+            <must_allow regexp="SEL-005"/>
+        </must_allow_list>
+    </tool_task>
+    <tool_task name="power_setup">
+        <step>40_finish</step>
+        <script_file>$SEV(gscript_dir)/power/power_setup.tcl</script_file>
+        <src>800_outputs</src>
+        <dst>900_outputs_power_examples</dst>
+        <tool>tcl</tool>
+    </tool_task>
+    <tool_task name="power_sim">
+        <step>40_finish</step>
+        <script_file>$SEV(bscript_dir)/power/power_sim.tcl</script_file>
+        <src>900_outputs_power_examples</src>
+        <dst>900_outputs_power_examples</dst>
+        <tool>tcl_job</tool>
+        <analysis_task>1</analysis_task>
+        <aux_tools>vcs verdi</aux_tools>
+        <variables>
+            <variable name="TEV(gen_vcd)" value="1"/>
+        </variables>
+        <must_have_list>
+            <must_have regexp="SNPS_PASS" severity="error"/>
+        </must_have_list>
+    </tool_task>
+    <tool_task name="power_syn_dmsa">
+        <step>10_syn</step>
+        <script_file>$SEV(gscript_dir)/sta/generate_scenarios.tcl</script_file>
+        <src>800_outputs</src>
+        <dst>900_outputs_power</dst>
+        <tool>pt_dmsa</tool>
+        <analysis_task>1</analysis_task>
+        <variables>
+            <variable name="TEV(pt_reports_script)" value="$SEV(gscript_dir)/sta/reports_dmsa.tcl"/>
+            <variable name="TEV(si_mode)" value="SI_OFF"/>
+            <variable name="TEV(power_analysis)" value="1"/>
+            <variable name="TEV(dmsa)" value="1"/>
+            <variable name="TEV(para_format)" value="SPEF"/>
+        </variables>
+    </tool_task>
+    <tool_task name="power_syn_sdf">
+        <step>10_syn</step>
+        <script_file>$SEV(gscript_dir)/sta/execute_scenario.tcl</script_file>
+        <src>800_outputs</src>
+        <dst>900_outputs_power</dst>
+        <tool>pt</tool>
+        <analysis_task>1</analysis_task>
+        <variables>
+            <variable name="TEV(hier_mode_parasitic)" value="FLAT"/>
+            <variable name="TEV(output_control)" value="SDF"/>
+            <variable name="TEV(para_format)" value="SPEF"/>
+        </variables>
+        <must_allow_list>
+            <must_allow regexp="PARA-075"/>
+            <must_allow regexp="DES-002"/>
+            <must_allow regexp="SEL-005"/>
+            <must_allow regexp="SNPS_ERROR  : Design contains timing violations"/>
+        </must_allow_list>
+    </tool_task>
+    <tool_task name="power_syn_setup">
+        <step>10_syn</step>
+        <script_file>$SEV(gscript_dir)/power/power_setup.tcl</script_file>
+        <src>800_outputs</src>
+        <dst>900_outputs_power</dst>
+        <tool>tcl</tool>
+    </tool_task>
+    <tool_task name="power_syn_sim">
+        <step>10_syn</step>
+        <script_file>$SEV(bscript_dir)/power/power_sim.tcl</script_file>
+        <src>900_outputs_power</src>
+        <dst>900_outputs_power</dst>
+        <tool>tcl_job</tool>
+        <analysis_task>1</analysis_task>
+        <aux_tools>vcs verdi</aux_tools>
+        <must_have_list>
+            <must_have regexp="SNPS_PASS" severity="error"/>
+        </must_have_list>
+    </tool_task>
+    <tool_task name="ptpx_saif">
+        <step>40_finish</step>
+        <script_file>$SEV(gscript_dir)/sta/execute_scenario.tcl</script_file>
+        <src>900_outputs_power_examples</src>
+        <dst>900_outputs_power_examples_ptpx_saif</dst>
+        <tool>pt</tool>
+        <analysis_task>1</analysis_task>
+        <variables>
+            <variable name="TEV(hier_mode_parasitic)" value="FLAT"/>
+            <variable name="TEV(power_analysis)" value="1"/>
+            <variable name="TEV(switching_format)" value="SAIF"/>
+        </variables>
+        <must_allow_list>
+            <must_allow regexp="PARA-075"/>
+            <must_allow regexp="DES-002"/>
+        </must_allow_list>
+    </tool_task>
+    <tool_task name="ptpx_tcl">
+        <step>40_finish</step>
+        <script_file>$SEV(gscript_dir)/sta/execute_scenario.tcl</script_file>
+        <src>900_outputs_power_examples</src>
+        <dst>900_outputs_power_examples_ptpx_tcl</dst>
+        <tool>pt</tool>
+        <analysis_task>1</analysis_task>
+        <variables>
+            <variable name="TEV(hier_mode_parasitic)" value="FLAT"/>
+            <variable name="TEV(power_analysis)" value="1"/>
+        </variables>
+        <must_allow_list>
+            <must_allow regexp="PARA-075"/>
+            <must_allow regexp="DES-002"/>
+        </must_allow_list>
+    </tool_task>
+    <tool_task name="ptpx_vcd">
+        <step>40_finish</step>
+        <script_file>$SEV(gscript_dir)/sta/execute_scenario.tcl</script_file>
+        <src>900_outputs_power_examples</src>
+        <dst>900_outputs_power_examples_ptpx_vcd</dst>
+        <tool>pt</tool>
+        <analysis_task>1</analysis_task>
+        <variables>
+            <variable name="TEV(hier_mode_parasitic)" value="FLAT"/>
+            <variable name="TEV(power_analysis)" value="1"/>
+            <variable name="TEV(switching_format)" value="VCD"/>
+        </variables>
+        <must_allow_list>
+            <must_allow regexp="PARA-075"/>
+            <must_allow regexp="DES-002"/>
+        </must_allow_list>
+    </tool_task>
+    <tool_task name="ptpx_vf">
+        <step>40_finish</step>
+        <script_file>$SEV(gscript_dir)/sta/execute_scenario.tcl</script_file>
+        <src>900_outputs_power_examples</src>
+        <dst>900_outputs_power_examples_ptpx_vf</dst>
+        <tool>pt</tool>
+        <analysis_task>1</analysis_task>
+        <variables>
+            <variable name="TEV(hier_mode_parasitic)" value="FLAT"/>
+            <variable name="TEV(power_analysis)" value="1"/>
+            <variable name="TEV(switching_format)" value="VF"/>
+        </variables>
+        <must_allow_list>
+            <must_allow regexp="PARA-075"/>
+            <must_allow regexp="DES-002"/>
+        </must_allow_list>
+    </tool_task>
+    <gen_task name="power_extract">
+        <step>40_finish</step>
+        <script_file>$SEV(tscript_dir)/generate_starrc_tasks.tcl</script_file>
+        <src>900_outputs_power_examples</src>
+        <dst>900_outputs_power_examples</dst>
+        <metrics_enable_transfer>0</metrics_enable_transfer>
+        <variables>
+            <variable name="TEV(hier_mode_parasitic)" value="FLAT"/>
+        </variables>
+        <must_allow_list>
+            <must_allow regexp="Errors: 0"/>
+        </must_allow_list>
+    </gen_task>
+    <mux_task name="gate_sim">
+        <step>10_syn</step>
+        <script_file>$SEV(gscript_dir)/conf/mux_task.tcl</script_file>
+        <src>900_outputs_power_examples</src>
+        <tool>tcl</tool>
+        <variables>
+            <variable name="TEV(allow_none_selected)" value="1"/>
+        </variables>
+        <port_count>1</port_count>
+        <ports>0000000000000000</ports>
+    </mux_task>
+    <edges>
+        <edge from="gate_sim" to="power_syn_dmsa"/>
+        <edge from="icc_rail_all_wo_sims" to="power_finish_end"/>
+        <edge from="icc_rail_saif_static" to="icc_rail_all_w_sims"/>
+        <edge from="icc_rail_vcd_dynamic" to="icc_rail_all_w_sims"/>
+        <edge from="icc_rail_vcd_static" to="icc_rail_all_w_sims"/>
+        <edge from="icc_rail_vf_dynamic" to="icc_rail_all_wo_sims"/>
+        <edge from="icc_rail_vf_static" to="icc_rail_all_wo_sims"/>
+        <edge from="power_extract" to="power_sdf"/>
+        <edge from="power_extract" to="ptpx_tcl"/>
+        <edge from="power_extract" to="ptpx_vf"/>
+        <edge from="power_finish_begin" to="power_setup"/>
+        <edge from="power_sdf" to="power_sim"/>
+        <edge from="power_setup" to="icc_rail_vf_dynamic"/>
+        <edge from="power_setup" to="icc_rail_vf_static"/>
+        <edge from="power_setup" to="power_extract"/>
+        <edge from="power_sim" to="icc_rail_saif_static"/>
+        <edge from="power_sim" to="icc_rail_vcd_dynamic"/>
+        <edge from="power_sim" to="icc_rail_vcd_static"/>
+        <edge from="power_sim" to="ptpx_saif"/>
+        <edge from="power_sim" to="ptpx_vcd"/>
+        <edge from="power_syn_begin" to="power_syn_dmsa"/>
+        <edge from="power_syn_begin" to="power_syn_setup" points="30,3"/>
+        <edge from="power_syn_dmsa" to="power_syn_end"/>
+        <edge from="power_syn_sdf" to="power_syn_sim"/>
+        <edge from="power_syn_setup" to="power_syn_sdf"/>
+        <edge from="power_syn_sim" to="gate_sim/0"/>
+        <edge from="ptpx_all_wo_sims" to="power_finish_end"/>
+        <edge from="ptpx_saif" to="ptpx_all_w_sims"/>
+        <edge from="ptpx_tcl" to="ptpx_all_wo_sims"/>
+        <edge from="ptpx_vcd" to="ptpx_all_w_sims"/>
+        <edge from="ptpx_vf" to="ptpx_all_wo_sims"/>
+    </edges>
+    <graph grid_width="870" grid_height="840">
+        <node name="note-1" x="510" y="330"/>
+        <node name="note-3" x="360" y="330"/>
+        <node name="note-3-copy" x="430" y="180"/>
+        <node name="note-3-copy-copy" x="130" y="740"/>
+        <node name="icc_rail_all_w_sims" x="610" y="810"/>
+        <node name="icc_rail_all_wo_sims" x="600" y="470"/>
+        <node name="power_finish_begin" x="160" y="380"/>
+        <node name="power_finish_end" x="770" y="520"/>
+        <node name="power_syn_begin" x="160" y="30"/>
+        <node name="power_syn_end" x="160" y="320"/>
+        <node name="ptpx_all_w_sims" x="590" y="680"/>
+        <node name="ptpx_all_wo_sims" x="600" y="570"/>
+        <node name="icc_rail_saif_static" x="380" y="730"/>
+        <node name="icc_rail_vcd_dynamic" x="380" y="810"/>
+        <node name="icc_rail_vcd_static" x="380" y="770"/>
+        <node name="icc_rail_vf_dynamic" x="370" y="470"/>
+        <node name="icc_rail_vf_static" x="370" y="430"/>
+        <node name="power_sdf" x="160" y="590"/>
+        <node name="power_setup" x="160" y="430"/>
+        <node name="power_sim" x="160" y="640"/>
+        <node name="power_syn_dmsa" x="160" y="270"/>
+        <node name="power_syn_sdf" x="300" y="100"/>
+        <node name="power_syn_setup" x="300" y="60"/>
+        <node name="power_syn_sim" x="300" y="140"/>
+        <node name="ptpx_saif" x="340" y="640"/>
+        <node name="ptpx_tcl" x="340" y="570"/>
+        <node name="ptpx_vcd" x="340" y="680"/>
+        <node name="ptpx_vf" x="330" y="530"/>
+        <node name="power_extract" x="160" y="530"/>
+        <node name="gate_sim" x="300" y="230"/>
+    </graph>
+</flow>

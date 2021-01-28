@@ -1,0 +1,310 @@
+
+<!--
+## HEADER $Id: //sps/flow/ds/scripts_global/flows/pnr_extras.xml#45 $
+## HEADER_MSG    Lynx Design System: Production Flow
+## HEADER_MSG    Version 2015.06-SP1
+## HEADER_MSG    Copyright (c) 2015 Synopsys
+## HEADER_MSG    Perforce Label: lynx_flow_2015.06-SP1
+## HEADER_MSG 
+-->
+<flow name="sf_pnr_extras">
+    <note name="note-1" title="CTS Only Route" always_show_detail="0">
+        <text>The following task / configuration can be used to route only the clock nets.  This can be 
+used to provide an expedited path for those wishing to look at clock skew post route but
+not wishing to route the complete design for example.</text>
+    </note>
+    <note name="note-2" title="MinChip" always_show_detail="0">
+        <text>The following is a minchip task that can be used to help aid in evaluating possible block shrinks.</text>
+    </note>
+    <note name="note-3" title="CAA" always_show_detail="0">
+        <text>The following task can be used to help perform Critical Area Analysis.</text>
+    </note>
+    <note name="note-4" title="Preroute Focal Opt" always_show_detail="0">
+        <text>Provided is a task which can be leveraged to execute &quot;preroute_focal_opt&quot;.  
+Possible usages would be at points like post icc_place_opt and post icc_clock_opt_psyn.  
+The types of violations being fixed, how they are being specified, and how they should 
+be fixed is hard to anticipate and as such it is largely left to the user to specify the exact 
+configuration of preroute_focal_opt.  Usage is both optional and very design dependent.</text>
+    </note>
+    <note name="note-5" title="The below are used for development of incremental extraction"/>
+    <note name="note-6" title="incremental extraction"/>
+    <note name="note-6-copy" title="star rewrite"/>
+    <note name="note-6-copy-copy" title="StarRC LEFDEF exploration / development"/>
+    <note name="note-7" title="Medium Effort CCD Flow"/>
+    <join_task name="starrc_lefdef"/>
+    <join_task name="test_extraction_new">
+        <step>30_pnr</step>
+    </join_task>
+    <join_task name="test_incr_eco_extraction">
+        <step>30_pnr</step>
+    </join_task>
+    <tool_task name="icc_clock_opt_cts_ccd_med">
+        <step>30_pnr</step>
+        <script_file>$SEV(gscript_dir)/pnr/icc_clock_opt_cts.tcl</script_file>
+        <src>020_icc_place_opt_qor</src>
+        <dst>030_icc_clock_opt_cts_ccd_med</dst>
+        <tool>icc</tool>
+        <variables>
+            <variable name="TEV(clock_opt_options)" value="-only_cts -no_clock_route -concurrent_clock_and_data -power -area_recovery -update_clock_latency"/>
+            <variable name="TEV(scenario_management_file)" value="$SEV(bscript_dir)/conf/example.icc_traditional_scenario_management.tcl"/>
+            <variable name="TEV(suppress_checks)" value="1"/>
+            <variable name="TEV(set_concurrent_clock_and_data_strategy)" value="-effort medium"/>
+        </variables>
+    </tool_task>
+    <tool_task name="icc_clock_opt_psyn_ccd_med">
+        <step>30_pnr</step>
+        <script_file>$SEV(gscript_dir)/pnr/icc_clock_opt_psyn.tcl</script_file>
+        <src>030_icc_clock_opt_cts_ccd_med</src>
+        <dst>040_icc_clock_opt_psyn_ccd_med</dst>
+        <tool>icc</tool>
+        <variables>
+            <variable name="TEV(post_clock_opt_options)" value="-only_psyn -power -no_clock_route -concurrent_clock_and_data -power -area_recovery"/>
+            <variable name="TEV(scenario_management_file)" value="$SEV(bscript_dir)/conf/example.icc_traditional_scenario_management.tcl"/>
+            <variable name="TEV(set_concurrent_clock_and_data_strategy)" value="-effort medium"/>
+        </variables>
+        <must_not_have_list>
+            <must_not_have regexp="PSYN-1028" severity="error"/>
+        </must_not_have_list>
+    </tool_task>
+    <tool_task name="icc_eco_example_10">
+        <step>30_pnr</step>
+        <script_file>$SEV(bscript_dir)/pnr/icc_eco_example.tcl</script_file>
+        <src>incr_eco1</src>
+        <dst>incr_eco2</dst>
+        <tool>icc</tool>
+        <variables>
+            <variable name="TEV(eco_type)" value="10"/>
+            <variable name="TEV(intask_export_mode)" value="VERILOG"/>
+            <variable name="TEV(scenario_management_file)" value="$SEV(bscript_dir)/conf/example.icc_traditional_scenario_management.tcl"/>
+        </variables>
+    </tool_task>
+    <tool_task name="icc_eco_example_10_new">
+        <step>30_pnr</step>
+        <script_file>$SEV(bscript_dir)/pnr/icc_eco_example.tcl</script_file>
+        <src>incr_eco1_new</src>
+        <dst>incr_eco2_new</dst>
+        <tool>icc</tool>
+        <variables>
+            <variable name="TEV(eco_type)" value="10"/>
+            <variable name="TEV(intask_export_mode)" value="VERILOG"/>
+            <variable name="TEV(scenario_management_file)" value="$SEV(bscript_dir)/conf/example.icc_traditional_scenario_management.tcl"/>
+        </variables>
+    </tool_task>
+    <tool_task name="icc_fix_signal_em_qor">
+        <step>30_pnr</step>
+        <script_file>$SEV(gscript_dir)/pnr/icc_fix_signal_em.tcl</script_file>
+        <src>600_icc_export_data</src>
+        <dst>incr_eco1</dst>
+        <tool>icc</tool>
+        <variables>
+            <variable name="TEV(scenario_management_file)" value="$SEV(bscript_dir)/conf/example.icc_traditional_scenario_management.tcl"/>
+            <variable name="TEV(em_mode)" value="SKIP"/>
+        </variables>
+    </tool_task>
+    <tool_task name="icc_fix_signal_em_qor_new">
+        <step>30_pnr</step>
+        <script_file>$SEV(gscript_dir)/pnr/icc_fix_signal_em.tcl</script_file>
+        <src>600_icc_export_data</src>
+        <dst>incr_eco1_new</dst>
+        <tool>icc</tool>
+        <variables>
+            <variable name="TEV(scenario_management_file)" value="$SEV(bscript_dir)/conf/example.icc_traditional_scenario_management.tcl"/>
+            <variable name="TEV(em_mode)" value=""/>
+        </variables>
+    </tool_task>
+    <tool_task name="icc_initial_route_ccd_med">
+        <step>30_pnr</step>
+        <script_file>$SEV(gscript_dir)/pnr/icc_initial_route.tcl</script_file>
+        <src>040_icc_clock_opt_psyn_ccd_med</src>
+        <dst>060_icc_initial_route_ccd_med</dst>
+        <tool>icc</tool>
+        <variables>
+            <variable name="TEV(route_mode)" value="CTS_AND_INITIAL_RT"/>
+            <variable name="TEV(post_route_cto_enable)" value="0"/>
+            <variable name="TEV(set_delay_calculation_options)" value="-preroute awe -routed_clock arnoldi -postroute arnoldi -arnoldi_effort hybrid"/>
+            <variable name="TEV(scenario_management_file)" value="$SEV(bscript_dir)/conf/example.icc_traditional_scenario_management.tcl"/>
+            <variable name="TEV(suppress_checks)" value="1"/>
+        </variables>
+        <must_allow_list>
+            <must_allow regexp="DES-002"/>
+            <must_allow regexp="PARA-078"/>
+        </must_allow_list>
+    </tool_task>
+    <tool_task name="icc_minchip">
+        <step>30_pnr</step>
+        <script_file>$SEV(gscript_dir)/dp/icc_minchip.tcl</script_file>
+        <dst>300_icc_minchip</dst>
+        <tool>icc</tool>
+        <analysis_task>1</analysis_task>
+        <variables>
+            <variable name="TEV(scenario_management_file)" value="$SEV(bscript_dir)/conf/example.icc_traditional_scenario_management.tcl"/>
+        </variables>
+    </tool_task>
+    <tool_task name="icc_preroute_focal_opt">
+        <step>30_pnr</step>
+        <script_file>$SEV(gscript_dir)/pnr/icc_preroute_focal_opt.tcl</script_file>
+        <tool>icc</tool>
+        <variables>
+            <variable name="TEV(set_delay_calculation_options)" value="-preroute awe -routed_clock arnoldi -postroute arnoldi -arnoldi_effort hybrid"/>
+            <variable name="TEV(scenario_management_file)" value="$SEV(bscript_dir)/conf/example.icc_traditional_scenario_management.tcl"/>
+        </variables>
+        <must_not_have_list>
+            <must_not_have regexp="PSYN-1028" severity="error"/>
+        </must_not_have_list>
+    </tool_task>
+    <tool_task name="icc_route_caa">
+        <step>30_pnr</step>
+        <script_file>$SEV(gscript_dir)/finish/icc_run_caa.tcl</script_file>
+        <dst>300_icc_route_caa</dst>
+        <tool>icc</tool>
+        <analysis_task>1</analysis_task>
+    </tool_task>
+    <tool_task name="icc_route_cts_only">
+        <step>30_pnr</step>
+        <script_file>$SEV(gscript_dir)/pnr/icc_initial_route.tcl</script_file>
+        <src>040_icc_clock_opt_psyn_baseline</src>
+        <dst>061_icc_initial_route_baseline</dst>
+        <tool>icc</tool>
+        <variables>
+            <variable name="TEV(route_mode)" value="CTS_RT_ONLY"/>
+            <variable name="TEV(set_delay_calculation_options)" value="-preroute awe -routed_clock arnoldi -postroute arnoldi -arnoldi_effort hybrid"/>
+            <variable name="TEV(scenario_management_file)" value="$SEV(bscript_dir)/conf/example.icc_traditional_scenario_management.tcl"/>
+        </variables>
+    </tool_task>
+    <tool_task name="icc_route_opt_ccd_med">
+        <step>30_pnr</step>
+        <script_file>$SEV(gscript_dir)/pnr/icc_route_opt.tcl</script_file>
+        <src>060_icc_initial_route_ccd_med</src>
+        <dst>070_icc_route_opt_ccd_med</dst>
+        <tool>icc</tool>
+        <variables>
+            <variable name="TEV(scenario_management_file)" value="$SEV(bscript_dir)/conf/example.icc_traditional_scenario_management.tcl"/>
+            <variable name="TEV(route_opt_options)" value="-skip_initial_route -xtalk_reduction -concurrent_clock_and_data"/>
+            <variable name="TEV(set_concurrent_clock_and_data_strategy)" value="-effort medium"/>
+        </variables>
+    </tool_task>
+    <tool_task name="mw_lef_export">
+        <step>30_pnr</step>
+        <script_file>$SEV(gscript_dir)/pnr/mw_export.tcl</script_file>
+        <src>600_icc_export_data</src>
+        <dst>100_lefdef</dst>
+        <tool>mw</tool>
+        <variables>
+            <variable name="TEV(intask_export_mode)" value="LEF"/>
+        </variables>
+    </tool_task>
+    <gen_task name="extr_new">
+        <step>30_pnr</step>
+        <script_file>$SEV(tscript_dir)/generate_starrc_tasks.tcl</script_file>
+        <src>incr_eco1_new</src>
+        <dst>extr_new</dst>
+    </gen_task>
+    <gen_task name="extr_smc_lefdef">
+        <step>30_pnr</step>
+        <script_file>$SEV(tscript_dir)/generate_starrc_tasks.tcl</script_file>
+        <src>600_icc_export_data</src>
+        <dst>100_extr_smc_lefdef</dst>
+        <variables>
+            <variable name="TEV(input_mode)" value="LEFDEF"/>
+            <variable name="TEV(para_format)" value="SPEF"/>
+            <variable name="TEV(delete_workdir)" value="NEVER"/>
+        </variables>
+    </gen_task>
+    <gen_task name="extr_smc_new">
+        <step>30_pnr</step>
+        <script_file>$SEV(tscript_dir)/generate_starrc_tasks.tcl</script_file>
+        <src>incr_eco1_new</src>
+        <dst>extr_smc_new</dst>
+    </gen_task>
+    <gen_task name="incr_eco1_extr">
+        <step>30_pnr</step>
+        <script_file>$SEV(tscript_dir)/generate_starrc_tasks.tcl</script_file>
+        <src>incr_eco1</src>
+        <dst>incr_eco1</dst>
+        <variables>
+            <variable name="TEV(para_format)" value="SPEF"/>
+            <variable name="TEV(delete_workdir)" value="NEVER"/>
+            <variable name="TEV(eco_mode)" value="YES"/>
+            <variable name="TEV(eco_loop_iteration)" value="0"/>
+        </variables>
+    </gen_task>
+    <gen_task name="incr_eco1_extr_new">
+        <step>30_pnr</step>
+        <script_file>$SEV(tscript_dir)/generate_starrc_tasks.tcl</script_file>
+        <src>incr_eco1_new</src>
+        <dst>extr_eco1_new</dst>
+    </gen_task>
+    <gen_task name="incr_eco2_extr">
+        <step>30_pnr</step>
+        <script_file>$SEV(tscript_dir)/generate_starrc_tasks.tcl</script_file>
+        <src>incr_eco2</src>
+        <dst>incr_eco2</dst>
+        <variables>
+            <variable name="TEV(para_format)" value="SPEF"/>
+            <variable name="TEV(delete_workdir)" value="NEVER"/>
+            <variable name="TEV(eco_mode)" value="YES"/>
+            <variable name="TEV(eco_loop_iteration)" value="1"/>
+        </variables>
+    </gen_task>
+    <gen_task name="incr_eco2_extr_new">
+        <step>30_pnr</step>
+        <script_file>$SEV(tscript_dir)/generate_starrc_tasks.tcl</script_file>
+        <src>incr_eco2_new</src>
+        <dst>extr_eco2_new</dst>
+    </gen_task>
+    <edges>
+        <edge from="extr_new" to="test_extraction_new"/>
+        <edge from="extr_smc_lefdef" to="starrc_lefdef"/>
+        <edge from="extr_smc_new" to="test_extraction_new"/>
+        <edge from="icc_clock_opt_cts_ccd_med" to="icc_clock_opt_psyn_ccd_med"/>
+        <edge from="icc_clock_opt_psyn_ccd_med" to="icc_initial_route_ccd_med"/>
+        <edge from="icc_eco_example_10" to="incr_eco2_extr"/>
+        <edge from="icc_eco_example_10_new" to="incr_eco2_extr_new"/>
+        <edge from="icc_fix_signal_em_qor" to="icc_eco_example_10"/>
+        <edge from="icc_fix_signal_em_qor" to="incr_eco1_extr"/>
+        <edge from="icc_fix_signal_em_qor_new" to="extr_new"/>
+        <edge from="icc_fix_signal_em_qor_new" to="extr_smc_new"/>
+        <edge from="icc_fix_signal_em_qor_new" to="icc_eco_example_10_new"/>
+        <edge from="icc_fix_signal_em_qor_new" to="incr_eco1_extr_new"/>
+        <edge from="icc_initial_route_ccd_med" to="icc_route_opt_ccd_med"/>
+        <edge from="incr_eco1_extr" to="incr_eco2_extr"/>
+        <edge from="incr_eco1_extr_new" to="incr_eco2_extr_new"/>
+        <edge from="incr_eco2_extr" to="test_incr_eco_extraction"/>
+        <edge from="incr_eco2_extr_new" to="test_extraction_new"/>
+        <edge from="mw_lef_export" to="extr_smc_lefdef"/>
+    </edges>
+    <graph grid_width="870" grid_height="680">
+        <node name="note-1" x="280" y="90"/>
+        <node name="note-2" x="250" y="160"/>
+        <node name="note-3" x="240" y="230"/>
+        <node name="note-4" x="290" y="30"/>
+        <node name="note-5" x="250" y="280"/>
+        <node name="note-6" x="100" y="310"/>
+        <node name="note-6-copy" x="70" y="480"/>
+        <node name="note-6-copy-copy" x="700" y="280"/>
+        <node name="note-7" x="660" y="30"/>
+        <node name="starrc_lefdef" x="620" y="410"/>
+        <node name="test_extraction_new" x="410" y="650"/>
+        <node name="test_incr_eco_extraction" x="280" y="440"/>
+        <node name="icc_clock_opt_cts_ccd_med" x="660" y="80"/>
+        <node name="icc_clock_opt_psyn_ccd_med" x="660" y="120"/>
+        <node name="icc_eco_example_10" x="280" y="340"/>
+        <node name="icc_eco_example_10_new" x="350" y="520"/>
+        <node name="icc_fix_signal_em_qor" x="100" y="340"/>
+        <node name="icc_fix_signal_em_qor_new" x="120" y="520"/>
+        <node name="icc_initial_route_ccd_med" x="660" y="160"/>
+        <node name="icc_minchip" x="70" y="160"/>
+        <node name="icc_preroute_focal_opt" x="100" y="30"/>
+        <node name="icc_route_caa" x="70" y="230"/>
+        <node name="icc_route_cts_only" x="90" y="90"/>
+        <node name="icc_route_opt_ccd_med" x="660" y="200"/>
+        <node name="mw_lef_export" x="620" y="320"/>
+        <node name="extr_new" x="80" y="650"/>
+        <node name="extr_smc_lefdef" x="620" y="370"/>
+        <node name="extr_smc_new" x="170" y="610"/>
+        <node name="incr_eco1_extr" x="100" y="390"/>
+        <node name="incr_eco1_extr_new" x="230" y="570"/>
+        <node name="incr_eco2_extr" x="280" y="390"/>
+        <node name="incr_eco2_extr_new" x="410" y="570"/>
+    </graph>
+</flow>

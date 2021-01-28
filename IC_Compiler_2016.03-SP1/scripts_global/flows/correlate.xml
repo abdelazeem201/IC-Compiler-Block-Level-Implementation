@@ -1,0 +1,294 @@
+
+<!--
+## HEADER $Id: //sps/flow/ds/scripts_global/flows/correlate.xml#83 $
+## HEADER_MSG    Lynx Design System: Production Flow
+## HEADER_MSG    Version 2015.06-SP1
+## HEADER_MSG    Copyright (c) 2015 Synopsys
+## HEADER_MSG    Perforce Label: lynx_flow_2015.06-SP1
+## HEADER_MSG 
+-->
+<flow name="sf_correlate">
+    <note name="note-1" title="ICC check_signoff_correlation" always_show_detail="0">
+        <text>The following is correlation collateral build around ICC check_signoff_correlations capabilities.
+Correlation deltas should not immediately be viewed as problem as implementation flows are
+turned for robust and efficient closure and not entirely for correlation.
+
+Correlation comes into play when robust closure cannot be achieved.  Typically in these situations,
+the items leading to issues should be identified and addressed rather than sweeping changes
+across the board.  Settings good for one technology or design are not necessarily good for another 
+technology or design.
+
+The following collateral should be viewed as a tool to help in debugging correlation issues. 
+
+In phase 1, icc_correlation_setup_preroute is used to perform correlation checks between
+IC Compiler and Prime-Time.  The output is a mechanical check that enumerates variables
+and other settings that can lead to correlation issues.
+The input database should be from the preroute phase (e.g. 020_icc_place_opt).  
+
+In phase 2, icc_correlation_export_script is  is used to generate Verilog, SDC, and SPEF for
+downstream usage.  The input database should be from the postroute phase (e.g. 060_icc_initial_route).
+This database is the reference database for the other phase 2 correlation checks.
+
+The task icc_correlation_postroute_star_setup is used to perform correlation checks between
+IC Compiler and StarRC.  The output is mechanical check that enumerates variables and other
+settings that can lead to correlation issues.
+
+The task icc_correlation_postroute_star_setup is used to perform parasitic correlation checks
+between IC Compiler and StarRC.  The output are SPEF files and comparison scripts to be used
+by myBingo.  It is left to the user to perform the myBingo check.
+
+The task icc_correlation_setup_postroute_pt is used to perform correlation checks between
+IC Compiler and Prime-Time.  The output is a mechanical check that enumerates variables and other
+settings that can lead to correlation issues.</text>
+    </note>
+    <note name="note-2" title="DCT to PT Correlation" always_show_detail="0"/>
+    <note name="note-3" title="Note" always_show_detail="0">
+        <text>The SRC on this task should get adjusted per your needs.</text>
+    </note>
+    <note name="note-4" title="DC to PT Correlation" always_show_detail="0"/>
+    <note name="note-5" title="ICC to PT Correlation" always_show_detail="0"/>
+    <tool_task name="dc_rpts">
+        <step>10_syn</step>
+        <script_file>$SEV(gscript_dir)/correlation/dc_correlate.tcl</script_file>
+        <src>800_outputs</src>
+        <dst>900_outputs_correlate</dst>
+        <tool>dc</tool>
+        <analysis_task>1</analysis_task>
+        <variables>
+            <variable name="TEV(corr_rpt_script)" value="path_script.tcl"/>
+            <variable name="TEV(corr_rpt_script_gen)" value="1"/>
+            <variable name="TEV(corr_rpt_name)" value="dc_rpts"/>
+        </variables>
+    </tool_task>
+    <tool_task name="dct_rpts">
+        <step>10_syn</step>
+        <script_file>$SEV(gscript_dir)/correlation/dc_correlate.tcl</script_file>
+        <src>800_outputs</src>
+        <dst>900_outputs_correlate</dst>
+        <tool>dct</tool>
+        <analysis_task>1</analysis_task>
+        <variables>
+            <variable name="TEV(corr_rpt_script)" value="path_script.tcl"/>
+            <variable name="TEV(corr_rpt_script_gen)" value="1"/>
+            <variable name="TEV(corr_rpt_name)" value="dct_rpts"/>
+        </variables>
+    </tool_task>
+    <tool_task name="icc_check_icc_pt_consistency_false">
+        <step>30_pnr</step>
+        <script_file>$SEV(gscript_dir)/pnr/icc_check_icc_pt_consistency.tcl</script_file>
+        <src>060_icc_initial_route_baseline</src>
+        <dst>950_outputs_correlation</dst>
+        <tool>icc</tool>
+    </tool_task>
+    <tool_task name="icc_check_icc_pt_consistency_true">
+        <step>30_pnr</step>
+        <script_file>$SEV(gscript_dir)/pnr/icc_check_icc_pt_consistency.tcl</script_file>
+        <src>060_icc_initial_route_baseline</src>
+        <dst>951_outputs_correlation</dst>
+        <tool>icc</tool>
+        <variables>
+            <variable name="TEV(enable_primetime_icc_consistency)" value=""/>
+        </variables>
+    </tool_task>
+    <tool_task name="icc_correlation_export_script">
+        <step>30_pnr</step>
+        <script_file>$SEV(gscript_dir)/pnr/icc_export_script.tcl</script_file>
+        <src>060_icc_initial_route_baseline</src>
+        <dst>910_outputs_correlation</dst>
+        <tool>icc</tool>
+        <variables>
+            <variable name="TEV(intask_export_mode)" value="VERILOG SDC SPEF"/>
+        </variables>
+    </tool_task>
+    <tool_task name="icc_correlation_postroute_pt">
+        <step>30_pnr</step>
+        <script_file>$SEV(gscript_dir)/pnr/icc_signoff_opt.tcl</script_file>
+        <src>910_outputs_correlation</src>
+        <dst>922_outputs_correlation</dst>
+        <tool>icc</tool>
+        <analysis_task>1</analysis_task>
+        <variables>
+            <variable name="TEV(signoff_mode)" value="CHECK_PRIMETIME_ICC_CONSISTENCY"/>
+            <variable name="TEV(report_level)" value="NONE"/>
+            <variable name="TEV(scenario_management_file)" value="$SEV(bscript_dir)/conf/example.icc_traditional_scenario_management.tcl"/>
+        </variables>
+    </tool_task>
+    <tool_task name="icc_correlation_postroute_star_setup">
+        <step>30_pnr</step>
+        <script_file>$SEV(gscript_dir)/pnr/icc_signoff_opt.tcl</script_file>
+        <src>910_outputs_correlation</src>
+        <dst>920_outputs_correlation</dst>
+        <tool>icc</tool>
+        <analysis_task>1</analysis_task>
+        <variables>
+            <variable name="TEV(signoff_mode)" value="CHECK_SIGNOFF_CORRELATION"/>
+            <variable name="TEV(check_signoff_correlation_options)" value="-setup -star_only -html"/>
+            <variable name="TEV(report_level)" value="NONE"/>
+            <variable name="TEV(scenario_management_file)" value="$SEV(bscript_dir)/conf/example.icc_traditional_scenario_management.tcl"/>
+        </variables>
+    </tool_task>
+    <tool_task name="icc_correlation_postroute_star_spef_out">
+        <step>30_pnr</step>
+        <script_file>$SEV(gscript_dir)/pnr/icc_signoff_opt.tcl</script_file>
+        <src>910_outputs_correlation</src>
+        <dst>921_outputs_correlation</dst>
+        <tool>icc</tool>
+        <analysis_task>1</analysis_task>
+        <variables>
+            <variable name="TEV(signoff_mode)" value="CHECK_SIGNOFF_CORRELATION"/>
+            <variable name="TEV(check_signoff_correlation_options)" value="-star_only -spef_out -html"/>
+            <variable name="TEV(report_level)" value="NONE"/>
+            <variable name="TEV(scenario_management_file)" value="$SEV(bscript_dir)/conf/example.icc_traditional_scenario_management.tcl"/>
+        </variables>
+    </tool_task>
+    <tool_task name="icc_correlation_setup_preroute">
+        <step>30_pnr</step>
+        <script_file>$SEV(gscript_dir)/pnr/icc_signoff_opt.tcl</script_file>
+        <dst>900_outputs_correlation</dst>
+        <tool>icc</tool>
+        <analysis_task>1</analysis_task>
+        <variables>
+            <variable name="TEV(signoff_mode)" value="CHECK_PRIMETIME_ICC_CONSISTENCY"/>
+            <variable name="TEV(scenario_management_file)" value="$SEV(bscript_dir)/conf/example.icc_traditional_scenario_management.tcl"/>
+        </variables>
+    </tool_task>
+    <tool_task name="icc_rpts">
+        <step>40_finish</step>
+        <script_file>$SEV(gscript_dir)/correlation/icc_correlate.tcl</script_file>
+        <src>800_outputs</src>
+        <dst>900_outputs_correlate</dst>
+        <tool>icc</tool>
+        <analysis_task>1</analysis_task>
+        <variables>
+            <variable name="TEV(corr_rpt_script)" value="path_script.tcl"/>
+            <variable name="TEV(corr_rpt_script_gen)" value="1"/>
+            <variable name="TEV(corr_rpt_name)" value="icc_rpts"/>
+        </variables>
+    </tool_task>
+    <tool_task name="pt_dc_rpts">
+        <step>10_syn</step>
+        <script_file>$SEV(gscript_dir)/sta/execute_scenario.tcl</script_file>
+        <src>800_outputs</src>
+        <dst>900_outputs_correlate</dst>
+        <tool>pt</tool>
+        <analysis_task>1</analysis_task>
+        <variables>
+            <variable name="TEV(corr_rpt_script)" value="path_script.tcl"/>
+            <variable name="TEV(pt_reports_script)" value="$SEV(gscript_dir)/correlation/pt_correlate.tcl"/>
+            <variable name="TEV(corr_rpt_name)" value="pt_dc_rpts"/>
+            <variable name="TEV(report_level)" value="NONE"/>
+        </variables>
+        <must_allow_list>
+            <must_allow regexp="DES-002"/>
+            <must_allow regexp="PARA-075"/>
+        </must_allow_list>
+    </tool_task>
+    <tool_task name="pt_dct_rpts">
+        <step>10_syn</step>
+        <script_file>$SEV(gscript_dir)/sta/execute_scenario.tcl</script_file>
+        <src>800_outputs</src>
+        <dst>900_outputs_correlate</dst>
+        <tool>pt</tool>
+        <analysis_task>1</analysis_task>
+        <variables>
+            <variable name="TEV(corr_rpt_script)" value="path_script.tcl"/>
+            <variable name="TEV(pt_reports_script)" value="$SEV(gscript_dir)/correlation/pt_correlate.tcl"/>
+            <variable name="TEV(corr_rpt_name)" value="pt_dct_rpts"/>
+            <variable name="TEV(report_level)" value="NONE"/>
+        </variables>
+        <must_allow_list>
+            <must_allow regexp="DES-002"/>
+            <must_allow regexp="PARA-075"/>
+        </must_allow_list>
+    </tool_task>
+    <tool_task name="pt_icc_rpts">
+        <step>40_finish</step>
+        <script_file>$SEV(gscript_dir)/sta/execute_scenario.tcl</script_file>
+        <src>800_outputs</src>
+        <dst>900_outputs_correlate</dst>
+        <tool>pt</tool>
+        <analysis_task>1</analysis_task>
+        <variables>
+            <variable name="TEV(corr_rpt_script)" value="path_script.tcl"/>
+            <variable name="TEV(pt_reports_script)" value="$SEV(gscript_dir)/correlation/pt_correlate.tcl"/>
+            <variable name="TEV(corr_rpt_name)" value="pt_icc_rpts"/>
+            <variable name="TEV(report_level)" value="NONE"/>
+        </variables>
+        <must_allow_list>
+            <must_allow regexp="DES-002"/>
+            <must_allow regexp="PARA-075"/>
+        </must_allow_list>
+    </tool_task>
+    <tool_task name="report_correlation_dc">
+        <step>10_syn</step>
+        <script_file>$SEV(gscript_dir)/correlation/report_correlation.tcl</script_file>
+        <src>900_outputs_correlate</src>
+        <dst>900_outputs_correlate</dst>
+        <tool>tcl</tool>
+        <analysis_task>1</analysis_task>
+        <variables>
+            <variable name="TEV(corr_rpt_name_ref)" value="../../10_syn/work/900_outputs_correlate/dc_rpts/path."/>
+            <variable name="TEV(corr_rpt_name_imp)" value="../../10_syn/work/900_outputs_correlate/pt_dc_rpts/path."/>
+        </variables>
+    </tool_task>
+    <tool_task name="report_correlation_dct">
+        <step>10_syn</step>
+        <script_file>$SEV(gscript_dir)/correlation/report_correlation.tcl</script_file>
+        <src>900_outputs_correlate</src>
+        <dst>900_outputs_correlate</dst>
+        <tool>tcl</tool>
+        <analysis_task>1</analysis_task>
+        <variables>
+            <variable name="TEV(corr_rpt_name_ref)" value="../../10_syn/work/900_outputs_correlate/dct_rpts/path."/>
+            <variable name="TEV(corr_rpt_name_imp)" value="../../10_syn/work/900_outputs_correlate/pt_dct_rpts/path."/>
+        </variables>
+    </tool_task>
+    <tool_task name="report_correlation_icc">
+        <step>40_finish</step>
+        <script_file>$SEV(gscript_dir)/correlation/report_correlation.tcl</script_file>
+        <src>900_outputs_correlate</src>
+        <dst>900_outputs_correlate</dst>
+        <tool>tcl</tool>
+        <analysis_task>1</analysis_task>
+        <variables>
+            <variable name="TEV(corr_rpt_name_ref)" value="../work/900_outputs_correlate/icc_rpts/path."/>
+            <variable name="TEV(corr_rpt_name_imp)" value="../work/900_outputs_correlate/pt_icc_rpts/path."/>
+        </variables>
+    </tool_task>
+    <edges>
+        <edge from="dc_rpts" to="pt_dc_rpts"/>
+        <edge from="dct_rpts" to="pt_dct_rpts"/>
+        <edge from="icc_correlation_export_script" to="icc_correlation_postroute_star_setup"/>
+        <edge from="icc_correlation_postroute_star_setup" to="icc_correlation_postroute_star_spef_out"/>
+        <edge from="icc_correlation_postroute_star_spef_out" to="icc_correlation_postroute_pt"/>
+        <edge from="icc_rpts" to="pt_icc_rpts"/>
+        <edge from="note-3" to="icc_check_icc_pt_consistency_false"/>
+        <edge from="note-3" to="icc_correlation_export_script"/>
+        <edge from="pt_dc_rpts" to="report_correlation_dc"/>
+        <edge from="pt_dct_rpts" to="report_correlation_dct"/>
+        <edge from="pt_icc_rpts" to="report_correlation_icc"/>
+    </edges>
+    <graph grid_width="1300" grid_height="340">
+        <node name="note-1" x="810" y="60"/>
+        <node name="note-2" x="320" y="30"/>
+        <node name="note-3" x="990" y="130"/>
+        <node name="note-4" x="110" y="30"/>
+        <node name="note-5" x="530" y="30"/>
+        <node name="dc_rpts" x="110" y="60"/>
+        <node name="dct_rpts" x="320" y="60"/>
+        <node name="icc_check_icc_pt_consistency_false" x="1140" y="160"/>
+        <node name="icc_check_icc_pt_consistency_true" x="1140" y="210"/>
+        <node name="icc_correlation_export_script" x="820" y="160"/>
+        <node name="icc_correlation_postroute_pt" x="820" y="310"/>
+        <node name="icc_correlation_postroute_star_setup" x="820" y="210"/>
+        <node name="icc_correlation_postroute_star_spef_out" x="820" y="260"/>
+        <node name="icc_correlation_setup_preroute" x="820" y="120"/>
+        <node name="icc_rpts" x="530" y="60"/>
+        <node name="pt_dc_rpts" x="110" y="110"/>
+        <node name="pt_dct_rpts" x="320" y="110"/>
+        <node name="pt_icc_rpts" x="530" y="110"/>
+        <node name="report_correlation_dc" x="110" y="160"/>
+        <node name="report_correlation_dct" x="320" y="160"/>
+        <node name="report_correlation_icc" x="530" y="160"/>
+    </graph>
+</flow>

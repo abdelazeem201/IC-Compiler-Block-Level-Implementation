@@ -1,0 +1,93 @@
+
+<!--
+## HEADER $Id: //sps/flow/ds/scripts_global/flows/syn_extras.xml#38 $
+## HEADER_MSG    Lynx Design System: Production Flow
+## HEADER_MSG    Version 2015.06-SP1
+## HEADER_MSG    Copyright (c) 2015 Synopsys
+## HEADER_MSG    Perforce Label: lynx_flow_2015.06-SP1
+## HEADER_MSG 
+-->
+<flow name="sf_syn_extras">
+    <note name="note-1" title="Extra Utilities and Optional Tasks" always_show_detail="0"/>
+    <note name="note-2" title="Early Floorplanning in Syn" always_show_detail="0">
+        <text>These tasks provide examples of jumping directly from DC to ICC floorplanning using ICC-DP link or the ICC2 link (beta). This launches ICC-DP/ICC2 from within DC/DE which greatly simplifies the type of floorplan work RTL designers are using to influence excellent synthesis results. 
+
+Users can now begin looking at design flow (DFA) as early as post-elaborate in the DC Explorer. Once a netlist exists, use the ICC-DP link to refine or explore details that can help acheive improved QOR.
+
+Several examples are provided here but users can add others. A script can be optionally provided
+to manage development of a quality floorplan or explore creation of numerous floorplan candidates.
+
+  rtl_fp - run after de_elaborate_exploration task in the EXPLORATION flow to start 
+              doing early Design Flow Analysis (DFA) on an unmapped design!
+  de_fp - run after de_compile_exploration to begin development of a quality floorplan
+              to use in synthesis.
+  dc_fp - run after dc_compile_baseline
+  dc_icc2 - run ICC2 link after dc_compile baseline
+
+Create others or launch into ICC-DP directly from a view target on the de_elaborate_exploration result or any mapped DC database.</text>
+    </note>
+    <note name="note-3" title="ICC2 Design Planning Link (LCA)">
+        <text>This release contains early access to DCG capabilities for launching ICC2 for
+interactive floorplanning work. Contact Synopsys support if interested.</text>
+    </note>
+    <tool_task name="dc_fp">
+        <step>10_syn</step>
+        <script_file>$SEV(gscript_dir)/syn/dc_floorplanning.tcl</script_file>
+        <src>020_dc_compile_baseline</src>
+        <dst>020_dc_compile_baseline</dst>
+        <tool>dct</tool>
+        <gui>1</gui>
+    </tool_task>
+    <tool_task name="dc_icc2">
+        <step>10_syn</step>
+        <script_file>$SEV(gscript_dir)/syn/dc_floorplanning.tcl</script_file>
+        <src>020_dc_compile_baseline</src>
+        <dst>020_dc_compile_baseline</dst>
+        <tool>dct</tool>
+        <gui>1</gui>
+        <aux_tools>icc2</aux_tools>
+        <variables>
+            <variable name="TEV(dp_link)" value="ICC2"/>
+            <variable name="TEV(icc_dp_script)" value="$SEV(bscript_dir)/syn/icc2_dp.example.tcl"/>
+        </variables>
+    </tool_task>
+    <tool_task name="de_fp">
+        <step>10_syn</step>
+        <script_file>$SEV(gscript_dir)/syn/dc_floorplanning.tcl</script_file>
+        <src>020_de_compile_exploration</src>
+        <dst>020_de_compile_exploration</dst>
+        <tool>de</tool>
+        <gui>1</gui>
+    </tool_task>
+    <tool_task name="de_icc2">
+        <step>10_syn</step>
+        <script_file>$SEV(gscript_dir)/syn/dc_floorplanning.tcl</script_file>
+        <src>020_de_compile_exploration</src>
+        <dst>020_de_compile_exploration</dst>
+        <tool>de</tool>
+        <gui>1</gui>
+        <aux_tools>icc2</aux_tools>
+        <variables>
+            <variable name="TEV(dp_link)" value="ICC2"/>
+            <variable name="TEV(icc_dp_script)" value="$SEV(bscript_dir)/syn/icc2_dp.example.tcl"/>
+        </variables>
+    </tool_task>
+    <tool_task name="rtl_fp">
+        <step>10_syn</step>
+        <script_file>$SEV(gscript_dir)/syn/dc_floorplanning.tcl</script_file>
+        <src>010_de_elaborate_exploration</src>
+        <dst>010_de_elaborate_exploration</dst>
+        <tool>de</tool>
+        <gui>1</gui>
+    </tool_task>
+    <graph grid_width="460" grid_height="250">
+        <node name="note-1" x="290" y="30"/>
+        <node name="note-2" x="140" y="100"/>
+        <node name="note-3" x="250" y="160"/>
+        <node name="dc_fp" x="40" y="220"/>
+        <node name="dc_icc2" x="140" y="220"/>
+        <node name="de_fp" x="40" y="190"/>
+        <node name="de_icc2" x="140" y="190"/>
+        <node name="rtl_fp" x="50" y="160"/>
+    </graph>
+</flow>

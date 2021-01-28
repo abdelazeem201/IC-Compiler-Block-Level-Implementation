@@ -1,0 +1,177 @@
+
+<!--
+## HEADER $Id: //sps/flow/ds/scripts_global/flows/fill.xml#63 $
+## HEADER_MSG    Lynx Design System: Production Flow
+## HEADER_MSG    Version 2015.06-SP1
+## HEADER_MSG    Copyright (c) 2015 Synopsys
+## HEADER_MSG    Perforce Label: lynx_flow_2015.06-SP1
+## HEADER_MSG 
+-->
+<flow name="sf_fill">
+    <note name="note-1" title="Skip" always_show_detail="0">
+        <text>This path performs no filling operations.</text>
+    </note>
+    <note name="note-2" title="Default" always_show_detail="0">
+        <text>This path is intended to be used to perform the initial filling operations on a design.
+It performs the following operations:
+
+- Filler cell insertion
+- Metal fill insertion
+- Base layer fill insertion</text>
+    </note>
+    <note name="note-3" title="ECO" always_show_detail="0">
+        <text>This path is intended to be used after an ECO has been performed on a
+design that had previously been filled.
+It performs the following operations:
+- Filler cell insertion (std fillers only, no DCAP)
+- Incremental metal fill insertion
+- Base layer fill insertion</text>
+    </note>
+    <note name="note-4" title="MO ECO" always_show_detail="0">
+        <text>This path is intended to be used after a metal only ECO has been performed
+on a design that had previously been filled.
+It performs the following operations:
+- Incremental metal fill insertion
+- Base layer fill insertion (above feature removes base fill from design)</text>
+    </note>
+    <note name="note-5" title="Fill Overview" always_show_detail="0">
+        <text>The FILL sub flow provides several options for inserting filler cellls, metal fill, and base fill.  
+Different paths can be choosen depending upon both the stage of your design
+and your technology requirements.
+
+See each flow path option for additional details.</text>
+    </note>
+    <join_task name="fill_begin">
+        <step>40_finish</step>
+    </join_task>
+    <join_task name="fill_end">
+        <step>40_finish</step>
+    </join_task>
+    <tool_task name="icc_insert_filler_cells">
+        <step>40_finish</step>
+        <script_file>$SEV(tscript_dir)/icc_insert_filler_cells.tcl</script_file>
+        <src>010_icc_fix_drc</src>
+        <dst>050_icc_insert_filler_cells</dst>
+        <tool>icc</tool>
+        <variables>
+            <variable name="TEV(scenario_management_file)" value="$SEV(bscript_dir)/conf/example.icc_traditional_scenario_management.tcl"/>
+        </variables>
+        <must_allow_list>
+            <must_allow regexp="ERROR: in mapping coordinate to tile index"/>
+        </must_allow_list>
+    </tool_task>
+    <tool_task name="icc_insert_filler_cells_eco">
+        <step>40_finish</step>
+        <script_file>$SEV(tscript_dir)/icc_insert_filler_cells.tcl</script_file>
+        <src>010_icc_fix_drc</src>
+        <dst>050_icc_insert_filler_cells_eco</dst>
+        <tool>icc</tool>
+        <variables>
+            <variable name="TEV(fill_type)" value="FILLER_ONLY"/>
+            <variable name="TEV(scenario_management_file)" value="$SEV(bscript_dir)/conf/example.icc_traditional_scenario_management.tcl"/>
+        </variables>
+        <must_allow_list>
+            <must_allow regexp="ERROR: in mapping coordinate to tile index"/>
+        </must_allow_list>
+    </tool_task>
+    <tool_task name="icc_insert_metal_fill">
+        <step>40_finish</step>
+        <script_file>$SEV(gscript_dir)/finish/icc_insert_fill_icv.tcl</script_file>
+        <src>050_icc_insert_filler_cells</src>
+        <dst>060_icc_insert_metal_fill</dst>
+        <tool>icc</tool>
+        <variables>
+            <variable name="TEV(scenario_management_file)" value="$SEV(bscript_dir)/conf/example.icc_traditional_scenario_management.tcl"/>
+        </variables>
+    </tool_task>
+    <tool_task name="icc_insert_metal_fill_eco">
+        <step>40_finish</step>
+        <script_file>$SEV(gscript_dir)/finish/icc_insert_fill_icv.tcl</script_file>
+        <src>050_icc_insert_filler_cells_eco</src>
+        <dst>060_icc_insert_metal_fill_eco</dst>
+        <tool>icc</tool>
+        <variables>
+            <variable name="TEV(fill_mode)" value="ECO_METAL_FILL_BY_RULES"/>
+            <variable name="TEV(timing_preserve_effort_level)" value="OFF"/>
+            <variable name="TEV(scenario_management_file)" value="$SEV(bscript_dir)/conf/example.icc_traditional_scenario_management.tcl"/>
+        </variables>
+    </tool_task>
+    <tool_task name="icc_insert_metal_fill_mo_eco">
+        <step>40_finish</step>
+        <script_file>$SEV(gscript_dir)/finish/icc_insert_fill_icv.tcl</script_file>
+        <src>010_icc_fix_drc</src>
+        <dst>050_icc_insert_metal_fill_mo_eco</dst>
+        <tool>icc</tool>
+        <variables>
+            <variable name="TEV(fill_mode)" value="ECO_METAL_FILL_BY_RULES"/>
+            <variable name="TEV(timing_preserve_effort_level)" value="OFF"/>
+            <variable name="TEV(scenario_management_file)" value="$SEV(bscript_dir)/conf/example.icc_traditional_scenario_management.tcl"/>
+        </variables>
+    </tool_task>
+    <tool_task name="insert_baselayer_fill">
+        <step>40_finish</step>
+        <script_file>$SEV(gscript_dir)/finish/icv_insert_fill.tcl</script_file>
+        <src>060_icc_insert_metal_fill</src>
+        <dst>070_insert_baselayer_fill</dst>
+        <tool>tcl_job</tool>
+        <aux_tools>hercules icv</aux_tools>
+    </tool_task>
+    <tool_task name="insert_baselayer_fill_eco">
+        <step>40_finish</step>
+        <script_file>$SEV(gscript_dir)/finish/icv_insert_fill.tcl</script_file>
+        <src>060_icc_insert_metal_fill_eco</src>
+        <dst>070_insert_baselayer_fill_eco</dst>
+        <tool>tcl_job</tool>
+        <aux_tools>hercules icv</aux_tools>
+    </tool_task>
+    <tool_task name="insert_baselayer_fill_mo_eco">
+        <step>40_finish</step>
+        <script_file>$SEV(gscript_dir)/finish/icv_insert_fill.tcl</script_file>
+        <src>050_icc_insert_metal_fill_mo_eco</src>
+        <dst>070_insert_baselayer_fill_mo_eco</dst>
+        <tool>tcl_job</tool>
+        <aux_tools>hercules icv</aux_tools>
+    </tool_task>
+    <mux_task name="select_results">
+        <step>40_finish</step>
+        <script_file>$SEV(gscript_dir)/conf/mux_task.tcl</script_file>
+        <src>070_insert_baselayer_fill</src>
+        <dst>290_fill_sf</dst>
+        <tool>tcl</tool>
+        <port_count>4</port_count>
+        <ports>1000000000000000</ports>
+    </mux_task>
+    <edges>
+        <edge from="fill_begin" to="icc_insert_filler_cells"/>
+        <edge from="fill_begin" to="icc_insert_filler_cells_eco" points="37,8"/>
+        <edge from="fill_begin" to="icc_insert_metal_fill_mo_eco" points="62,8"/>
+        <edge from="fill_begin" to="select_results/1" points="24,8;24,16;24,26;16,32"/>
+        <edge from="icc_insert_filler_cells" to="icc_insert_metal_fill"/>
+        <edge from="icc_insert_filler_cells_eco" to="icc_insert_metal_fill_eco"/>
+        <edge from="icc_insert_metal_fill" to="insert_baselayer_fill"/>
+        <edge from="icc_insert_metal_fill_eco" to="insert_baselayer_fill_eco"/>
+        <edge from="icc_insert_metal_fill_mo_eco" to="insert_baselayer_fill_mo_eco"/>
+        <edge from="insert_baselayer_fill" to="select_results/0"/>
+        <edge from="insert_baselayer_fill_eco" to="select_results/2" points="37,26;18,32"/>
+        <edge from="insert_baselayer_fill_mo_eco" to="select_results/3" points="62,26;22,32"/>
+        <edge from="select_results" to="fill_end"/>
+    </edges>
+    <graph grid_width="760" grid_height="440">
+        <node name="note-1" x="290" y="110"/>
+        <node name="note-2" x="180" y="110"/>
+        <node name="note-3" x="400" y="110"/>
+        <node name="note-4" x="660" y="110"/>
+        <node name="note-5" x="390" y="30"/>
+        <node name="fill_begin" x="120" y="30"/>
+        <node name="fill_end" x="150" y="410"/>
+        <node name="icc_insert_filler_cells" x="120" y="150"/>
+        <node name="icc_insert_filler_cells_eco" x="370" y="150"/>
+        <node name="icc_insert_metal_fill" x="120" y="190"/>
+        <node name="icc_insert_metal_fill_eco" x="370" y="190"/>
+        <node name="icc_insert_metal_fill_mo_eco" x="620" y="150"/>
+        <node name="insert_baselayer_fill" x="120" y="230"/>
+        <node name="insert_baselayer_fill_eco" x="370" y="230"/>
+        <node name="insert_baselayer_fill_mo_eco" x="620" y="190"/>
+        <node name="select_results" x="150" y="370"/>
+    </graph>
+</flow>

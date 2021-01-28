@@ -1,0 +1,339 @@
+
+<!--
+## HEADER $Id: //sps/flow/ds/scripts_global/flows/check_tools.xml#65 $
+## HEADER_MSG    Lynx Design System: Production Flow
+## HEADER_MSG    Version 2015.06-SP1
+## HEADER_MSG    Copyright (c) 2015 Synopsys
+## HEADER_MSG    Perforce Label: lynx_flow_2015.06-SP1
+## HEADER_MSG 
+-->
+<flow name="sf_check_tools">
+    <note name="note-1" title="Overview" always_show_detail="0">
+        <text>This flow is used to quickly check whether tools can be loaded and invoked according to your tool loading and job distribution settings.</text>
+    </note>
+    <join_task name="all">
+        <step>chk</step>
+    </join_task>
+    <tool_task name="check_dc">
+        <step>chk</step>
+        <script_file>$SEV(gscript_dir)/conf/check_tool.tcl</script_file>
+        <dst>chk</dst>
+        <tool>dc</tool>
+        <variables>
+            <variable name="TEV(tool)" value="dc"/>
+        </variables>
+        <must_have_list>
+            <must_have regexp="OKOK: dc" severity="error"/>
+        </must_have_list>
+    </tool_task>
+    <tool_task name="check_fm">
+        <step>chk</step>
+        <script_file>$SEV(gscript_dir)/conf/check_tool.tcl</script_file>
+        <dst>chk</dst>
+        <tool>fm</tool>
+        <variables>
+            <variable name="TEV(tool)" value="fm"/>
+        </variables>
+        <must_have_list>
+            <must_have regexp="OKOK: fm" severity="error"/>
+        </must_have_list>
+    </tool_task>
+    <tool_task name="check_gca">
+        <step>chk</step>
+        <script_file>$SEV(gscript_dir)/conf/check_tool.tcl</script_file>
+        <dst>chk</dst>
+        <tool>gca</tool>
+        <variables>
+            <variable name="TEV(tool)" value="gca"/>
+        </variables>
+        <must_have_list>
+            <must_have regexp="OKOK: gca" severity="error"/>
+        </must_have_list>
+    </tool_task>
+    <tool_task name="check_hercules">
+        <step>chk</step>
+        <script_file>$SEV(gscript_dir)/conf/check_tool.tcl</script_file>
+        <dst>chk</dst>
+        <tool>tcl</tool>
+        <aux_tools>hercules</aux_tools>
+        <variables>
+            <variable name="TEV(tool)" value="hercules"/>
+        </variables>
+        <must_have_list>
+            <must_have regexp="OKOK: hercules" severity="error"/>
+        </must_have_list>
+    </tool_task>
+    <tool_task name="check_hspice">
+        <step>chk</step>
+        <script_file>$SEV(gscript_dir)/conf/check_tool.tcl</script_file>
+        <dst>chk</dst>
+        <tool>tcl</tool>
+        <aux_tools>hspice</aux_tools>
+        <variables>
+            <variable name="TEV(tool)" value="hspice"/>
+        </variables>
+        <must_have_list>
+            <must_have regexp="OKOK: hspice" severity="error"/>
+        </must_have_list>
+    </tool_task>
+    <tool_task name="check_icc">
+        <step>chk</step>
+        <script_file>$SEV(gscript_dir)/conf/check_tool.tcl</script_file>
+        <dst>chk</dst>
+        <tool>icc</tool>
+        <variables>
+            <variable name="TEV(tool)" value="icc"/>
+        </variables>
+        <must_have_list>
+            <must_have regexp="OKOK: icc" severity="error"/>
+        </must_have_list>
+    </tool_task>
+    <tool_task name="check_icv">
+        <step>chk</step>
+        <script_file>$SEV(gscript_dir)/conf/check_tool.tcl</script_file>
+        <dst>chk</dst>
+        <tool>tcl</tool>
+        <aux_tools>icv</aux_tools>
+        <variables>
+            <variable name="TEV(tool)" value="icv"/>
+        </variables>
+        <must_have_list>
+            <must_have regexp="OKOK: icv" severity="error"/>
+        </must_have_list>
+    </tool_task>
+    <tool_task name="check_icwb">
+        <step>chk</step>
+        <script_file>$SEV(gscript_dir)/conf/check_tool.tcl</script_file>
+        <dst>chk</dst>
+        <tool>tcl</tool>
+        <aux_tools>icwb</aux_tools>
+        <variables>
+            <variable name="TEV(tool)" value="icwb"/>
+        </variables>
+        <must_have_list>
+            <must_have regexp="OKOK: icwb" severity="error"/>
+        </must_have_list>
+    </tool_task>
+    <tool_task name="check_leda">
+        <step>chk</step>
+        <script_file>$SEV(gscript_dir)/conf/check_tool.tcl</script_file>
+        <dst>chk</dst>
+        <tool>leda</tool>
+        <variables>
+            <variable name="TEV(tool)" value="leda"/>
+        </variables>
+        <must_have_list>
+            <must_have regexp="OKOK: leda" severity="error"/>
+        </must_have_list>
+    </tool_task>
+    <tool_task name="check_mvcmp">
+        <step>chk</step>
+        <script_file>$SEV(gscript_dir)/conf/check_tool.tcl</script_file>
+        <dst>chk</dst>
+        <tool>tcl</tool>
+        <aux_tools>mvcmp</aux_tools>
+        <variables>
+            <variable name="TEV(tool)" value="mvcmp"/>
+        </variables>
+        <must_have_list>
+            <must_have regexp="OKOK: mvcmp" severity="error"/>
+        </must_have_list>
+    </tool_task>
+    <tool_task name="check_mw">
+        <step>chk</step>
+        <script_file>$SEV(gscript_dir)/conf/check_tool.tcl</script_file>
+        <dst>chk</dst>
+        <tool>mw</tool>
+        <variables>
+            <variable name="TEV(tool)" value="mw"/>
+        </variables>
+        <must_have_list>
+            <must_have regexp="OKOK: mw" severity="error"/>
+        </must_have_list>
+    </tool_task>
+    <tool_task name="check_nanosim">
+        <step>chk</step>
+        <script_file>$SEV(gscript_dir)/conf/check_tool.tcl</script_file>
+        <dst>chk</dst>
+        <tool>tcl</tool>
+        <aux_tools>nanosim</aux_tools>
+        <variables>
+            <variable name="TEV(tool)" value="nanosim"/>
+        </variables>
+        <must_have_list>
+            <must_have regexp="OKOK: nanosim" severity="error"/>
+        </must_have_list>
+    </tool_task>
+    <tool_task name="check_nettran_h">
+        <step>chk</step>
+        <script_file>$SEV(gscript_dir)/conf/check_tool.tcl</script_file>
+        <dst>chk</dst>
+        <tool>tcl</tool>
+        <aux_tools>nettran_h</aux_tools>
+        <variables>
+            <variable name="TEV(tool)" value="nettran_h"/>
+        </variables>
+        <must_have_list>
+            <must_have regexp="OKOK: nettran_h" severity="error"/>
+        </must_have_list>
+    </tool_task>
+    <tool_task name="check_nettran_i">
+        <step>chk</step>
+        <script_file>$SEV(gscript_dir)/conf/check_tool.tcl</script_file>
+        <dst>chk</dst>
+        <tool>tcl</tool>
+        <aux_tools>nettran_i</aux_tools>
+        <variables>
+            <variable name="TEV(tool)" value="nettran_i"/>
+        </variables>
+        <must_have_list>
+            <must_have regexp="OKOK: nettran_i" severity="error"/>
+        </must_have_list>
+    </tool_task>
+    <tool_task name="check_pr">
+        <step>chk</step>
+        <script_file>$SEV(gscript_dir)/conf/check_tool.tcl</script_file>
+        <dst>chk</dst>
+        <tool>pr</tool>
+        <variables>
+            <variable name="TEV(tool)" value="pr"/>
+        </variables>
+        <must_have_list>
+            <must_have regexp="OKOK: pr" severity="error"/>
+        </must_have_list>
+    </tool_task>
+    <tool_task name="check_pt">
+        <step>chk</step>
+        <script_file>$SEV(gscript_dir)/conf/check_tool.tcl</script_file>
+        <dst>chk</dst>
+        <tool>pt</tool>
+        <variables>
+            <variable name="TEV(tool)" value="pt"/>
+        </variables>
+        <must_have_list>
+            <must_have regexp="OKOK: pt" severity="error"/>
+        </must_have_list>
+    </tool_task>
+    <tool_task name="check_pylcc">
+        <step>chk</step>
+        <script_file>$SEV(gscript_dir)/conf/check_tool.tcl</script_file>
+        <dst>chk</dst>
+        <tool>tcl</tool>
+        <aux_tools>pylcc</aux_tools>
+        <variables>
+            <variable name="TEV(tool)" value="pylcc"/>
+        </variables>
+        <must_have_list>
+            <must_have regexp="OKOK: pylcc" severity="error"/>
+        </must_have_list>
+    </tool_task>
+    <tool_task name="check_star">
+        <step>chk</step>
+        <script_file>$SEV(gscript_dir)/conf/check_tool.tcl</script_file>
+        <dst>chk</dst>
+        <tool>tcl</tool>
+        <aux_tools>star</aux_tools>
+        <variables>
+            <variable name="TEV(tool)" value="star"/>
+        </variables>
+        <must_have_list>
+            <must_have regexp="OKOK: star" severity="error"/>
+        </must_have_list>
+    </tool_task>
+    <tool_task name="check_tcl">
+        <step>chk</step>
+        <script_file>$SEV(gscript_dir)/conf/check_tool.tcl</script_file>
+        <dst>chk</dst>
+        <tool>tcl</tool>
+        <variables>
+            <variable name="TEV(tool)" value="tcl"/>
+        </variables>
+        <must_have_list>
+            <must_have regexp="OKOK: tcl" severity="error"/>
+        </must_have_list>
+    </tool_task>
+    <tool_task name="check_tx">
+        <step>chk</step>
+        <script_file>$SEV(gscript_dir)/conf/check_tool.tcl</script_file>
+        <dst>chk</dst>
+        <tool>tx</tool>
+        <variables>
+            <variable name="TEV(tool)" value="tx"/>
+        </variables>
+        <must_have_list>
+            <must_have regexp="OKOK: tx" severity="error"/>
+        </must_have_list>
+    </tool_task>
+    <tool_task name="check_vc_static">
+        <step>chk</step>
+        <script_file>$SEV(gscript_dir)/conf/check_tool.tcl</script_file>
+        <dst>chk</dst>
+        <tool>vc_static</tool>
+        <variables>
+            <variable name="TEV(tool)" value="vc_static"/>
+        </variables>
+    </tool_task>
+    <tool_task name="check_vcs">
+        <step>chk</step>
+        <script_file>$SEV(gscript_dir)/conf/check_tool.tcl</script_file>
+        <dst>chk</dst>
+        <tool>tcl</tool>
+        <aux_tools>vcs</aux_tools>
+        <variables>
+            <variable name="TEV(tool)" value="vcs"/>
+        </variables>
+        <must_have_list>
+            <must_have regexp="OKOK: vcs" severity="error"/>
+        </must_have_list>
+    </tool_task>
+    <edges>
+        <edge from="check_dc" to="all"/>
+        <edge from="check_fm" to="all"/>
+        <edge from="check_gca" to="all"/>
+        <edge from="check_hercules" to="all"/>
+        <edge from="check_hspice" to="all"/>
+        <edge from="check_icc" to="all"/>
+        <edge from="check_icv" to="all"/>
+        <edge from="check_icwb" to="all"/>
+        <edge from="check_leda" to="all"/>
+        <edge from="check_mvcmp" to="all"/>
+        <edge from="check_mw" to="all"/>
+        <edge from="check_nanosim" to="all"/>
+        <edge from="check_nettran_h" to="all"/>
+        <edge from="check_nettran_i" to="all"/>
+        <edge from="check_pr" to="all"/>
+        <edge from="check_pt" to="all"/>
+        <edge from="check_pylcc" to="all"/>
+        <edge from="check_star" to="all"/>
+        <edge from="check_tcl" to="all"/>
+        <edge from="check_tx" to="all"/>
+        <edge from="check_vc_static" to="all"/>
+        <edge from="check_vcs" to="all"/>
+    </edges>
+    <graph grid_width="500" grid_height="560">
+        <node name="note-1" x="230" y="80"/>
+        <node name="all" x="240" y="250"/>
+        <node name="check_dc" x="80" y="130"/>
+        <node name="check_fm" x="80" y="380"/>
+        <node name="check_gca" x="80" y="280"/>
+        <node name="check_hercules" x="410" y="130"/>
+        <node name="check_hspice" x="400" y="380"/>
+        <node name="check_icc" x="80" y="180"/>
+        <node name="check_icv" x="390" y="230"/>
+        <node name="check_icwb" x="400" y="430"/>
+        <node name="check_leda" x="70" y="30"/>
+        <node name="check_mvcmp" x="410" y="80"/>
+        <node name="check_mw" x="80" y="430"/>
+        <node name="check_nanosim" x="410" y="480"/>
+        <node name="check_nettran_h" x="410" y="180"/>
+        <node name="check_nettran_i" x="410" y="280"/>
+        <node name="check_pr" x="80" y="480"/>
+        <node name="check_pt" x="80" y="230"/>
+        <node name="check_pylcc" x="400" y="530"/>
+        <node name="check_star" x="400" y="330"/>
+        <node name="check_tcl" x="80" y="80"/>
+        <node name="check_tx" x="80" y="330"/>
+        <node name="check_vc_static" x="80" y="530"/>
+        <node name="check_vcs" x="390" y="30"/>
+    </graph>
+</flow>
