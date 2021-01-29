@@ -1,0 +1,2 @@
+gui_create_var -name gui_use_normalcolor -value true
+
