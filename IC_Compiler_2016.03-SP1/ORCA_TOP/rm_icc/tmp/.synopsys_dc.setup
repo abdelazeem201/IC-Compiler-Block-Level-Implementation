@@ -1,0 +1,11 @@
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# IC Compiler Setup File
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+gui_create_var -name gui_use_normalcolor -value true
+
+# Enable logging of commands and everything by date/shell
+set timestamp [clock format [clock scan now] -format "%Y-%m-%d_%H-%M"]
+set sh_output_log_file "${synopsys_program_name}.log.[pid].$timestamp"
+set sh_command_log_file "${synopsys_program_name}.cmd.[pid].$timestamp"
+
