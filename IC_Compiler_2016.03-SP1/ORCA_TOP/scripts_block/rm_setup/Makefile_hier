@@ -1,0 +1,82 @@
+##ICC Hierarchical RM Makefile
+##See README.* file for RM details
+
+
+ICC_EXEC = icc_shell -64bit
+LOGS_DIR     = ../logs
+REPORTS_DIR = ../rpts
+RESULTS_DIR = ../work
+PNA_OUTPUT_DIR = ../work/pna_output
+
+####Source Options
+OPTIONS = 
+
+
+
+##Optional: Specify design library if you want backup step and clean step to use it
+##CAUTION: if added, the clean step will delete it
+DESIGN_LIB = 
+
+
+#################################################################################################################
+# Script Execution Section
+# Execute "make -f Makefile_hier hier_dp" to run ICC Hierarchical RM based on your common_setup.tcl, icc_setup.tcl
+#################################################################################################################
+
+init_design_icc: 
+	mkdir -p $(REPORTS_DIR) $(RESULTS_DIR) $(LOGS_DIR)/init_design_icc
+	$(ICC_EXEC) $(OPTIONS) -f ../../scripts_block/rm_icc_scripts/init_design_icc.tcl | tee -i $(LOGS_DIR)/init_design_icc/init_design_icc.log
+	date > init_design_icc
+
+create_plangroups_dp: init_design_icc
+	mkdir -p $(REPORTS_DIR) $(RESULTS_DIR) $(LOGS_DIR)/create_plangroups_dp
+	$(ICC_EXEC) $(OPTIONS) -f ../../scripts_block/rm_icc_dp_scripts/create_plangroups_dp.tcl | tee -i $(LOGS_DIR)/create_plangroups_dp/create_plangroups_dp.log
+	date > create_plangroups_dp
+
+routeability_on_plangroups_dp: create_plangroups_dp
+	mkdir -p $(REPORTS_DIR) $(RESULTS_DIR) $(LOGS_DIR)/routeability_on_plangroups_dp
+	$(ICC_EXEC) $(OPTIONS) -f ../../scripts_block/rm_icc_dp_scripts/routeability_on_plangroups_dp.tcl | tee -i $(LOGS_DIR)/routeability_on_plangroups_dp/routeability_on_plangroups_dp.log
+	date > routeability_on_plangroups_dp
+
+pin_assignment_budgeting_dp: routeability_on_plangroups_dp
+	mkdir -p $(REPORTS_DIR) $(RESULTS_DIR) $(LOGS_DIR)/pin_assignment_budgeting_dp
+	$(ICC_EXEC) $(OPTIONS) -f ../../scripts_block/rm_icc_dp_scripts/pin_assignment_budgeting_dp.tcl | tee -i $(LOGS_DIR)/pin_assignment_budgeting_dp/pin_assignment_budgeting_dp.log
+	date > pin_assignment_budgeting_dp
+
+commit_dp: pin_assignment_budgeting_dp
+	mkdir -p $(REPORTS_DIR) $(RESULTS_DIR) $(LOGS_DIR)/commit_dp
+	$(ICC_EXEC) $(OPTIONS) -f ../../scripts_block/rm_icc_dp_scripts/commit_dp.tcl | tee -i $(LOGS_DIR)/commit_dp/commit_dp.log
+	date > commit_dp
+
+prepare_block_dp: commit_dp
+	mkdir -p $(REPORTS_DIR) $(RESULTS_DIR) $(LOGS_DIR)/prepare_block_dp
+	$(ICC_EXEC) $(OPTIONS) -f ../../scripts_block/rm_icc_dp_scripts/prepare_block_dp.tcl | tee -i $(LOGS_DIR)/prepare_block_dp/prepare_block_dp.log
+	date > prepare_block_dp
+
+hier_dp: prepare_block_dp 
+	date > hier_dp
+
+
+#############################################################################################################################
+# Utilities Section
+#
+#############################################################################################################################
+
+
+##Backup
+BACKUP  = BACKUP.`date "+%m_%d_%H_%M"`
+backup:
+	rm -rf $(BACKUP)
+	mkdir -p $(BACKUP)
+	cp -rf ../../scripts_block/rm_icc_scripts ../../scripts_block/rm_icc_zrt_scripts ../../scripts_block/rm_icc_dp_scripts ../../scripts_block/rm_setup $(DESIGN_LIB) $(REPORTS_DIR) $(RESULTS_DIR) $(LOGS_DIR) $(PNA_OUTPUT_DIR) $(BACKUP)
+
+
+##Clean
+
+clean_dp:
+	rm  -f init_design_icc create_plangroups_dp routeability_on_plangroups_dp pin_assignment_budgeting_dp commit_dp prepare_block_dp hier_dp
+	rm -rf $(DESIGN_LIB) $(LOGS_DIR) $(RESULTS_DIR) $(REPORTS_DIR) *_map\.* \
+               net.acts *.attr .zr* Milkyway.cmd.*_*_*_* Milkyway.log.*_*_*_* \.vers* port_mapping.* pna_output
+	##ICC Hierarchical RM-Info: "make clean_dp" does not remove the design library unless you have specified it with the DESIGN_LIB variable in Makefile"
+
+clean: clean_dp
