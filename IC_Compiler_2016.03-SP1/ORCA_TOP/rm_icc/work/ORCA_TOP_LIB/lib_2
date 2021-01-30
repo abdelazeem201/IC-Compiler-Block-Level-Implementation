@@ -1,0 +1,4 @@
+LIBRARY    ../work/ORCA_TOP_LIB
+  REFERENCE    ../../../ref/SAED32_2012-12-25/lib/stdcell_lvt/milkyway/saed32nm_lvt_1p9m
+  REFERENCE    ../../../ref/SAED32_2012-12-25/lib/stdcell_hvt/milkyway/saed32nm_hvt_1p9m
+  REFERENCE    ../../../ref/SAED32_2012-12-25/lib/sram_lp/milkyway/saed32sram_lp
