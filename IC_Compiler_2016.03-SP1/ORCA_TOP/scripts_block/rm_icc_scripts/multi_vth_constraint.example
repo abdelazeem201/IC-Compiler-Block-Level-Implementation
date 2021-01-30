@@ -1,0 +1,27 @@
+puts "RM-Info: Running script [info script]\n"
+
+#########################################################################################
+# Version: J-2014.09-SP2 (January 12, 2015)
+# Copyright (C) 2010-2015 Synopsys, Inc. All rights reserved.
+##########################################################################################
+
+  # set_multi_vth_constraint -reset
+
+  ############################################################
+  # %LVT leakage optimization flow (edit before using it)
+  ############################################################
+  # For limiting the number of low Vth cells in the design, set a multithreshold
+  # voltage constraint. This is a faster flow than the default leakage
+  # optimization flow, and does not use the leakage power values in the library.
+
+  # Edit the following to set the threshold voltage groups in the libraries.
+  # Please use the same settings as used in place_opt_icc step.
+  # set_attribute <my_hvt_lib> default_threshold_voltage_group HVT -type string
+  # set_attribute <my_lvt_lib> default_threshold_voltage_group LVT -type string
+
+  # If pre-existing, the <percent value> of set_multi_vth_constraint will be inherited 
+  # from previous ICC step where it was last set. 
+  # If needed, edit the following to set a differnt <percent value>
+  # set_multi_vth_constraint -lvth_groups { LVT } -lvth_percentage <percent value>
+
+puts "RM-Info: Completed script [info script]\n"
