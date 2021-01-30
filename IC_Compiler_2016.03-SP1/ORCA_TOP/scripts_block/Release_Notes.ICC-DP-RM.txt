@@ -1,0 +1,92 @@
+####################################################################################
+# Synopsys(R) IC Compiler(TM) Design Planning Reference Methodology Release Notes
+# Version: J-2014.09-SP2 (January 12, 2015)
+# Copyright (C) 2010-2015 Synopsys, Inc. All rights reserved.
+####################################################################################
+
+I-2013.12-SP2, I-2013.12-SP4, J-2014.09, and J-2014.09-SP2
+==========================================================
+
+These releases of the IC Compiler Design Planning Reference Methodology do not
+include any product-specific changes. However, they do provide support for the
+enhancements in the Lynx-compatible reference methodology flow. For information
+about these enhancements, see the file named Release_Notes.LynxCompatible-RM.txt.
+
+
+I-2013.12
+=========
+
+IC Compiler Design Planning Reference Methodology version I-2013.12 provides 
+the following new features, enhancements, and changes.
+
+*  The set_dont_touch_placement and remove_dont_touch_placement commands have 
+   been replaced with instances of the set_attribute command for the is_fixed
+   cell attribute.
+   
+   o  Setting is_fixed to true is equivalent to using the set_dont_touch_placement 
+      command.
+
+      set_attribute $cells is_fixed true
+   
+   o  Setting is_fixed to false is equivalent to using the 
+      remove_dont_touch_placment command.
+
+   These changes have been applied in multiple script files. For further 
+   information, see Synopsys SolvNet(R) article number 019235 at
+   https://solvnet.synopsys.com/retrieve/019235.html.
+
+This release also provides enhancements in the Lynx-compatible reference 
+methodology flow. For information about these enhancements, see the
+file named Release_Notes.LynxCompatible-RM.txt.
+ 
+
+G-2012.06, G-2012.06-SP4, and H-2013.03 
+=======================================
+
+These releases of the IC Compiler Design Planning Reference Methodology do not 
+include any product-specific changes. However, they do provide support for the 
+enhancements in the Lynx-compatible reference methodology flow. For information 
+about these enhancements, see the file named Release_Notes.LynxCompatible-RM.txt.
+
+
+F-2011.09-SP4
+=============
+
+This section describes new features, changes, and enhancements in the
+IC Compiler Design Planning Reference Methodology version F-2011.09-SP4.
+
+*  In baseline.tcl, the write_floorplan command options used to write out  
+   a floorplan file that the Design Compiler topographical technology can read 
+   have been updated:
+
+   write_floorplan -create_terminal -create_bound -row -track -preroute \
+       -placement {io terminal hard_macro soft_macro} ${block}.DCT.fp
+
+   The -track option and the terminal argument have been added.
+
+
+F-2011.09-SP2
+=============
+
+This section describes new features, changes, and enhancements in the 
+IC Compiler Design Planning Reference Methodology version F-2011.09-SP2.
+
+*  The power network synthesis flow has been updated for baseline.tcl.
+
+   The classic power network synthesis content has been replaced with template-based 
+   power network synthesis content in baseline.tcl. To proceed, you must specify a 
+   valid customized script using the $CUSTOM_ICC_DP_PNS_SCRIPT variable. 
+   For more details, see the descriptions and examples in the template-based power 
+   network synthesis section.
+
+This release also provides enhancements in the Lynx-compatible reference methodology 
+flow. For information about these enhancements, see the file named 
+Release_Notes.LynxCompatible-RM.txt.
+
+
+F-2011.09
+=========
+
+This release of the IC Compiler Design Planning Reference Methodology provides 
+enhancements in the Lynx-compatible reference methodology flow. For information 
+about these enhancements, see the file named Release_Notes.LynxCompatible-RM.txt.

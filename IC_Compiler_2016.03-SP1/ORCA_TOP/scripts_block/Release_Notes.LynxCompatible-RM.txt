@@ -1,0 +1,348 @@
+####################################################################################
+# Synopsys(R) Lynx-Compatible Reference Methodology Release Notes 
+# Version: J-2014.09-SP2 (January 12, 2015)
+# Copyright (C) 2010-2015 Synopsys, Inc. All rights reserved.
+####################################################################################
+
+J-2014.09-SP2
+=============
+
+This section describes new features, enhancements, and changes for the
+Lynx-Compatible reference methodology scripts version J-2014.09-SP2.
+
+Support File Updates for lcrm_setup files
+-----------------------------------------
+
+*  No changes were made to the lcrm_setup files in this release.
+
+
+J-2014.09
+=========
+
+This section describes new features, enhancements, and changes for the
+Lynx-Compatible reference methodology scripts version J-2014.09.
+
+Support File Updates for lcrm_setup files
+-----------------------------------------
+
+*  Added the icc_eco task to the rm_icc.xml flow.
+
+*  Removed the ptvx task from the rm_pt.xml flow.
+
+*  Updated the Synopsys Verification Compiler(TM) Static Low Power related flow 
+   conventions. This includes pointing to the vc_lp.tcl script instead of the 
+   prior vsi.tcl script. The flow tasks also reflect use of vclp_* conventions 
+   instead of vsi*.
+
+*  General improvements were made to the procedures in lcrm_setup.tcl
+   that parse reports for creating Lynx flow metrics and QoR Viewer 
+   files. 
+
+
+I-2013.12-SP4
+=============
+
+This section describes new features, enhancements, and changes for the
+Lynx-Compatible reference methodology scripts version I-2013.12-SP4.
+
+Support File Updates for lcrm_setup.tcl
+---------------------------------------
+
+*  General edits to lcrm_setup/*.xml files just to improve their look
+   in the newer versions of Lynx Runtime Manager flow editor.
+
+*  General improvements were made to the procedures which parse reports
+   for creating Lynx flow metrics and QoR Viewer files. 
+
+*  The rm_dc.xml flow example was updated to include an example
+   DC Explorer task. This task uses the same dc.tcl script and is 
+   configured to allow expected warnings and errors DESH-008, DESH-013, 
+   and CMD-005.
+   
+*  The rm_dc_upf.xml and multi_product_sample_upf_flow.xml flow examples 
+   were updated to use the Synopsys Verdi(R) Signoff-LP tool.
+
+
+I-2013.12-SP2
+=============
+
+This section describes new features, enhancements, and changes for the
+Lynx-Compatible reference methodology scripts version I-2013.12-SP2.
+
+Support File Updates for lcrm_setup.tcl
+---------------------------------------
+
+*  General edits to lcrm_setup/*.xml files just to improve their look
+   in the newer versions of Lynx Runtime Manager flow editor.
+
+*  General improvements were made to the procedures which parse reports
+   for creating Lynx flow metrics and QoR Viewer files. 
+
+
+I-2013.12
+=========
+
+This section describes new features, enhancements, and changes for the
+Lynx-Compatible reference methodology scripts version I-2013.12.
+
+Support File Updates for lcrm_setup.tcl
+---------------------------------------
+
+*  General edits to lcrm_setup/*.xml files just to improve their look
+   in the newer versions of Lynx Runtime Manager flow editor.
+
+*  General improvements were made to the procedures which parse reports
+   for creating Lynx flow metrics and QoR Viewer files. This includes
+   one bug fix for STAR 9000688420 which effected parsing of power reports
+   when no power was set in an IC Compiler scenario.
+
+
+H-2013.03-SP2
+=============
+
+This section describes new features, enhancements, and changes for the
+Lynx-Compatible reference methodology scripts version H-2013.03-SP2.
+
+Support File Updates for lcrm_setup.tcl
+---------------------------------------
+
+*  General metric enhancements - The procedures that extract metric
+   information from reports have been updated to reflect the latest
+   techniques consistent with the Lynx production flows.
+
+*  The *.qor files produced in the rpts directory are now hidden files. These
+   will be used by reporting features available in a future Runtime Manager 
+  (RTM).
+
+
+H-2013.03
+=========
+
+This section describes new features, enhancements, and changes for the
+Lynx-Compatible reference methodology scripts version H-2013.03.
+
+Support File Updates for lcrm_setup.tcl
+---------------------------------------
+
+*  General metric enhancements - The procedures that extract metric
+   information from reports have been updated to reflect the latest 
+   techniques consistent with the Lynx production flows.
+   
+   This update includes improved support for power and automatic test pattern 
+   generation (ATPG) metrics.
+
+*  An additional file is now placed in the rpts directory.
+   
+   The name of the file ends with *flow_summary.qor. This file will become
+   useful in future Runtime Manager (RTM) flow reporting capabilities.
+
+*  The metric tag SVAR(tag10) is no longer available for general use.
+
+   You can use metric tags SVAR(tag01) through SVAR(tag09), which are
+   available in the Lynx Block Variable Editor, if you want to enhance the 
+   grouping of metrics for project reporting.
+
+
+Support File Updates for the Lynx Compatible Reference Methodology Flows
+------------------------------------------------------------------------
+
+The mvrc tasks that Lynx uses in multi_product_sample_upf_flow.xml have 
+been updated to improve naming conventions, and the mvrc_icc task has 
+been corrected to use the rm_icc_scripts/mvrc.tcl script rather than the
+rm_dc_scripts/mvrc.tcl script used by the mvrc_dc task.
+
+
+G-2012.06-SP4
+=============
+
+This section describes new features, changes, and enhancements in the 
+Lynx-Compatible reference methodology scripts for version G-2012.06-SP4.
+
+Support File Updates for lcrm_setup.tcl
+---------------------------------------
+
+*  General metric enhancements -- the procedures that extract metric information 
+   from reports have been updated to reflect the latest techniques consistent with 
+   the Lynx production flows.
+
+*  Support has been added to detect multicorner and multimode use in Design Compiler 
+   and adjust the reports and metrics to be scenario based.
+
+*  Metrics for PrimeTime are now based on report_qor rather than report_constraints.
+
+*  Default settings have been added for several variables associated with the newer 
+   Lynx Runtime Manager (RTM).
+
+
+Support File Updates for the Lynx Compatible Reference Methodology Flows
+------------------------------------------------------------------------
+
+No changes have been made for this release.
+
+
+G-2012.06 
+=========
+
+This section describes new features, changes, and enhancements in the 
+Lynx-Compatible reference methodology scripts for version G-2012.06.
+
+Lynx Support File Updates for lcrm_setup.tcl
+--------------------------------------------
+
+*  The lcrm_setup.tcl script has been changed to regenerate the SYS.BLOCK metric 
+   at the end of every Lynx-compatible reference methodology (LCRM) task, based on 
+   the DESIGN_NAME variable from common_setup.tcl.
+   
+   This change provides the correct metric record from the Lynx-compatible reference
+   methodology scripts when you run the scripts by using the Lynx Design System 
+   Runtime Manager. Previously, lcrm_setup.tcl generated SYS.BLOCK only at the 
+   beginning of each task, before DESIGN_NAME was defined in the script.
+
+*  Support has been added for the Lynx "early completion" feature.
+
+   Although this feature is not used by the default Lynx-compatible reference 
+   methodology scripts, it is now available if you want to use it in custom flows.
+
+*  The procedures used to parse metrics from reports have been updated for 
+   consistency with the latest versions of the Lynx production scripts.
+
+
+Lynx Support File Updates for the Lynx-Compatible Reference Methodology Flows
+-----------------------------------------------------------------------------
+
+*  The content of the template flows has been updated to remove Load_DC_database 
+   and Load_ICC_database because they are no longer required. 
+   
+   The new version of the Lynx Runtime Manager can use the Run View feature 
+   to load the databases for Lynx-compatible reference methodology tasks.
+
+*  Notes have been added to some of the XML flows to provide guidance for:
+
+   o  Downloading all the required reference methodology scripts that are referenced 
+      in the flow
+   
+   o  Removing optional tasks that the Lynx flow checks might flag as pointing to 
+      missing script files
+
+*  The rm_dc_upf.xml flow template has been added to support the execution of 
+   Design Compiler IEEE 1801 flows.
+   
+   IEEE 1801 is also known as Unified Power Format (UPF).
+
+*  The signoff_opt command has been removed from all IC Compiler design flows and 
+   from sample design flows involving IC Compiler because of changes in the 
+   IC Compiler Reference Methodology.
+   
+   The signoff_opt_icc task has been removed from the IC Compiler Reference 
+   Methodology scripts because the signoff_opt command has been de-emphasi8zed 
+   in IC Compiler version G-2012.06. For more details, see the IC Compiler 
+   Reference methodology Release Notes. 
+
+*  A NOTE object has been added to each sample flow, with simple instructions for 
+   changing the top flow of a block by using the Block Flow Manager.
+
+
+F-2011.09-SP2/F-2011.12
+=======================
+
+This section describes new features, changes, and enhancements in the 
+Lynx-Compatible reference methodology scripts for version F-2011.09-SP2.
+
+Lynx Support File Updates for lcrm_setup.tcl
+--------------------------------------------
+
+*  The Tcl variable sh_continue_on_error is now set true in the lcrm_setup.tcl 
+   script to enforce a consistent behavior across all tcl shell tools when an error 
+   is encountered. This overcomes a hang condition seen when running MVTOOLs in the 
+   Lynx environment.
+
+*  General metric enhancements - Updated the procedures which extract metric 
+   information from reports to reflect the latest techniques
+
+Lynx Support File Updates for the Lynx-Compatible  Reference Methodology Flows
+-----------------------------------------------============-------------------
+
+*  Added rm_dc_upf.xml and multiproduct_sample_upf_flow.xml flow files as templates 
+   for working with UPF flows. They add MVRC tasks to the base flows.
+
+
+F-2011.09/F-2011.06-SP2
+=======================
+
+In this release of the Lynx-compatible reference methodology scripts, the procedures 
+in lcrm_setup.tcl that extract metric information from reports have been updated to 
+reflect the latest techniques for extracting this information.
+
+
+E-2010.12-SP4/F-2011.06
+=======================
+
+This section describes new features, changes, and enhancements in the 
+Lynx-compatible reference methodology scripts for version E-2010.12-SP4.
+
+Lynx Support File Updates for lcrm_setup.tcl
+--------------------------------------------
+
+*  The lcrm_setup.tcl file now sources system.tcl from the Lynx workspace area when 
+   running in the Lynx Runtime Manager (RTM).
+   
+   This change provides support for setting Lynx System Environment Variables, 
+   such as SEV(project_name) for managing metrics.
+   
+   Note:
+      The default project name setting for the Lynx-compatible reference 
+      methodology scripts is project_name=lcrm.
+
+*  Metric TAG support has been added. 
+
+   TAGs provide an option for managing metrics from different runs, experiments, 
+   teams, and so forth for easy filtering in the Lynx Management Cockpit. When 
+   running in the RTM, you have the option to set SVAR(TAG) in the Block Variable 
+   Editor graphical user interface (GUI). This results in TAG string settings that 
+   become part of a SYS.TAG.XX metric in every task. The values set in the GUI are 
+   stored in conf/block.tcl.
+
+*  Support has been added for handling tool command language (Tcl) tasks that do 
+   not support the source options -e and -v. 
+
+   This capability is used in the StarRC Reference Methodology.
+
+*  New metrics have been added for CELL_AREA, clock skew, and the 
+   multicorner-multimode summary.
+   
+   User strings like path_group names and scenario names that become metrics now 
+   handle special characters (/-()[]%&@!~) by replacing them with an underscore (_)
+   only for the string that appears as the metric. 
+
+
+Lynx Support File Updates for the Lynx-Compatible Reference Methodology Flows
+-----------------------------------------------------------------------------
+
+*  The focal_opt_icc task has been added to the rm_icc.xml and 
+   multi_product_sample_flow.xml files.
+   
+   This task is not tied into the flow, but you can run it by explicitly executing 
+   the task in the Lynx Execution Monitor or by customizing the flow to tie the 
+   task into the flow goal with an edge.
+
+*  The rm_icc_hier_odl.xml flow has been updated to reflect the latest IC Compiler
+   on-demand loading task and script names.
+
+*  The new signoff_drc_icc task for the IC Compiler Reference Methodology has been 
+   added to the rm_icc.xml flow and in multi_product_sample_flow.xml.
+
+*  The Load_DC_database and Load_ICC_database tasks have been added to rm_dc.xml 
+   and rm_icc.xml. 
+
+   These tasks are optional utilities for loading the tool and setup file so that 
+   you can load a results database interactively.
+
+*  Changes have been made to correct the StarRC, TetraMAX, and PrimeTime tasks in 
+   multi_product_sample_flow.xml.
+   
+   For one of these changes, the target "all" has been added at the end of each 
+   flow for consistency across all the product reference methodology flows.
+
+
+
+

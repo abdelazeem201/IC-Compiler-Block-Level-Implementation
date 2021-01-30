@@ -1,0 +1,22 @@
+##############################################################
+# Reference methodology option settings selected by the user.
+#
+# Copyright (C) 2015 Synopsys, Inc. All rights reserved.
+##############################################################
+ 
+Option Name:  Setting
+=====================
+Focus on QoR or Feasibility:  QOR
+Multicorner-Multimode (MCMM) Optimization:  TRUE
+Multivoltage or Multisupply:  UPF_PRIME
+Physical Guidance:  TRUE
+Flip Chip Design Style:  FALSE
+In-Design Rail Analysis:  FALSE
+Zroute:  TRUE
+Advanced Node:  FALSE
+Concurrent Clock and Data Optimization Flow:  FALSE
+Floorplan Style:  DEFAULT
+Design Style:  DEFAULT
+Flow Style:  VIRTUAL_FLAT
+Lynx Compatible:  TRUE
+

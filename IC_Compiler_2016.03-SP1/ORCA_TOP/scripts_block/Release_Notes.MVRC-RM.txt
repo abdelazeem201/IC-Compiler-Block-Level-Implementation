@@ -1,0 +1,133 @@
+####################################################################################
+# Synopsys(R) MVRC Static Verification Reference Methodology Release Notes
+# Version: J-2014.09-SP2 (January 12, 2015)
+# Copyright (C) 2010-2015 Synopsys, Inc. All rights reserved.
+####################################################################################
+
+I-2013.12-SP2, I-2013.12-SP4, J-2014.09, and J-2014.09-SP2
+==========================================================
+
+These releases of the MVRC Static Verification Reference Methodology do not include
+any product-specific changes. However, they do provide support for the enhancements
+in the Lynx-compatible reference methodology flow. For information about these
+enhancements, see the file named Release_Notes.LynxCompatible-RM.txt.
+
+
+I-2013.12
+=========
+
+General Updates
+---------------
+
+*  The definition of the MVRC_RUN variable has been moved to the dc_setup.tcl file.
+
+*  The name of the RTL read script variable has been updated to
+   MVRCRM_RTL_READ_SCRIPT and defined in the dc_setup_filename.tcl file.
+
+*  The MVRCRM_RTL_READ_SCRIPT script is now a Tool Command Language (Tcl) script, 
+   which allows the script log execution to be printed on screen.
+
+   MVRCRM_RTL_READ_SCRIPT should include an exec call before each mvcmp command.
+   For example,
+
+   o  In a script for Verilog or SystemVerilog: 
+   
+      exec mvcmp -vlogan <vlogan command line>
+
+   o  In a script for VHDL: 
+   
+      exec mvcmp -vhdlan <vhdlan command line>
+
+
+Common Changes in mvrc(_top).tcl
+--------------------------------
+
+Extra comments have been added to the scripts, clarifying the steps performed 
+in the verification process.
+
+
+Changes in mvrc_top.tcl
+-----------------------
+
+For the NETLIST verification, the reading order of the hierarchical and top 
+design mapped netlist has been changed to ensure the correct implementation 
+of the complete design.
+
+
+Changes in dc_setup.tcl
+-----------------------
+
+The setting of the MVRC_RUN variable, which controls the stage that runs MVRC, 
+is now located in the Setup Variable section in dc_setup.tcl.
+
+
+Changes in dc_setup_filenames.tcl
+---------------------------------
+
+The MVRCRM_RTL_READ_SCRIPT variable, which points to the read RTL script, is now
+located in the dc_setup_filename.tcl file.
+
+
+Lynx Compatibility
+-------------------
+
+This release provides enhancements in the Lynx-compatible reference
+methodology flow. For information about these enhancements, see the
+file named Release_Notes.LynxCompatible-RM.txt.
+
+
+G-2012.06, G-2012.06-SP4, H-2013.03 and  H-2013.03-SP2
+======================================================
+
+These releases of the MVRC Static Verification Reference Methodology do not include 
+any product-specific changes. However, they do provide support for the enhancements 
+in the Lynx-compatible reference methodology flow. For information about these 
+enhancements, see the file named Release_Notes.LynxCompatible-RM.txt.
+
+
+F-2011.09-SP2 and F-2011.09-SP4
+===============================
+
+These releases of the MVRC Static Verification Reference Methodology do not include 
+any product-specific changes. However, they do provide support for the enhancements 
+in the Lynx-compatible reference methodology flow. 
+
+For the Design Compiler Reference Methodology, which did not participate in the 
+F-2011.09-SP2 reference methodology release, the Lynx-compatible reference 
+methodology enhancements take affect in the F-2011.09-SP4 release.
+
+For information about the Lynx-compatible reference methodology enhancements, 
+see the file named Release_Notes.LynxCompatible-RM.txt.
+
+
+F-2011.09
+=========
+
+General Updates
+---------------
+
+The sh_continue_on_error variable is now set to true to match the behavior 
+of other Synopsys tools.
+
+
+Changes in mvrc(_top).tcl for the Design Compiler Reference Methodology
+-----------------------------------------------------------------------
+
+*  The MVRC_RTL_READ_SCRIPT variable is now defined in both the standard and 
+   Lynx-compatible reference methodology flows to resolve a problem in previous 
+   releases.
+
+*  The script has been updated to use MVRC_RTL_READ_SCRIPT when you select the 
+   AUTOREAD setting for the RTL Source Format option in RMgen. 
+   
+   This variable is necessary because Design Compiler does not write an RTL read 
+   script for MVRC. Previous releases used the MVRC_RTL_AUTOREAD_SCRIPT variable 
+   when you selected the AUTOREAD setting. 
+
+
+Lynx Compatibility 
+-------------------
+
+This release provides enhancements in the Lynx-compatible reference 
+methodology flow. For information about these enhancements, see the 
+file named Release_Notes.LynxCompatible-RM.txt.

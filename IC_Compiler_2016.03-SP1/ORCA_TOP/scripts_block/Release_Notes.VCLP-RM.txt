@@ -1,0 +1,59 @@
+####################################################################################
+# Synopsys(R) Verification Compiler(TM) Low Power Static Signoff Reference 
+# Methodology Release Notes
+# Version: J-2014.09-SP2 (January 12, 2015)
+# Copyright (C) 2014-2015 Synopsys, Inc. All rights reserved.
+####################################################################################
+
+J-2014.09-SP2
+=============
+
+This release of the Synopsys Verification Compiler Low Power Static Signoff
+Reference Methodology does not include any product-specific changes. However,
+it does provide support for the enhancements in the Lynx-compatible reference
+methodology flow. For information about these enhancements, see the file named
+Release_Notes.LynxCompatible-RM.txt.
+
+
+J-2014.09
+=========
+
+The Synopsys Verification Compiler Low Power Static Signoff Reference Methodology, 
+formerly the Synopsys Verdi(R) Signoff-LP Low Power Static Signoff Reference 
+Methodology, has been renamed to be consistent with the new tool name. The 
+functionality of the scripts is the same, but names and variables have been updated 
+to match the new product name.
+
+*  The vsi.tcl script in rm_dc_scripts has been renamed to vc_lp.tcl.
+*  The vsi_top.tcl script in rm_dc_scripts has been renamed to vc_lp_top.tcl.
+*  The vsi.tcl script in rm_icc_scripts has been renamed to vc_lp.tcl.
+
+The scripts now use the Verification Compiler Low Power Static Signoff tool 
+shell, vc_static_shell, instead of the Verdi Signoff-LP Low Power Static Signoff 
+tool shell, vsi_shell.
+
+This release also provides enhancements in the Lynx-compatible reference methodology 
+flow. For information about these enhancements, see the file named 
+Release_Notes.LynxCompatible-RM.txt.
+
+
+I-2013.12-SP2 and I-2013.12-SP4
+===============================
+
+These releases of the Verdi Signoff-LP Low Power Static Signoff Reference 
+Methodology do not include any product-specific changes. However, they do provide 
+support for the enhancements in the Lynx-compatible reference methodology flow. 
+For information about these enhancements, see the file named 
+Release_Notes.LynxCompatible-RM.txt.
+
+
+I-2013.12
+=========
+
+This is the initial release of the Verdi Signoff-LP Low Power Static Signoff 
+Reference Methodology.
+
+This release allows you to run the Verdi Signoff-LP tool on netlist output or RTL 
+in a top-down or block-level synthesis flow and to run the tool on a full-chip 
+design in a bottom-up hierarchical synthesis flow.
+

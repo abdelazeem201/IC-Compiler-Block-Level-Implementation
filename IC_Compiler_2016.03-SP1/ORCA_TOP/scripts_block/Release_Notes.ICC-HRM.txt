@@ -1,0 +1,520 @@
+####################################################################################
+# Synopsys(R) IC Compiler(TM) Hierarchical Reference Methodology Release Notes
+# Version: J-2014.09-SP2 (January 12, 2015)
+# Copyright (C) 2010-2015 Synopsys, Inc. All rights reserved.
+####################################################################################
+
+J-2014.09-SP2
+=============
+
+This release of the IC Compiler Hierarchical Reference Methodology does not
+include any product-specific changes. However, it does provide support for the
+enhancements in the Lynx-compatible reference methodology flow. For
+information about these enhancements, see the file named
+Release_Notes.LynxCompatible-RM.txt.
+
+
+J-2014.09
+=========
+
+IC Compiler Hierarchical Reference Methodology version J-2014.09 provides the
+following new features, enhancements, and changes.
+
+*  UPF-Prime Support for On-Demand Loading Flows
+*  Replacement of create_on_demand_netlist Options
+*  Lynx Compatibility
+
+UPF-Prime Support for On-Demand Loading Flows
+---------------------------------------------
+
+The create_odl_dp.tcl script now can support UPF-prime flows for on-demand loading 
+creation. UPF-prime is the traditional IEEE 1801 flow. IEEE 1801 is also known as 
+Unified Power Format (UPF).
+
+A map file is required for mapping the block with its UPF file. This file is 
+specified in the following command:
+
+create_on_deman_netlist -block_upf_map_file $ICC_DP_ODL_BLOCK_UPF_MAP_FILE
+
+Additional multivoltage and PG steps have also been added. These steps are 
+performed after the on-demand netlist has been created.
+
+Replacement of create_on_demand_netlist Options
+-----------------------------------------------
+
+The following create_on_demand_netlist command options have been replaced in the 
+create_odl_dp.tcl script:
+
+*  The -full_sdc_file option has been replaced with the -block_sdc_map_file option.
+
+*  The -mcmm_map_file and -mcmm_setup_file options have been replaced with the 
+   -block_mcmm_map_file option.
+
+The ICC_DP_ODL_MCMM_MAP_FILE variable in icc_setup.tcl has been replaced with 
+the ICC_DP_ODL_BLOCK_MCMM_MAP_FILE variable. To show the format of the map file, 
+odl_mcmm_map_file has been replaced with odl_block_mcmm_map_file. 
+
+Another variable, ICC_DP_ODL_BLOCK_SDC_MAP_FILE, has been added to the icc_setup.tcl
+script to point to a map file for single-scenario flows. This map file should point 
+to a Synopsys Design Constraints (SDC) file for each block.
+
+Lynx Compatibility
+------------------
+
+This release also provides enhancements in the Lynx-compatible reference
+methodology flow. For information about these enhancements, see the
+file named Release_Notes.LynxCompatible-RM.txt.
+
+
+I-2013.12-SP2 and I-2013.12-SP4
+===============================
+
+These releases of the IC Compiler Hierarchical Reference Methodology do not 
+include any product-specific changes. However, they do provide support for the
+enhancements in the Lynx-compatible reference methodology flow. For information
+about these enhancements, see the file named Release_Notes.LynxCompatible-RM.txt.
+
+
+I-2013.12
+=========
+
+IC Compiler Hierarchical Reference Methodology version I-2013.12 provides the 
+following new features, enhancements, and changes.
+
+*  Synopsys has officially ended support for interface logic model (ILM) creation 
+   in IC Compiler version I-2013.12.
+   
+   In previous reference methodology releases, the prepare_block_dp.tcl script 
+   created an ILM by default unless ICC_CREATE_BLOCK_ABSTRACTION was set to true. 
+   Beginning with the I-2013.12 reference methodology release, the script always 
+   creates a block abstraction.
+
+------------------
+
+This release also provides enhancements in the Lynx-compatible reference
+methodology flow. For information about these enhancements, see the
+file named Release_Notes.LynxCompatible-RM.txt.
+
+
+H-2013.03-SP4
+=============
+
+IC Compiler Hierarchical Reference Methodology version H-2013.03-SP4 provides the 
+following new features, enhancements, and changes.
+
+*  The following commands have been added to prepare_block_dp.tcl to avoid 
+   double-patterning violations for macro pins:
+
+   o  create_double_pattern_route_guides
+
+      This command creates route guides around macro pins during block-level 
+      implementation.
+
+   o  create_macro_fram -create_double_pattern_route_guides true
+
+      This command creates route guides around macro pins during FRAM view 
+      blockage, pin, and via (BPV) extraction.
+
+   Both of these commands must be run during block-level implementation.
+
+
+H-2013.03-SP2
+=============
+
+IC Compiler Hierarchical Reference Methodology version H-2013.03-SP2 provides the 
+following new features, enhancements, and changes.
+
+Advanced Node Flow
+------------------
+
+A new option, Advanced Node, has been added to RMgen. This option is available 
+only when you select TRUE for the Zroute option.
+
+Set the Advanced Node option to TRUE if you want to enable features and settings 
+for designs with advanced geometries, such as process nodes at or below 20 nm. 
+
+The advanced node flow includes the following updates:
+
+*  A new script, common_advanced_node_settings_zrt_icc.tcl, has been added.
+
+   This script includes several advanced-node-related routing settings that are
+   sourced during the place_opt_icc step and most subsequent steps. These settings 
+   include 
+   
+   o  A placeholder, $ICC_COMMON_ADVANCED_NODE_SETTINGS_PRE_SOURCE_FILE, which 
+      you can use to include your customized advanced-node settings
+   
+   o  A setting to report double-patterning odd cycles
+   
+   o  A setting to restrict routing for metal2 and above
+   
+   o  A setting to control double-patterning utilization
+   
+   o  A setting to control pin-connection behavior below the minimum routing layer
+
+*  A new variable, $ICC_COMMON_ADVANCED_NODE_SETTINGS_PRE_SOURCE_FILE, 
+   has been added.
+   
+   This variable allows you to include customized advanced-node settings. It is  
+   sourced within common_advanced_node_settings_zrt_icc.tcl. 
+
+*  The common_placement_settings_icc.tcl file has been updated for the Advanced 
+   Node option.
+
+   The definition of MIN_ROUTING_LAYER is now overwritten with the metal2 layer 
+   name prior to running the set_ignored_layer command.
+ 
+   The "set_app_var placer_enable_enhanced_router true" command has been added. 
+   The "set_app_var placer_congestion_effort medium" and 
+   "set_app_var placer_show_zroutegr_output true" commands are now defaults in 
+   the reference methodology script.
+
+*  The pin_assignment_buggeting_dp.tcl file has been updated.
+
+   o  The "set_fp_pin_constraints -use_physical_constraints on" command has been 
+      added,
+
+   o  The "set_pin_physical_constraints" command has been added as a comment.  
+
+      Uncomment this command if you want to use it.
+
+      # set_pin_physical_constraints [get_pins *] -layers {your_dpt_layers} \
+          -depth min_length             ;edit the command to specify your dpt layers
+
+   o  The -pin_size option has been added to the check_fp_pin_assignment command 
+      for advanced-node designs.
+
+Lynx Compatibility
+------------------
+
+This release provides enhancements in the Lynx-compatible reference methodology 
+flow. For information about these enhancements, see the file named 
+Release_Notes.LynxCompatible-RM.txt.
+
+
+H-2013.03
+=========
+
+IC Compiler Hierarchical Reference Methodology version H-2013.03 provides the 
+following new features, enhancements, and changes.
+
+*  Usage of the same host and the list of named hosts for block updates during 
+   transparent interface optimization has been enabled in route_opt_icc.tcl, 
+   chip_finish_icc.tcl, and focal_opt_icc.tcl.
+
+   The $ICC_TIO_HOST_OPTION_POOL_OPTION variable has been renamed  
+   $ICC_TIO_HOST_OPTION where the new "samehost" and "list_of_hosts" values 
+   become available in addition to the existing "lsf" and "grd" values. If you 
+   specify list_of_hosts, you must also specify the new  
+   $ICC_TIO_HOST_OPTION_HOSTS_LIST variable. If you specify samehost, 
+   "[sh hostname]" is used for the host name.
+
+This release also provides enhancements in the Lynx-Compatible reference 
+methodology flow. For information about these enhancements, see the file 
+named Release_Notes.LynxCompatible-RM.txt.
+
+
+G-2012.06-SP4
+=============
+
+This section describes new features, changes, and enhancements in the
+IC Compiler Hierarchical Reference Methodology version G-2012.06-SP4.
+
+*  The select_mim_master_instance command is moved to run before 
+   the create_on_demand_netlist command if you select ODL for the 
+   Hierarchical FLow Style option in RMgen.
+
+This release also provides enhancements in the Lynx-Compatible reference 
+methodology flow. For information about these enhancements, see the file 
+named Release_Notes.LynxCompatible-RM.txt.
+
+
+G-2012.06
+=========
+
+This section describes new features, changes, and enhancements in the
+IC Compiler Hierarchical Reference Methodology version G-2012.06.
+
+*  Support has been added for block abstractions.
+
+   The ICC_CREATE_BLOCK_ABSTRACTION variable has been added to icc_setup.tcl. 
+   Use this variable to control which command is used at the end of block 
+   implementation in outputs_icc.tcl: create_block_abstraction (TRUE), which 
+   generates a block abstraction, or create_ilm (FALSE), which generates an 
+   interface logic model (ILM). The default is create_block_abstraction.
+
+*  Support has been added for top-level optimization using block abstractions.
+
+   When you run the IC Compiler Hierarchical Reference Methodology, it uses the 
+   IC Compiler Reference Methodology for top-level implementation. Transparent 
+   interface optimization (TIO) support has been added to the route_opt command 
+   for top-level implementation, which includes route_opt_icc.tcl, 
+   chip_finish_icc.tcl, and focal_opt_icc.tcl. Transparent interface 
+   optimization only works with block abstractions.
+
+   The following new variables have been added in icc_setup.tcl to control 
+   transparent interface optimization:
+
+   set ICC_TIO_BLOCK_LIST ""    ;# a list; specify block reference  
+                                   names for TIO to work on; 
+
+                                ;# default is empty and will be auto set to all 
+                                   blocks by prepare_block_dp task of HRM
+
+   set ICC_TIO_HOST_OPTION_POOL_OPTION ""    
+                                ;# lsf|grd; this controls the -pool option  
+                                   for set_host_options"
+
+   set ICC_TIO_HOST_OPTION_SUBMIT_OPTIONS {} 
+                                ;# controls the value of -submit_option 
+                                   option for set_host_options. If 
+                                   ICC_TIO_HOST_OPTION_POOL_OPTION 
+                                   is set to lsf, 
+
+                                ;# then lsf specific submit options 
+                                   should be specified, for example, 
+
+                                ;# {-q bnormal 
+                                   -R "rusage\[mem=12000\]\cputype==  
+                                   emt64 cpuspeed==EMT3000 qsc==e"}
+
+   set ICC_TIO_WRITE_ECO_FILE "FALSE"        
+                                ;# TRUE|FALSE; set to TRUE to write out 
+                                   an ECO file to TIO_eco_changes directory
+
+   set ICC_TIO_OPTIMIZE_BLOCK_INTERFACE "TRUE" 
+                                ;# TRUE|FALSE; set to TRUE to optimize 
+                                   interface logic
+
+   set ICC_TIO_OPTIMIZE_SHARED_LOGIC "FALSE"    
+                                ;# TRUE|FALSE; set to TRUE to optimize 
+                                   shared logic
+
+   Because ICC_TIO_OPTIMIZE_BLOCK_INTERFACE is set to TRUE by default and 
+   ICC_TIO_BLOCK_LIST is automatically set to all blocks at the prepare_block_dp 
+   step, transparent interface optimization is 
+   
+   o  Enabled by default to work on all blocks for the route_opt command if 
+      ICC_TIO_HOST_OPTION_POOL_OPTION and ICC_TIO_HOST_OPTION_SUBMIT_OPTIONS are 
+      also specified as required by IC Compiler.
+
+   o  Not performed if ICC_TIO_HOST_OPTION_POOL_OPTION and 
+      ICC_TIO_HOST_OPTION_SUBMIT_OPTIONS are not specified, .
+
+   When transparent interface optimization is enabled, the block CEL views specified 
+   in ICC_TIO_BLOCK_LIST are automatically copied to the same design library in such 
+   a way that transparent interface optimization can work on them.
+
+   In addition, ICC_IMPLEMENTATION_PHASE is automatically set to top for the 
+   top-level design if the IC Compiler Hierarchical Reference Methodology is used 
+   in such a way that transparent interface optimization support is enabled. 
+   (Transparent interface optimization works only at the top-level design when 
+   ICC_IMPLEMENTATION_PHASE is set to top.)
+
+*  ICC_ILM_LIBS has been renamed to ICC_SOFT_MACRO_LIBS because the scripts now 
+   support both block abstractions and ILMs.  
+
+   ICC_SKIPPED_IN_BLOCK_IMPLEMENTATION has been renamed to ICC_IMPLEMENTATION_PHASE.
+
+   The descriptions in icc_setup.tcl have been updated.
+
+*  The default hierarchical flow style has been changed from virtual flat to 
+   on-demand loading.
+
+   The default value for the Flow Style option in RMgen is now ODL. The value 
+   for a virtual flat flow has been changed from DEFAULT to VIRTUAL_FLAT. All 
+   the scripts have been updated.
+
+*  The copy_mim and flip_mim comments have been updated for the multiply 
+   instantiated modules flow in create_plangroups_dp.tcl.
+
+   ## To copy cell placement, blockages, or shapes from one MIM plangroup 
+      to others in same group : 
+   # copy_mim -type <placement | blockage> <MIM plangroup to be 
+      copied from>
+  
+   ## To flip the placement of MIM plangroups :
+   #  flip_mim -direction <X | Y> <MIM plangroups to be flipped>
+
+*  A feedthrough control is now added in routeability_on_plangroups_dp.tcl
+   and pin_assignment_budgeting_dp.tcl when you select MIM for the Design Style 
+   option in RMgen.
+   
+   The script now allows feedthroughs on non-multiply-instantiated-module 
+   plan groups by using the following command:
+   
+   set_fp_pin_constraints -allow_feedthroughs on -keep_buses_together on \
+      [remove_from_collection [get_plan_groups] \
+      [get_plan_groups $ICC_MIM_INSTANCE_LIST]]
+
+*  The optimize_dft -plan_groups command is not supported if you select ODL for the 
+   Flow Style option in RMgen.
+
+*  A new option, Zroute, has been added in RMgen.
+
+   This option allows you to choose between Zroute or the classic router. 
+   To generate only Zroute scripts, select TRUE. To generate only classic router
+   scripts, select FALSE.
+
+   As a result, the ICC_DP_USE_ZROUTE variable is no longer needed and has been 
+   removed.
+
+This release also provides enhancements in the Lynx-compatible reference methodology 
+flow. For information about these enhancements, see the file named 
+Release_Notes.LynxCompatible-RM.txt.
+
+
+F-2011.09-SP4
+=============
+
+This section describes new features, changes, and enhancements in the 
+IC Compiler Hierarchical Reference Methodology version F-2011.09-SP4.
+
+*  In prepare_block_dp.tcl, the write_floorplan command options used to write out 
+   a floorplan file that the Design Compiler topographical technology can read 
+   have been updated:
+
+   write_floorplan -create_terminal -create_bound -row -track -preroute \
+       -placement {io terminal hard_macro soft_macro} ${block}.DCT.fp
+
+   The -track option and the terminal argument have been added.
+
+
+F-2011.09-SP2
+=============
+
+This section describes new features, changes, and enhancements in the 
+IC Compiler Hierarchical Reference Methodology version F-2011.09-SP2.
+
+*  The CUSTOM_LOAD_ASCII_UPF_SCRIPT_LIST variable and its associated commands 
+   have been removed from icc_setup.tcl and init_design_icc.tcl.
+
+*  The ICC_SKIP_IN_BLOCK_IMPLEMENTATION variable has been renamed 
+   ICC_SKIPPED_IN_BLOCK_IMPLEMENTATION in icc_setup.tcl, init_design_icc.tcl, 
+   and prepare_block_dp.tcl.
+
+*  The clock tree planning section has been removed from 
+   pin_assignment_budgeting_dp.tcl.
+
+   The ICC_DP_CTP and ICC_DP_CTP_ANCHOR_CEL variables have been removed from 
+   icc_setup.tcl.
+
+   If you need references for the clock tree planning feature, see previous 
+   releases of the IC Compiler Hierarchical Reference Methodology or contact 
+   your Synopsys representative.
+
+*  The hierarchical on-demand loading flow has been updated.
+
+   The -effort option setting for the second create_fp_placement command in 
+   create_plangroups_dp.tcl has been changed from high to low.
+
+   Also, the following exploration global route command has been added after 
+   placement to check full-chip routeability before on-demand netlist creation:
+
+   route_zrt_global -exploration true -congestion_map_only true 
+
+*  The power network synthesis flow has been updated.
+
+   The classic power network synthesis content has been replaced with template-based 
+   power network synthesis content in routeability_on_plangroups_dp.tcl. To proceed, 
+   you must specify a valid customized script using the $CUSTOM_ICC_DP_PNS_SCRIPT variable.
+   For more details, see the descriptions and examples in the template-based power 
+   network synthesis section.
+
+   The prefixes of the following variables have been renamed from PNS to PNA 
+   because they now apply only to power network analysis:
+
+   o  PNS_TLUPLUS_MAX_FILE and PNS_TLUPLUS_MIN_FILE have been renamed to 
+      PNA_TLUPLUS_MAX_FILE and PNA_TLUPLUS_MIN_FILE.
+
+   o  PNS_EXTRACTION_TEMPERATURE and PNS_EXTRACTION_CORNER have been renamed to 
+      PNA_EXTRACTION_TEMPERATURE and PNA_EXTRACTION_CORNER.
+
+*  Problems have been resolved in the section of init_design_icc.tcl that reads 
+   the full-chip SCANDEF file, ICC_IN_FULL_CHIP_SCANDEF_FILE, for DFT-aware 
+   hierarchical design planning.
+
+This release also provides enhancements in the Lynx-compatible reference methodology 
+flow. For information about these enhancements, see the file named 
+Release_Notes.LynxCompatible-RM.txt.
+
+
+F-2011.09
+=========
+
+The following sections describe new features, changes, and enhancements in the 
+IC Compiler Hierarchical Reference Methodology version F-2011.09.
+
+Black Box Flow Update
+---------------------
+
+The import_fp_black_boxes command in init_design_icc.tcl has been moved ahead of 
+the uniquify_fp_mw_cel command. Previously, the import_fp_black_boxes command 
+followed the uniquify_fp_mw_cel command.
+
+Hierarchical On-Demand Loading Multicorner-Multimode Flow Update
+----------------------------------------------------------------
+
+A new variable, $ICC_DP_MCMM_SCENARIOS_FILE, has been added and set by default 
+to $ICC_MCMM_SCENARIOS_FILE. For hierarchical design planning, you can set this 
+variable to specify a subset of scenarios to be used for design planning tasks 
+after on-demand netlist creation but before budgeting. The complete scenario 
+definitions from $ICC_MCMM_SCENARIOS_FILE are reapplied to the top-level on-demand 
+netlist before budgeting.
+
+The following files have been updated:
+
+*  In icc_setup.tcl, a new variable has been added:
+
+   set ICC_DP_MCMM_SCENARIOS_FILE $ICC_MCMM_SCENARIOS_FILE  
+
+      ;# a file that defines a subset of scenarios; 
+         default is to be same as $ICC_MCMM_SCENARIOS_FILE;
+      ;# $ICC_MCMM_SCENARIOS_FILE is the file that defines your complete set of 
+         scenarios which should be used during ODN creation in create_odl_dp step;
+      ;# $ICC_DP_MCMM_SCENARIOS_FILE allows you to use only subset of scenarios 
+         after ODN creation for design planning tasks up to but not including 
+         budgeting then before budgeting in pin_assignment_budgeting_dp step, 
+         $ICC_MCMM_SCENARIOS_FILE will be restored
+      
+*  In routeability_on_plangroups_dp.tcl, the source -echo $ICC_MCMM_SCENARIOS_FILE 
+   command has been replaced with the source -echo $ICC_DP_MCMM_SCENARIOS_FILE 
+   command.
+
+*  In pin_assignment_budgeting_dp.tcl, the following commands have been added 
+   before the allocate_fp_budget command:
+
+   remove_scenario -all
+   source -echo $ICC_MCMM_SCENARIOS_FILE
+
+Pin Assignment and Routing Updates
+----------------------------------
+
+*  If $ICC_DP_USE_ZROUTE is set to TRUE in routeability_on_plangroups_dp.tcl, 
+   the exploration effort is now used with the route_zrt_global command instead 
+   of the minimum effort used in previous versions.
+
+   o  The set_route_zrt_global_options -effort minimum command has been removed.
+   
+   o  The -exploration true option has been added to the 
+      route_zrt_global -congestion_map_only true command.
+
+*  A new option has been added in a comment when feedthrough is enabled:
+
+   ## If -allow_feedthroughs on is enabled :
+   #  - You can use the -feedthrough_map_file option to specify a feedthrough map 
+   #    input file
+   #  - You can use report_fp_feedthroughs command to report feedthroughs
+
+*  The check_fp_pin_assignment and check_fp_pin_alignment commands have been added 
+   after the place_fp_pins command in pin_assignment_budgeting_dp.tcl because they 
+   now support plan group pins. Previously, these commands were in comments, as
+   optional steps, in commit_dp.tcl.
+
+
+Lynx Compatibility
+------------------
+
+This release provides enhancements in the Lynx-compatible reference methodology 
+flow. For information about these enhancements, see the file named 
+Release_Notes.LynxCompatible-RM.txt.
