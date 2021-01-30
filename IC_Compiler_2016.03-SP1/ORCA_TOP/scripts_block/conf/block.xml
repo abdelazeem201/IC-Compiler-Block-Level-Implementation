@@ -1,0 +1,23 @@
+
+<!--
+## HEADER_MSG ============================================================================
+## HEADER_MSG Lynx Compatible Reference Methodology (LCRM) Setup File
+## HEADER_MSG Script: block.xml
+## HEADER_MSG Version: J-2014.09-SP2 (January 12, 2015)
+## HEADER_MSG Copyright (C) 2007-2015 Synopsys, Inc. All rights reserved.
+## HEADER_MSG ============================================================================
+## HEADER_MSG DESCRIPTION:
+## HEADER_MSG * This file is used by the Lynx Design System. It is not used when running LCRM
+## HEADER_MSG * standalone. This file is required for each block in the system and indicates
+## HEADER_MSG * which Lynx flow will be used as the 'top_flow'. It also has an optional
+## HEADER_MSG * default 'flow_goal'. Configuration of this file can be done by directly editing
+## HEADER_MSG * but it will be written by Lynx when configuring TopFlow in the Flow Editor
+## HEADER_MSG * Block Flow Manager menu.
+## HEADER_MSG ============================================================================
+-->
+<block>
+    <top_flow>$SEV(bscript_dir)/lcrm_setup/rm_icc.xml</top_flow>
+    <flows></flows>
+    <flow_goal>rm_icc/all</flow_goal>
+</block>
+
