@@ -1,0 +1,96 @@
+#################################################################################################
+# ICC Hierarchical RM
+# routeability_on_plangroups_dp: PNS/PNA, IPO, and PGAR
+# Version: J-2014.09-SP2 (January 12, 2015)
+# Copyright (C) 2010-2015 Synopsys, Inc. All rights reserved.
+##################################################################################################
+
+## Below are advanced TPNS examples with parameters
+
+## Here are some examples for your reference :
+#  <tpns_example.tcl> : an example of a customized script that makes use of the template examples mentioned below.
+#  <ring_example.tpl> : an example of a template file for the ring strategies used by tpns_example.tcl 
+#  <mesh_example.tpl> : an example of a template file for the mesh strategies used by tpns_example.tcl
+#
+#  Note that you can write out default templates from the tool instead of creating new ones yourself by doing the following :
+#  compile_power_plan -ring -write_default_template ring_example.tpl and compile_power_plan -write_default_template mesh_example.tpl
+#
+#  <tpns_example.tcl> ------------------------------------------------------------------------------------------------------------------
+#  	/specify strategy for rings/
+#  	set_power_ring_strategy r1 -nets {VDD VSS} -core -template ring_example.tpl:non_uniform(4.0,4.0,5.0)
+#  	set_power_ring_strategy r2 -nets {VDDS VSS} -voltage_area VA0 -template ring_example.tpl:non_uniform(3.0,3.0,3.0)
+#  	compile_power_plan -ring 
+#  	
+#  	/specify strategy for top mesh and VA0 voltage area/
+#  	set_power_plan_strategy s1 -core -nets {VDD VSS} -template mesh_example.tpl:top(20,20) -extension {{stop: outermost_ring}}
+#  	set_power_plan_strategy s2 -voltage_areas VA0 -nets {VDDS VDD} -template mesh_example.tpl:block(15,15) -extension {{stop: innermost_ring}}
+#  	compile_power_plan
+#
+#  <ring_example.tpl> ------------------------------------------------------------------------------------------------------------------
+#  	/A side is an edge in the ring contour. A side is numbered from the lowest leftmost edge starting with "1" and 
+#  	 increased in the clockwise direction.
+#  	 Horizontal represents all horizontal sides and vertical represents all vertical sides/ 
+#
+#	template : non_uniform (w_h,w_v,w_ext){
+#	  side : horizontal {
+#	        layer: M7
+#	        width : @w_h
+#	        spacing: minimum
+#	        offset : 
+#	  }
+#	  side : vertical {
+#	        layer: M6
+#	        width : @w_v
+#	        spacing: minimum
+#	        offset : 
+#	  }
+#	  side : "1 3" {
+#	        layer: M6
+#	        width : @w_ext
+#	        spacing: minimum
+#	        offset : 
+#	  }     
+#	}
+#
+#  <mesh_example.tpl> ------------------------------------------------------------------------------------------------------------------
+#	template : top (p_h,p_v) {
+#	  layer : M7 {
+#	        direction : horizontal
+#	        width : 5
+#	        spacing : minimum
+#	        number : 
+#	        pitch : @p_h
+#	        offset :
+#	        trim_strap : true
+#	  }
+#	  layer : M8 {
+#	        direction : vertical
+#	        width : 5
+#	        spacing : minimum
+#	        number : 7
+#	        pitch : @p_v
+#	        offset :
+#	        trim_strap : true
+#	  }
+#	}
+#	
+#	template : block(p_h,p_v) {
+#	  layer : M5 {
+#	        direction : horizontal
+#	        width : 2.5
+#	        spacing : minimum
+#	        number : 
+#	        pitch : @p_h
+#	        offset :
+#	        trim_strap : true
+#	  }
+#	  layer : M6 {
+#	        direction : vertical
+#	        width : 2.5
+#	        spacing : minimum
+#	        number : 9
+#	        pitch : @p_v
+#	        offset :
+#	        trim_strap : true
+#	  }
+#	}
