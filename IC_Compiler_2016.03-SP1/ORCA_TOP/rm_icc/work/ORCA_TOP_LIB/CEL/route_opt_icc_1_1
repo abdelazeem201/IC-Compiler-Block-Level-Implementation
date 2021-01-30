@@ -1,0 +1,34 @@
+create_power_domain PD_ORCA_TOP
+create_power_domain PD_RISC_CORE
+create_supply_net VSS -domain PD_ORCA_TOP
+create_supply_net VDD -domain PD_ORCA_TOP
+create_supply_net VDDH -domain PD_ORCA_TOP
+set_domain_supply_net PD_ORCA_TOP
+create_supply_port VDD -domain PD_ORCA_TOP
+create_supply_port VSS -domain PD_ORCA_TOP
+create_supply_port VDDH -domain PD_ORCA_TOP
+create_supply_net VSS -domain PD_RISC_CORE
+create_supply_net VDD -domain PD_RISC_CORE
+create_supply_net VDDH -domain PD_RISC_CORE
+set_domain_supply_net PD_RISC_CORE
+set_level_shifter
+set_level_shifter
+add_port_state
+add_port_state
+add_port_state
+add_port_state
+add_port_state
+add_port_state
+create_pst
+add_pst_state
+add_pst_state
+add_pst_state
+add_pst_state
+set_derived_upf
+connect_supply_net VSS
+connect_supply_net VSS
+connect_supply_net VDD
+connect_supply_net VDD
+connect_supply_net VDDH
+connect_supply_net VDDH
+set_derived_upf
