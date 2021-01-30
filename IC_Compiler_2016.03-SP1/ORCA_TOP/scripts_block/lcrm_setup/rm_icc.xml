@@ -1,0 +1,199 @@
+
+<!--
+## HEADER_MSG ============================================================================
+## HEADER_MSG Lynx Compatible Reference Methodology (LCRM) Setup File
+## HEADER_MSG Script: rm_icc.xml
+## HEADER_MSG Version: J-2014.09-SP2 (January 12, 2015)
+## HEADER_MSG Copyright (C) 2007-2015 Synopsys, Inc. All rights reserved.
+## HEADER_MSG ============================================================================
+## HEADER_MSG DESCRIPTION:
+## HEADER_MSG * Provided to support example execution of the product methodology scripts in
+## HEADER_MSG * the Lynx Design System
+## HEADER_MSG OPEN IN Lynx Runtime Manager Flow Editor"
+## HEADER_MSG ============================================================================
+-->
+<flow name="rm_icc">
+    <note name="note-1" title="Want a different top flow for this block? &lt;i&gt;click here&lt;/i&gt;" always_show_detail="0">
+        <text>Want to change the top flow for this block?
+
+Either edit this flow or use another flow, including the sample flows included in the 
+scripts_block/lcrm_setup directory.
+
+Use the &quot;Block Flow Manager&quot; to configure a new top flow
+1) Open the &quot;Block Flow Manager&quot; (found as the wrench icon located in toolbar or under &quot;File&quot; menu)
+2) &quot;Add existing flow&quot; and navigate to locate the xml flow file to add 
+    (usually in scripts_block/lcrm_setup)
+3) Set a flow as the &quot;Top Flow&quot; by selecting it and using the icon &quot;Make Selected flow the TopFlow&quot;
+    located on the right pane
+4) Set a &quot;Flow Goal&quot; by selecting the target task from the lower pane and using the
+   right icon &quot;Make selected Task the FlowGoal&quot;
+5) save (which will write the scripts_block/conf/block.xml with your config)</text>
+    </note>
+    <note name="note-2" title="Optional Tasks">
+        <text>These optional tasks are not tied into the flow by default but users can
+explicitly execute them or modify the flow to tie them in with an edge.
+
+The focal_opt_icc task performs focal optimization. 
+
+The eco_icc task updates the ICC database with eco edits calculated
+by the PT eco task from the PT rm.</text>
+    </note>
+    <join_task name="all">
+        <step>rm_icc</step>
+    </join_task>
+    <join_task name="implementation">
+        <step>rm_icc</step>
+    </join_task>
+    <tool_task name="chip_finish_icc">
+        <step>rm_icc</step>
+        <script_file>$SEV(bscript_dir)/rm_icc_zrt_scripts/chip_finish_icc.tcl</script_file>
+        <src>route_opt_icc</src>
+        <dst>chip_finish_icc</dst>
+        <tool>icc</tool>
+    </tool_task>
+    <tool_task name="clock_opt_cts_icc">
+        <step>rm_icc</step>
+        <script_file>$SEV(bscript_dir)/rm_icc_scripts/clock_opt_cts_icc.tcl</script_file>
+        <src>place_opt_icc</src>
+        <dst>clock_opt_cts_icc</dst>
+        <tool>icc</tool>
+    </tool_task>
+    <tool_task name="clock_opt_psyn_icc">
+        <step>rm_icc</step>
+        <script_file>$SEV(bscript_dir)/rm_icc_zrt_scripts/clock_opt_psyn_icc.tcl</script_file>
+        <src>clock_opt_cts_icc</src>
+        <dst>clock_opt_psyn_icc</dst>
+        <tool>icc</tool>
+    </tool_task>
+    <tool_task name="clock_opt_route_icc">
+        <step>rm_icc</step>
+        <script_file>$SEV(bscript_dir)/rm_icc_zrt_scripts/clock_opt_route_icc.tcl</script_file>
+        <src>clock_opt_psyn_icc</src>
+        <dst>clock_opt_route_icc</dst>
+        <tool>icc</tool>
+    </tool_task>
+    <tool_task name="eco_icc">
+        <step>rm_icc</step>
+        <script_file>$SEV(bscript_dir)/rm_icc_zrt_scripts/eco_icc.tcl</script_file>
+        <tool>icc</tool>
+    </tool_task>
+    <tool_task name="flat_dp">
+        <step>rm_icc</step>
+        <script_file>$SEV(bscript_dir)/rm_icc_dp_scripts/flat_dp.tcl</script_file>
+        <src>init_design_icc</src>
+        <dst>flat_dp</dst>
+        <tool>icc</tool>
+    </tool_task>
+    <tool_task name="fm">
+        <step>rm_icc</step>
+        <script_file>$SEV(bscript_dir)/rm_icc_scripts/fm.tcl</script_file>
+        <src>init_design_icc</src>
+        <dst>outputs_icc</dst>
+        <tool>fm</tool>
+        <must_have_list>
+            <must_have regexp="Verification SUCCEEDED" severity="error"/>
+        </must_have_list>
+    </tool_task>
+    <tool_task name="focal_opt_icc">
+        <step>rm_icc</step>
+        <script_file>$SEV(bscript_dir)/rm_icc_scripts/focal_opt_icc.tcl</script_file>
+        <src>chip_finish_icc</src>
+        <dst>focal_opt_icc</dst>
+        <tool>icc</tool>
+    </tool_task>
+    <tool_task name="init_design_icc">
+        <step>rm_icc</step>
+        <script_file>$SEV(bscript_dir)/rm_icc_scripts/init_design_icc.tcl</script_file>
+        <src>init_design_icc</src>
+        <dst>init_design_icc</dst>
+        <tool>icc</tool>
+    </tool_task>
+    <tool_task name="metal_fill_icc">
+        <step>rm_icc</step>
+        <script_file>$SEV(bscript_dir)/rm_icc_zrt_scripts/metal_fill_icc.tcl</script_file>
+        <src>chip_finish_icc</src>
+        <dst>metal_fill_icc</dst>
+        <tool>icc</tool>
+    </tool_task>
+    <tool_task name="outputs_icc">
+        <step>rm_icc</step>
+        <script_file>$SEV(bscript_dir)/rm_icc_zrt_scripts/outputs_icc.tcl</script_file>
+        <src>metal_fill_icc</src>
+        <dst>outputs_icc</dst>
+        <tool>icc</tool>
+    </tool_task>
+    <tool_task name="place_opt_icc">
+        <step>rm_icc</step>
+        <script_file>$SEV(bscript_dir)/rm_icc_scripts/place_opt_icc.tcl</script_file>
+        <src>init_design_icc</src>
+        <dst>place_opt_icc</dst>
+        <tool>icc</tool>
+    </tool_task>
+    <tool_task name="route_icc">
+        <step>rm_icc</step>
+        <script_file>$SEV(bscript_dir)/rm_icc_zrt_scripts/route_icc.tcl</script_file>
+        <src>clock_opt_route_icc</src>
+        <dst>route_icc</dst>
+        <tool>icc</tool>
+    </tool_task>
+    <tool_task name="route_opt_icc">
+        <step>rm_icc</step>
+        <script_file>$SEV(bscript_dir)/rm_icc_zrt_scripts/route_opt_icc.tcl</script_file>
+        <src>route_icc</src>
+        <dst>route_opt_icc</dst>
+        <tool>icc</tool>
+    </tool_task>
+    <tool_task name="signoff_drc_icc">
+        <step>rm_icc</step>
+        <script_file>$SEV(bscript_dir)/rm_icc_zrt_scripts/signoff_drc_icc.tcl</script_file>
+        <src>metal_fill_icc</src>
+        <dst>signoff_drc_icc</dst>
+        <tool>icc</tool>
+        <aux_tools>pt star</aux_tools>
+        <must_not_have_list>
+            <must_not_have regexp="StarRCXT Failed" severity="error"/>
+            <must_not_have regexp="PrimeTime Failed" severity="error"/>
+        </must_not_have_list>
+    </tool_task>
+    <edges>
+        <edge from="chip_finish_icc" to="focal_opt_icc"/>
+        <edge from="chip_finish_icc" to="metal_fill_icc"/>
+        <edge from="clock_opt_cts_icc" to="clock_opt_psyn_icc"/>
+        <edge from="clock_opt_psyn_icc" to="clock_opt_route_icc"/>
+        <edge from="clock_opt_route_icc" to="route_icc"/>
+        <edge from="fm" to="all"/>
+        <edge from="init_design_icc" to="flat_dp"/>
+        <edge from="init_design_icc" to="place_opt_icc"/>
+        <edge from="metal_fill_icc" to="signoff_drc_icc"/>
+        <edge from="note-2" to="eco_icc"/>
+        <edge from="note-2" to="focal_opt_icc"/>
+        <edge from="outputs_icc" to="fm"/>
+        <edge from="outputs_icc" to="implementation"/>
+        <edge from="place_opt_icc" to="clock_opt_cts_icc"/>
+        <edge from="route_icc" to="route_opt_icc"/>
+        <edge from="route_opt_icc" to="chip_finish_icc"/>
+        <edge from="signoff_drc_icc" to="outputs_icc"/>
+    </edges>
+    <graph grid_width="470" grid_height="810">
+        <node name="note-1" x="230" y="30"/>
+        <node name="note-2" x="320" y="490"/>
+        <node name="all" x="260" y="770"/>
+        <node name="implementation" x="150" y="780"/>
+        <node name="chip_finish_icc" x="150" y="470"/>
+        <node name="clock_opt_cts_icc" x="150" y="220"/>
+        <node name="clock_opt_psyn_icc" x="150" y="270"/>
+        <node name="clock_opt_route_icc" x="150" y="320"/>
+        <node name="eco_icc" x="360" y="530"/>
+        <node name="flat_dp" x="320" y="120"/>
+        <node name="fm" x="260" y="720"/>
+        <node name="focal_opt_icc" x="240" y="530"/>
+        <node name="init_design_icc" x="150" y="120"/>
+        <node name="metal_fill_icc" x="150" y="570"/>
+        <node name="outputs_icc" x="150" y="690"/>
+        <node name="place_opt_icc" x="150" y="170"/>
+        <node name="route_icc" x="150" y="370"/>
+        <node name="route_opt_icc" x="150" y="420"/>
+        <node name="signoff_drc_icc" x="150" y="630"/>
+    </graph>
+</flow>
+

@@ -1,0 +1,150 @@
+
+<!--
+## HEADER_MSG ============================================================================
+## HEADER_MSG Lynx Compatible Reference Methodology (LCRM) Setup File
+## HEADER_MSG Script: rm_dc.xml
+## HEADER_MSG Version: J-2014.09-SP2 (January 12, 2015)
+## HEADER_MSG Copyright (C) 2007-2015 Synopsys, Inc. All rights reserved.
+## HEADER_MSG ============================================================================
+## HEADER_MSG DESCRIPTION:
+## HEADER_MSG * Provided to support example execution of the product methodology scripts in
+## HEADER_MSG * the Lynx Design System
+## HEADER_MSG OPEN IN Lynx Runtime Manager Flow Editor"
+## HEADER_MSG ============================================================================
+-->
+<flow name="rm_dc">
+    <note name="note-2" title="Want a different top flow for this block? &lt;click here&gt;" always_show_detail="0">
+        <text>Want to change the top flow for this block?
+
+Either edit this flow or use another flow, including the sample flows included in the 
+scripts_block/lcrm_setup directory.
+
+Use the &quot;Block Flow Manager&quot; to configure a new top flow
+1) Open the &quot;Block Flow Manager&quot; (found as the wrench icon located in toolbar or under &quot;File&quot; menu)
+2) &quot;Add existing flow&quot; and navigate to locate the xml flow file to add 
+    (usually in scripts_block/lcrm_setup)
+3) Set a flow as the &quot;Top Flow&quot; by selecting it and using the icon &quot;Make Selected flow the TopFlow&quot;
+    located on the right pane
+4) Set a &quot;Flow Goal&quot; by selecting the target task from the lower pane and using the
+   right icon &quot;Make selected Task the FlowGoal&quot;
+5) save (which will write the scripts_block/conf/block.xml with your config)</text>
+    </note>
+    <note name="note-3" title="Design Compiler">
+        <text>These are example tasks which run the RM Design Compiler tasks.
+Make sure the RM was configured with Lynx Compatible set TRUE. If
+the RM was not configured for hierarchical design, the dc_top task
+will not have a proper script dc_top.tcl to reference and the flow will
+show errors. You can either delete the dc_top task from the flow or 
+download the RM with hierarchical design enabled.</text>
+    </note>
+    <note name="note-4" title="DC Explorer">
+        <text>This task uses the same scripts as DC but runs using the DC Explorer 
+for faster runtimes and handling of dirty data, including infeasible paths.
+
+Make sure the RM was configured with Lynx Compatible set to TRUE and 
+DC Explorer compatible set to TRUE. DC Explorer execution will fail if 
+you are not using the DC Explorer compatible version of the scripts.
+If the RM was not configured for hierarchical design, the dc_top task
+will not have a proper script dc_top.tcl to reference and the flow will
+show errors. You can either delete the dc_top task from the flow or 
+download the RM with hierarchical design enabled.</text>
+    </note>
+    <join_task name="all">
+        <step>rm_dc</step>
+    </join_task>
+    <join_task name="all_top"/>
+    <join_task name="implement">
+        <step>rm_dc</step>
+    </join_task>
+    <join_task name="implement_dce">
+        <step>rm_dc</step>
+    </join_task>
+    <join_task name="implement_top"/>
+    <join_task name="implement_top_dce"/>
+    <tool_task name="dc">
+        <step>rm_dc</step>
+        <script_file>$SEV(bscript_dir)/rm_dc_scripts/dc.tcl</script_file>
+        <src>dc</src>
+        <dst>dc</dst>
+        <tool>dct</tool>
+    </tool_task>
+    <tool_task name="dc_top">
+        <step>rm_dc</step>
+        <script_file>$SEV(bscript_dir)/rm_dc_scripts/dc_top.tcl</script_file>
+        <src>dc</src>
+        <dst>dc</dst>
+        <tool>dct</tool>
+    </tool_task>
+    <tool_task name="dce">
+        <step>rm_dc</step>
+        <script_file>$SEV(bscript_dir)/rm_dc_scripts/dc.tcl</script_file>
+        <src>dce</src>
+        <dst>dce</dst>
+        <tool>de</tool>
+        <must_allow_list>
+            <must_allow regexp="DESH-008"/>
+            <must_allow regexp="DESH-013"/>
+            <must_allow regexp="CMD-005"/>
+        </must_allow_list>
+    </tool_task>
+    <tool_task name="dce_top">
+        <step>rm_dc</step>
+        <script_file>$SEV(bscript_dir)/rm_dc_scripts/dc_top.tcl</script_file>
+        <src>dce</src>
+        <dst>dce</dst>
+        <tool>de</tool>
+        <must_allow_list>
+            <must_allow regexp="DESH-008"/>
+            <must_allow regexp="DESH-013"/>
+            <must_allow regexp="CMD-005"/>
+        </must_allow_list>
+    </tool_task>
+    <tool_task name="fm">
+        <step>rm_dc</step>
+        <script_file>$SEV(bscript_dir)/rm_dc_scripts/fm.tcl</script_file>
+        <src>dc</src>
+        <dst>dc</dst>
+        <tool>fm</tool>
+        <must_have_list>
+            <must_have regexp="Verification SUCCEEDED" severity="error"/>
+        </must_have_list>
+    </tool_task>
+    <tool_task name="fm_top">
+        <step>rm_dc</step>
+        <script_file>$SEV(bscript_dir)/rm_dc_scripts/fm_top.tcl</script_file>
+        <src>dc</src>
+        <dst>dc</dst>
+        <tool>fm</tool>
+        <must_have_list>
+            <must_have regexp="Verification SUCCEEDED" severity="error"/>
+        </must_have_list>
+    </tool_task>
+    <edges>
+        <edge from="dc" to="fm"/>
+        <edge from="dc" to="implement"/>
+        <edge from="dc_top" to="fm_top"/>
+        <edge from="dc_top" to="implement_top"/>
+        <edge from="dce" to="implement_dce"/>
+        <edge from="dce_top" to="implement_top_dce"/>
+        <edge from="fm" to="all"/>
+        <edge from="fm_top" to="all_top"/>
+    </edges>
+    <graph grid_width="760" grid_height="310">
+        <node name="note-2" x="390" y="10"/>
+        <node name="note-3" x="160" y="70"/>
+        <node name="note-4" x="600" y="70"/>
+        <node name="all" x="150" y="280"/>
+        <node name="all_top" x="390" y="280"/>
+        <node name="implement" x="60" y="280"/>
+        <node name="implement_dce" x="520" y="280"/>
+        <node name="implement_top" x="270" y="280"/>
+        <node name="implement_top_dce" x="670" y="280"/>
+        <node name="dc" x="60" y="120"/>
+        <node name="dc_top" x="270" y="120"/>
+        <node name="dce" x="520" y="120"/>
+        <node name="dce_top" x="670" y="120"/>
+        <node name="fm" x="150" y="190"/>
+        <node name="fm_top" x="390" y="190"/>
+    </graph>
+</flow>
+

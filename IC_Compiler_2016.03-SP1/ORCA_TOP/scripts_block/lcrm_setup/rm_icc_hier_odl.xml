@@ -1,0 +1,105 @@
+
+<!--
+## HEADER_MSG ============================================================================
+## HEADER_MSG Lynx Compatible Reference Methodology (LCRM) Setup File
+## HEADER_MSG Script: rm_icc_hier_odl.xml
+## HEADER_MSG Version: J-2014.09-SP2 (January 12, 2015)
+## HEADER_MSG Copyright (C) 2007-2015 Synopsys, Inc. All rights reserved.
+## HEADER_MSG ============================================================================
+## HEADER_MSG DESCRIPTION:
+## HEADER_MSG * Provided to support example execution of the product methodology scripts in
+## HEADER_MSG * the Lynx Design System
+## HEADER_MSG OPEN IN Lynx Runtime Manager Flow Editor"
+## HEADER_MSG ============================================================================
+-->
+<flow name="rm_icc_hier_odl">
+    <note name="note-1" title="Want a different top flow for this block? &lt;i&gt;click here&lt;/i&gt;" always_show_detail="0">
+        <text>Want to change the top flow for this block?
+
+Either edit this flow or use another flow, including the sample flows included in the 
+scripts_block/lcrm_setup directory.
+
+Use the &quot;Block Flow Manager&quot; to configure a new top flow
+1) Open the &quot;Block Flow Manager&quot; (found as the wrench icon located in toolbar or under &quot;File&quot; menu)
+2) &quot;Add existing flow&quot; and navigate to locate the xml flow file to add 
+    (usually in scripts_block/lcrm_setup)
+3) Set a flow as the &quot;Top Flow&quot; by selecting it and using the icon &quot;Make Selected flow the TopFlow&quot;
+    located on the right pane
+4) Set a &quot;Flow Goal&quot; by selecting the target task from the lower pane and using the
+   right icon &quot;Make selected Task the FlowGoal&quot;
+5) save (which will write the scripts_block/conf/block.xml with your config)</text>
+    </note>
+    <join_task name="all">
+        <step>rm_icc</step>
+    </join_task>
+    <tool_task name="commit_dp">
+        <step>rm_icc</step>
+        <script_file>$SEV(bscript_dir)/rm_icc_dp_scripts/commit_dp.tcl</script_file>
+        <src>pin_assignment_budgeting_dp</src>
+        <dst>commit_dp</dst>
+        <tool>icc</tool>
+    </tool_task>
+    <tool_task name="create_odl_dp">
+        <step>rm_icc</step>
+        <script_file>$SEV(bscript_dir)/rm_icc_dp_scripts/create_odl_dp.tcl</script_file>
+        <src>create_plangroups_dp</src>
+        <dst>create_odl_dp</dst>
+        <tool>icc</tool>
+    </tool_task>
+    <tool_task name="create_plangroups_dp">
+        <step>rm_icc</step>
+        <script_file>$SEV(bscript_dir)/rm_icc_dp_scripts/create_plangroups_dp.tcl</script_file>
+        <src>init_design_odl</src>
+        <dst>create_plangroups_dp</dst>
+        <tool>icc</tool>
+    </tool_task>
+    <tool_task name="init_design_odl">
+        <step>rm_icc</step>
+        <script_file>$SEV(bscript_dir)/rm_icc_dp_scripts/init_design_odl.tcl</script_file>
+        <src>init_design_odl</src>
+        <dst>init_design_odl</dst>
+        <tool>icc</tool>
+    </tool_task>
+    <tool_task name="pin_assignment_budgeting_dp">
+        <step>rm_icc</step>
+        <script_file>$SEV(bscript_dir)/rm_icc_dp_scripts/pin_assignment_budgeting_dp.tcl</script_file>
+        <src>routeability_on_plangroups_dp</src>
+        <dst>pin_assignment_budgeting_dp</dst>
+        <tool>icc</tool>
+    </tool_task>
+    <tool_task name="prepare_block_dp">
+        <step>rm_icc</step>
+        <script_file>$SEV(bscript_dir)/rm_icc_dp_scripts/prepare_block_dp.tcl</script_file>
+        <src>commit_dp</src>
+        <dst>prepare_block_dp</dst>
+        <tool>icc</tool>
+    </tool_task>
+    <tool_task name="routeability_on_plangroups_dp">
+        <step>rm_icc</step>
+        <script_file>$SEV(bscript_dir)/rm_icc_dp_scripts/routeability_on_plangroups_dp.tcl</script_file>
+        <src>create_odl_dp</src>
+        <dst>routeability_on_plangroups_dp</dst>
+        <tool>icc</tool>
+    </tool_task>
+    <edges>
+        <edge from="commit_dp" to="prepare_block_dp"/>
+        <edge from="create_odl_dp" to="routeability_on_plangroups_dp"/>
+        <edge from="create_plangroups_dp" to="create_odl_dp"/>
+        <edge from="init_design_odl" to="create_plangroups_dp"/>
+        <edge from="pin_assignment_budgeting_dp" to="commit_dp"/>
+        <edge from="prepare_block_dp" to="all"/>
+        <edge from="routeability_on_plangroups_dp" to="pin_assignment_budgeting_dp"/>
+    </edges>
+    <graph grid_width="470" grid_height="530">
+        <node name="note-1" x="230" y="30"/>
+        <node name="all" x="210" y="500"/>
+        <node name="commit_dp" x="210" y="380"/>
+        <node name="create_odl_dp" x="210" y="200"/>
+        <node name="create_plangroups_dp" x="210" y="140"/>
+        <node name="init_design_odl" x="210" y="80"/>
+        <node name="pin_assignment_budgeting_dp" x="210" y="320"/>
+        <node name="prepare_block_dp" x="210" y="440"/>
+        <node name="routeability_on_plangroups_dp" x="210" y="260"/>
+    </graph>
+</flow>
+

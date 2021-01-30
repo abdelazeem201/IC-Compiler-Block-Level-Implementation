@@ -1,0 +1,144 @@
+
+<!--
+## HEADER_MSG ============================================================================
+## HEADER_MSG Lynx Compatible Reference Methodology (LCRM) Setup File
+## HEADER_MSG Script: rm_dc_upf.xml
+## HEADER_MSG Version: J-2014.09-SP2 (January 12, 2015)
+## HEADER_MSG Copyright (C) 2007-2015 Synopsys, Inc. All rights reserved.
+## HEADER_MSG ============================================================================
+## HEADER_MSG DESCRIPTION:
+## HEADER_MSG * Provided to support example execution of the product methodology scripts in
+## HEADER_MSG * the Lynx Design System
+## HEADER_MSG OPEN IN Lynx Runtime Manager Flow Editor"
+## HEADER_MSG ============================================================================
+-->
+<flow name="rm_dc_upf">
+    <note name="note-1" title="Want a different top flow for this block? &lt;i&gt;click here&lt;/i&gt;" always_show_detail="0">
+        <text>Want to change the top flow for this block?
+
+Either edit this flow or use another flow, including the sample flows included in the 
+scripts_block/lcrm_setup directory.
+
+Use the &quot;Block Flow Manager&quot; to configure a new top flow
+1) Open the &quot;Block Flow Manager&quot; (found as the wrench icon located in toolbar or under &quot;File&quot; menu)
+2) &quot;Add existing flow&quot; and navigate to locate the xml flow file to add 
+    (usually in scripts_block/lcrm_setup)
+3) Set a flow as the &quot;Top Flow&quot; by selecting it and using the icon &quot;Make Selected flow the TopFlow&quot;
+    located on the right pane
+4) Set a &quot;Flow Goal&quot; by selecting the target task from the lower pane and using the
+   right icon &quot;Make selected Task the FlowGoal&quot;
+5) save (which will write the scripts_block/conf/block.xml with your config)</text>
+    </note>
+    <note name="note-2" always_show_detail="1">
+        <text>Delete &lt;b&gt;top&lt;/b&gt; tasks if not doing hierarchical Synthesis. Otherwise,
+configure RMGen so top scripts are included in the download.
+Use connection group object  &lt;b&gt;'build_subblocks'&lt;/b&gt; to create 
+dependencies to child block flows to this top flow.</text>
+    </note>
+    <join_task name="all">
+        <step>rm_dc</step>
+    </join_task>
+    <join_task name="all_top"/>
+    <join_task name="implement">
+        <step>rm_dc</step>
+    </join_task>
+    <join_task name="implement_top"/>
+    <tool_task name="dc">
+        <step>rm_dc</step>
+        <script_file>$SEV(bscript_dir)/rm_dc_scripts/dc.tcl</script_file>
+        <src>dc</src>
+        <dst>dc</dst>
+        <tool>dct</tool>
+    </tool_task>
+    <tool_task name="dc_top">
+        <step>rm_dc</step>
+        <script_file>$SEV(bscript_dir)/rm_dc_scripts/dc_top.tcl</script_file>
+        <src>dc</src>
+        <dst>dc</dst>
+        <tool>dct</tool>
+    </tool_task>
+    <tool_task name="fm">
+        <step>rm_dc</step>
+        <script_file>$SEV(bscript_dir)/rm_dc_scripts/fm.tcl</script_file>
+        <src>dc</src>
+        <dst>dc</dst>
+        <tool>fm</tool>
+        <must_have_list>
+            <must_have regexp="Verification SUCCEEDED" severity="error"/>
+        </must_have_list>
+    </tool_task>
+    <tool_task name="fm_top">
+        <step>rm_dc</step>
+        <script_file>$SEV(bscript_dir)/rm_dc_scripts/fm_top.tcl</script_file>
+        <src>dc</src>
+        <dst>dc</dst>
+        <tool>fm</tool>
+        <must_have_list>
+            <must_have regexp="Verification SUCCEEDED" severity="error"/>
+        </must_have_list>
+    </tool_task>
+    <tool_task name="vclp">
+        <step>rm_dc</step>
+        <script_file>$SEV(bscript_dir)/rm_dc_scripts/vc_lp.tcl</script_file>
+        <src>dc</src>
+        <dst>dc</dst>
+        <tool>vc_static</tool>
+    </tool_task>
+    <tool_task name="vclp_rtl">
+        <step>rm_dc</step>
+        <script_file>$SEV(bscript_dir)/rm_dc_scripts/vc_lp.tcl</script_file>
+        <src>dc</src>
+        <dst>dc</dst>
+        <tool>vc_static</tool>
+        <variables>
+            <variable name="TEV(VCLP_RUN)" value="RTL"/>
+        </variables>
+    </tool_task>
+    <tool_task name="vclp_top">
+        <step>rm_dc</step>
+        <script_file>$SEV(bscript_dir)/rm_dc_scripts/vc_lp_top.tcl</script_file>
+        <src>dc</src>
+        <tool>vc_static</tool>
+    </tool_task>
+    <tool_task name="vclp_top_rtl">
+        <step>rm_dc</step>
+        <script_file>$SEV(bscript_dir)/rm_dc_scripts/vc_lp_top.tcl</script_file>
+        <src>dc</src>
+        <dst>dc</dst>
+        <tool>vc_static</tool>
+        <variables>
+            <variable name="TEV(VCLP_RUN)" value="RTL"/>
+        </variables>
+    </tool_task>
+    <edges>
+        <edge from="dc" to="fm" points="11,18"/>
+        <edge from="dc" to="implement"/>
+        <edge from="dc" to="vclp" points="22,18"/>
+        <edge from="dc_top" to="fm_top" points="36,18"/>
+        <edge from="dc_top" to="implement_top"/>
+        <edge from="dc_top" to="vclp_top" points="54,18"/>
+        <edge from="fm" to="all"/>
+        <edge from="fm_top" to="all_top"/>
+        <edge from="vclp" to="all"/>
+        <edge from="vclp_rtl" to="all"/>
+        <edge from="vclp_top" to="all_top"/>
+        <edge from="vclp_top_rtl" to="all_top"/>
+    </edges>
+    <graph grid_width="570" grid_height="480">
+        <node name="note-1" x="260" y="30"/>
+        <node name="note-2" x="280" y="420"/>
+        <node name="all" x="160" y="340"/>
+        <node name="all_top" x="450" y="340"/>
+        <node name="implement" x="60" y="340"/>
+        <node name="implement_top" x="300" y="340"/>
+        <node name="dc" x="60" y="150"/>
+        <node name="dc_top" x="300" y="150"/>
+        <node name="fm" x="110" y="210"/>
+        <node name="fm_top" x="360" y="210"/>
+        <node name="vclp" x="220" y="210"/>
+        <node name="vclp_rtl" x="160" y="210"/>
+        <node name="vclp_top" x="540" y="210"/>
+        <node name="vclp_top_rtl" x="450" y="210"/>
+    </graph>
+</flow>
+

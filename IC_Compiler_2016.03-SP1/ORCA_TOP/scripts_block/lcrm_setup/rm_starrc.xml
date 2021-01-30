@@ -1,0 +1,51 @@
+
+<!--
+## HEADER_MSG ============================================================================
+## HEADER_MSG Lynx Compatible Reference Methodology (LCRM) Setup File
+## HEADER_MSG Script: rm_starrc.xml
+## HEADER_MSG Version: J-2014.09-SP2 (January 12, 2015)
+## HEADER_MSG Copyright (C) 2007-2015 Synopsys, Inc. All rights reserved.
+## HEADER_MSG ============================================================================
+## HEADER_MSG DESCRIPTION:
+## HEADER_MSG * Provided to support example execution of the product methodology scripts in
+## HEADER_MSG * the Lynx Design System
+## HEADER_MSG OPEN IN Lynx Runtime Manager Flow Editor"
+## HEADER_MSG ============================================================================
+-->
+<flow name="rm_starrc">
+    <note name="note-1" title="Want a different top flow for this block? &lt;i&gt;click here&lt;/i&gt;" always_show_detail="0">
+        <text>Want to change the top flow for this block?
+
+Either edit this flow or use another flow, including the sample flows included in the 
+scripts_block/lcrm_setup directory.
+
+Use the &quot;Block Flow Manager&quot; to configure a new top flow
+1) Open the &quot;Block Flow Manager&quot; (found as the wrench icon located in toolbar or under &quot;File&quot; menu)
+2) &quot;Add existing flow&quot; and navigate to locate the xml flow file to add 
+    (usually in scripts_block/lcrm_setup)
+3) Set a flow as the &quot;Top Flow&quot; by selecting it and using the icon &quot;Make Selected flow the TopFlow&quot;
+    located on the right pane
+4) Set a &quot;Flow Goal&quot; by selecting the target task from the lower pane and using the
+   right icon &quot;Make selected Task the FlowGoal&quot;
+5) save (which will write the scripts_block/conf/block.xml with your config)</text>
+    </note>
+    <join_task name="all"/>
+    <tool_task name="starrc">
+        <step>rm_starrc</step>
+        <script_file>$SEV(bscript_dir)/rm_setup/run_starrc.tcl</script_file>
+        <src>starrc</src>
+        <dst>starrc</dst>
+        <tool>tcl_job</tool>
+        <analysis_task>1</analysis_task>
+        <aux_tools>star</aux_tools>
+    </tool_task>
+    <edges>
+        <edge from="starrc" to="all"/>
+    </edges>
+    <graph grid_width="470" grid_height="190">
+        <node name="note-1" x="230" y="30"/>
+        <node name="all" x="200" y="160"/>
+        <node name="starrc" x="200" y="90"/>
+    </graph>
+</flow>
+
