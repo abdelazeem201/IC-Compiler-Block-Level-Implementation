@@ -73,6 +73,8 @@ Workshop Introduction & GUI (Lecture + Lab + Optional Lab)
 MCMM Data Setup (Lecture + Lab)
 Overview of Floorplanning (Lecture)
 
+![Placement](https://user-images.githubusercontent.com/58098260/128783109-3ac2d543-aad2-4199-9d14-9c0ca5b04c9f.jpeg)
+
 *Day 2*
 
 Overview of Floorplanning (Lab)
