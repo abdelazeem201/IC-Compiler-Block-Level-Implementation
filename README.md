@@ -70,7 +70,9 @@ Convert the completed block-level design into a soft macro
 *Day 1*
 
 Workshop Introduction & GUI (Lecture + Lab + Optional Lab)
+
 MCMM Data Setup (Lecture + Lab)
+
 Overview of Floorplanning (Lecture)
 
 ![Placement](https://user-images.githubusercontent.com/58098260/128783109-3ac2d543-aad2-4199-9d14-9c0ca5b04c9f.jpeg)
@@ -78,7 +80,9 @@ Overview of Floorplanning (Lecture)
 *Day 2*
 
 Overview of Floorplanning (Lab)
+
 Placement (Lecture + Lab)
+
 Clock Tree Synthesis (Lecture)
 
 ![Block_implematation](https://user-images.githubusercontent.com/58098260/129451309-a8e123fb-7242-40d8-87e7-81c9047090ff.png)
@@ -86,8 +90,11 @@ Clock Tree Synthesis (Lecture)
 *Day 3*
 
 Clock Tree Synthesis (Lecture + Lab)
+
 Routing (Lecture + Lab)
+
 Design for Manufacturability (Lecture + Optional Lab)
+
 Customer Support (Lecture)
  
 # *Synopsys Tools Used*
