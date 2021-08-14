@@ -80,6 +80,7 @@ Overview of Floorplanning (Lecture)
 Overview of Floorplanning (Lab)
 Placement (Lecture + Lab)
 Clock Tree Synthesis (Lecture)
+![image](https://user-images.githubusercontent.com/58098260/129451266-6384d1e9-e1c0-4082-bf78-d8e4f2352fc6.png)
 
 *Day 3*
 
